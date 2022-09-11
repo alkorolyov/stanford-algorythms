@@ -1,10 +1,9 @@
 # cython: language_level  = 3
 
-# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
+# cython: profile=False
+# cython: linetrace=False
+# cython: binding=False
 
-# cython: infer_types=False
 # cython: boundscheck=False
 # cython: wraparound=False
 # cython: initializedcheck=False
@@ -48,52 +47,6 @@ cdef double distance(double x1, double y1, double x2, double y2):
 cdef inline double dist_sqr(double x1, double y1, double x2, double y2):
     return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
 
-cpdef double distance_point(double[:] p1, double[:] p2):
-    return sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
-
-""" Using memory views """
-cpdef double min_dist_naive_mv(double[:, :] arr):
-    cdef size_t i, j, n
-    cdef double min, dist
-    n = arr.shape[0]
-    min = dist_sqr(arr[0, 0], arr[0, 1],
-                   arr[1, 0], arr[1, 1])
-    for i in range(n - 1):
-        for j in range(i + 1, n):
-            # dist = dist_sqr(arr[i, 0], arr[i, 1], arr[j, 0], arr[j, 1])
-            dist = (arr[i, 0] - arr[j, 0]) * (arr[i, 0] - arr[j, 0]) + (arr[i, 1] - arr[j, 1]) * (arr[i, 1] - arr[j, 1])
-            if dist < min:
-                min = dist
-    return sqrt(min)
-
-
-""" Using direct memory access """
-cpdef double min_dist_naive(cnp.ndarray[double, ndim=2] arr):
-    cdef cnp.npy_intp * dims
-    cdef double * data
-    if arr.flags['C_CONTIGUOUS']:
-        dims = cnp.PyArray_DIMS(arr)
-        data = <double *> cnp.PyArray_DATA(arr)
-        return min_dist_naive_c(dims[0], data)
-    else:
-        print('Array is non C-contiguous')
-        return -1
-
-
-cdef double min_dist_naive_c(size_t n, double *arr):
-    cdef size_t i, j
-    cdef double min, dist
-    min = dist_sqr(arr[0], arr[1],
-                   arr[2], arr[3])
-    for i in range(n - 1):
-        for j in range(i + 1, n):
-            dist = dist_sqr(arr[2*i], arr[2*i + 1], arr[2*j], arr[2*j + 1])
-            # dist = (arr[2*i] - arr[2*j]) * (arr[2*i] - arr[2*j]) + (arr[2*i + 1] - arr[2*j + 1]) * (arr[2*i + 1] - arr[2*j + 1])
-            if dist < min:
-                min = dist
-    return sqrt(min)
-
-
 cdef double min_3_db(double a, double b, double c):
     if a < b and a < c:
         return a
@@ -119,8 +72,48 @@ cdef size_t min_2_int(size_t a, size_t b):
     else:
         return b
 
-cdef bint equal_double(double a, double b):
-    return fabs(a - b) < 2 * DBL_EPSILON
+
+""" ######## Using memory views ############ """
+cpdef double min_dist_naive_mv(double[:, :] arr):
+    cdef size_t i, j, n
+    cdef double min, dist
+    n = arr.shape[0]
+    min = dist_sqr(arr[0, 0], arr[0, 1],
+                   arr[1, 0], arr[1, 1])
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            # dist = dist_sqr(arr[i, 0], arr[i, 1], arr[j, 0], arr[j, 1])
+            dist = (arr[i, 0] - arr[j, 0]) * (arr[i, 0] - arr[j, 0]) + (arr[i, 1] - arr[j, 1]) * (arr[i, 1] - arr[j, 1])
+            if dist < min:
+                min = dist
+    return sqrt(min)
+
+
+""" ########### Using direct memory access ########## """
+cpdef double min_dist_naive(cnp.ndarray[double, ndim=2] arr):
+    cdef cnp.npy_intp * dims
+    cdef double * data
+    if arr.flags['C_CONTIGUOUS']:
+        dims = cnp.PyArray_DIMS(arr)
+        data = <double *> cnp.PyArray_DATA(arr)
+        return min_dist_naive_c(dims[0], data)
+    else:
+        print('Array is non C-contiguous')
+        return -1
+
+
+cdef double min_dist_naive_c(size_t n, double *arr):
+    cdef size_t i, j
+    cdef double min, dist
+    min = dist_sqr(arr[0], arr[1],
+                   arr[2], arr[3])
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            dist = dist_sqr(arr[2*i], arr[2*i + 1], arr[2*j], arr[2*j + 1])
+            # dist = (arr[2*i] - arr[2*j]) * (arr[2*i] - arr[2*j]) + (arr[2*i + 1] - arr[2*j + 1]) * (arr[2*i + 1] - arr[2*j + 1])
+            if dist < min:
+                min = dist
+    return sqrt(min)
 
 """ #################### Using numpy arrays memory views ##################### """
 
@@ -225,6 +218,47 @@ cpdef double min_dist_c(cnp.ndarray[cnp.float64_t, ndim=2] P, cnp.NPY_SORTKIND k
     free(Py)
     return sqrt(d)
 
+
+cdef double _min_dist_c(size_t n, double *Px, double *Py):
+    cdef size_t i, j, k
+    # base cases
+    if n == 2:
+        return dist_sqr(Px[0], Px[1], Px[2*1], Px[2*1 + 1])
+    if n == 3:
+        return min_3_db(dist_sqr(Px[0], Px[1], Px[2], Px[2 + 1]),
+                        dist_sqr(Px[0], Px[1], Px[2*2], Px[2*2 + 1]),
+                        dist_sqr(Px[2], Px[2 + 1], Px[2*2], Px[2*2 + 1]))
+    # split Px on Qx and Rx
+    cdef size_t mid = n // 2
+    cdef double mid_x = Px[2 * mid]
+    cdef double *Qx
+    cdef double *Rx
+    Qx = Px                 # Px[:mid, :], total size 2 * mid
+    Rx = Px + 2 * mid       # Px[mid:, :], total size 2 * (n - mid)
+
+    cdef double *Qy
+    cdef double *Ry
+    Qy = <double*> malloc(mid * 2 * sizeof(double))
+    Ry = <double*> malloc((n - mid) * 2 * sizeof(double))
+
+    # sorting Qx, Rx by y, according to Py array
+    _sort_y(n, mid_x, Qy, Ry, Py)
+
+    cdef double d1 = _min_dist_c(mid, Qx, Qy)
+    cdef double d2 = _min_dist_c(n - mid, Rx, Ry)
+    cdef double delta = min_2_db(d1, d2)
+
+    free(Qy)
+    free(Ry)
+
+    # get points in Sy
+    cdef double *Sy
+    Sy = <double*> malloc(n * 2 * sizeof(double))
+    cdef size_t s_y_size = _get_sy(n, mid_x, delta, Py, Sy)
+    delta = _min_dist_split_c(s_y_size, Sy, delta)
+    free(Sy)
+    return delta
+
 cdef double _min_dist_split_c(size_t n, double *Sy, double delta):
     cdef size_t i, j, j_max
     cdef double d, d_max
@@ -272,48 +306,8 @@ cdef size_t _get_sy(size_t n, double mid_x, double delta, double *Py, double *Sy
             j += 1
     return j
 
-cdef double _min_dist_c(size_t n, double *Px, double *Py):
-    cdef size_t i, j, k
-    # base cases
-    if n == 2:
-        return dist_sqr(Px[0], Px[1], Px[2*1], Px[2*1 + 1])
-    if n == 3:
-        return min_3_db(dist_sqr(Px[0], Px[1], Px[2], Px[2 + 1]),
-                        dist_sqr(Px[0], Px[1], Px[2*2], Px[2*2 + 1]),
-                        dist_sqr(Px[2], Px[2 + 1], Px[2*2], Px[2*2 + 1]))
-    # split Px on Qx and Rx
-    cdef size_t mid = n // 2
-    cdef double mid_x = Px[2 * mid]
-    cdef double *Qx
-    cdef double *Rx
-    Qx = Px                 # Px[:mid, :], total size 2 * mid
-    Rx = Px + 2 * mid       # Px[mid:, :], total size 2 * (n - mid)
 
-    cdef double *Qy
-    cdef double *Ry
-    Qy = <double*> malloc(mid * 2 * sizeof(double))
-    Ry = <double*> malloc((n - mid) * 2 * sizeof(double))
-
-    # sorting Qx, Rx by y, according to Py array
-    _sort_y(n, mid_x, Qy, Ry, Py)
-
-    cdef double d1 = _min_dist_c(mid, Qx, Qy)
-    cdef double d2 = _min_dist_c(n - mid, Rx, Ry)
-    cdef double delta = min_2_db(d1, d2)
-
-    free(Qy)
-    free(Ry)
-
-    # get points in Sy
-    cdef double *Sy
-    Sy = <double*> malloc(n * 2 * sizeof(double))
-    cdef size_t s_y_size = _get_sy(n, mid_x, delta, Py, Sy)
-    delta = _min_dist_split_c(s_y_size, Sy, delta)
-    free(Sy)
-    return delta
-
-
-""" ################ 32 bit version ###############################"""
+""" ################ 32 bit version ############################## """
 
 cdef inline float dist32(float x1, float y1, float x2, float y2):
     return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)

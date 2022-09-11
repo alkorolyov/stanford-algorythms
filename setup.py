@@ -93,14 +93,20 @@ closestpair.test_mindist32_1()
 print(f"PASSED {time() - start_time:.2f}s")
 
 print("============================ PROFILING ====================================")
+from sorting import quicksort_c, mergesort_c
 
-from selection import d_select
+from selection import d_select, r_select
 from closestpair import min_dist_c
-# arr = np.random.randn(1000000)
-# cProfile.runctx("d_select(arr, arr.shape[0] // 2)", globals(), locals(), "Profile.prof")
 
-arr = np.random.randn(1000000, 2)
+# arr = np.random.randn(100000)
+# cProfile.runctx("quicksort_c(arr)", globals(), locals(), "Profile.prof")
+
+# arr = np.random.randn(10000000)
+# cProfile.runctx("r_select(arr, arr.shape[0] // 2)", globals(), locals(), "Profile.prof")
+
+arr = np.random.randn(100000, 2)
 cProfile.runctx("min_dist_c(arr)", globals(), locals(), "Profile.prof")
+
 s = pstats.Stats("Profile.prof")
 s.strip_dirs().sort_stats("time").print_stats()
 
@@ -121,7 +127,7 @@ def parse_time(time: float) -> str:
 def timeit_func(func, arg_string: str, import_string: str, post_string: str=""):
     t = Timer(stmt=f"{func}({arg_string}){post_string}",
                    setup=import_string)
-    NUM_LOOPS = t.autorange()[0] // 5 + 1
+    NUM_LOOPS = t.autorange()[0] // 5
     NUM_RUNS = 3
     result = np.array(t.repeat(repeat=NUM_RUNS, number=NUM_LOOPS))
     run_time = result.mean() / NUM_LOOPS
@@ -133,13 +139,13 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
           "from closestpair import min_dist_naive_mv, min_dist_naive, min_dist_mv, min_dist_c, max_points_c, min_dist32\n" \
           "import numpy as np\n" \
           "from scipy.spatial.distance import pdist\n" \
-          "n = 10000\n" \
-          "arr = np.random.randn(n, 2)\n"
+          "n = 100000\n" \
+          "arr = np.random.randn(n)\n"
 
 
-# timeit_func("r_select", "arr.copy(), n // 2", imports)
-# timeit_func("d_select", "arr.copy(), n // 2", imports)
-# timeit_func("np.median", "arr.copy()", imports)
+timeit_func("r_select", "arr.copy(), n // 2", imports)
+timeit_func("d_select", "arr.copy(), n // 2", imports)
+timeit_func("np.median", "arr.copy()", imports)
 
 # timeit_func("quicksort_c", "arr.copy()", imports)
 # timeit_func("np.sort", "arr.copy(), kind='mergesort'", imports)
@@ -147,7 +153,7 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
 # timeit_func("quicksort_c", "arr.copy()", imports)
 # timeit_func("np.sort", "arr.copy(), kind='quicksort'", imports)
 
-timeit_func("min_dist_c", "arr.copy()", imports)
+# timeit_func("min_dist_c", "arr.copy()", imports)
 # timeit_func("min_dist_naive", "arr.copy()", imports)
 # timeit_func("pdist", "arr.copy()", imports, ".min()")
 # timeit_func("min_dist32", "arr.copy().astype(np.float32)", imports)

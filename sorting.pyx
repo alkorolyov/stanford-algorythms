@@ -18,7 +18,7 @@ np.import_array()
 cdef inline size_t SEED = 1
 
 cdef inline size_t fastrand():
-  cdef size_t g_seed = (214013 * SEED + 2531011);
+  cdef size_t g_seed = (214013 * SEED + 2531011)
   return (g_seed>>16)&0x7FFF
 
 cpdef double read_numpy(np.ndarray[double, ndim=1] arr):
@@ -106,7 +106,7 @@ cdef void qsort_c(double *arr, size_t n):
     # cdef p_idx = rand() % n
     # cdef p_idx = 0 # first
     # cdef p_idx = n - 1 # last
-    cdef p_idx = choose_p(arr, n) # median of 3
+    cdef size_t p_idx = choose_p(arr, n) # median of 3
 
     cdef size_t idx = partition_c(arr, n, p_idx)
     cdef double *right = arr + idx + 1

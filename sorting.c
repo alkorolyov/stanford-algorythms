@@ -2707,7 +2707,7 @@ static PyObject *__pyx_codeobj__61;
  * cdef inline size_t SEED = 1
  * 
  * cdef inline size_t fastrand():             # <<<<<<<<<<<<<<
- *   cdef size_t g_seed = (214013 * SEED + 2531011);
+ *   cdef size_t g_seed = (214013 * SEED + 2531011)
  *   return (g_seed>>16)&0x7FFF
  */
 
@@ -2720,7 +2720,7 @@ static CYTHON_INLINE size_t __pyx_f_7sorting_fastrand(void) {
   /* "sorting.pyx":21
  * 
  * cdef inline size_t fastrand():
- *   cdef size_t g_seed = (214013 * SEED + 2531011);             # <<<<<<<<<<<<<<
+ *   cdef size_t g_seed = (214013 * SEED + 2531011)             # <<<<<<<<<<<<<<
  *   return (g_seed>>16)&0x7FFF
  * 
  */
@@ -2728,7 +2728,7 @@ static CYTHON_INLINE size_t __pyx_f_7sorting_fastrand(void) {
 
   /* "sorting.pyx":22
  * cdef inline size_t fastrand():
- *   cdef size_t g_seed = (214013 * SEED + 2531011);
+ *   cdef size_t g_seed = (214013 * SEED + 2531011)
  *   return (g_seed>>16)&0x7FFF             # <<<<<<<<<<<<<<
  * 
  * cpdef double read_numpy(np.ndarray[double, ndim=1] arr):
@@ -2740,7 +2740,7 @@ static CYTHON_INLINE size_t __pyx_f_7sorting_fastrand(void) {
  * cdef inline size_t SEED = 1
  * 
  * cdef inline size_t fastrand():             # <<<<<<<<<<<<<<
- *   cdef size_t g_seed = (214013 * SEED + 2531011);
+ *   cdef size_t g_seed = (214013 * SEED + 2531011)
  *   return (g_seed>>16)&0x7FFF
  */
 
@@ -3588,16 +3588,11 @@ static size_t __pyx_f_7sorting_choose_p(double *__pyx_v_arr, size_t __pyx_v_n) {
  */
 
 static void __pyx_f_7sorting_qsort_c(double *__pyx_v_arr, size_t __pyx_v_n) {
-  PyObject *__pyx_v_p_idx = 0;
+  size_t __pyx_v_p_idx;
   size_t __pyx_v_idx;
   double *__pyx_v_right;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  size_t __pyx_t_3;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("qsort_c", 0);
 
   /* "sorting.pyx":97
@@ -3687,24 +3682,20 @@ static void __pyx_f_7sorting_qsort_c(double *__pyx_v_arr, size_t __pyx_v_n) {
   /* "sorting.pyx":109
  *     # cdef p_idx = 0 # first
  *     # cdef p_idx = n - 1 # last
- *     cdef p_idx = choose_p(arr, n) # median of 3             # <<<<<<<<<<<<<<
+ *     cdef size_t p_idx = choose_p(arr, n) # median of 3             # <<<<<<<<<<<<<<
  * 
  *     cdef size_t idx = partition_c(arr, n, p_idx)
  */
-  __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_f_7sorting_choose_p(__pyx_v_arr, __pyx_v_n)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_v_p_idx = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_v_p_idx = __pyx_f_7sorting_choose_p(__pyx_v_arr, __pyx_v_n);
 
   /* "sorting.pyx":111
- *     cdef p_idx = choose_p(arr, n) # median of 3
+ *     cdef size_t p_idx = choose_p(arr, n) # median of 3
  * 
  *     cdef size_t idx = partition_c(arr, n, p_idx)             # <<<<<<<<<<<<<<
  *     cdef double *right = arr + idx + 1
  *     qsort_c(arr, idx)
  */
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_v_p_idx); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L1_error)
-  __pyx_v_idx = __pyx_f_7sorting_partition_c(__pyx_v_arr, __pyx_v_n, __pyx_t_3);
+  __pyx_v_idx = __pyx_f_7sorting_partition_c(__pyx_v_arr, __pyx_v_n, __pyx_v_p_idx);
 
   /* "sorting.pyx":112
  * 
@@ -3742,12 +3733,7 @@ static void __pyx_f_7sorting_qsort_c(double *__pyx_v_arr, size_t __pyx_v_n) {
  */
 
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_WriteUnraisable("sorting.qsort_c", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_p_idx);
   __Pyx_RefNannyFinishContext();
 }
 
