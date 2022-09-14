@@ -18,7 +18,7 @@ def max1_r(arr):
     r = max1_r(right)  # T(n/2)
 
     # conquer
-    return max(q, r) # 1 comparison
+    return max(q, r)    # 1 comparison
 
 def _max2r(arr, cmp_list=[]):
     """
@@ -46,10 +46,10 @@ def _max2r(arr, cmp_list=[]):
 def max2(arr):
     """
     2nd maximum calculation
-    In a recursive call tree second maximum is always among first leaves
-    of the path containing first maximum. On each recursion level there are
-    one comparison, total log2(n) - 1 comparisons.
-    :param arr:
+    In a tree of recursive calls the second maximum is always among first leaves
+    of the path containing first maximum. On each recursion level there is
+    a single comparison, totaling log2(n) - 1 additional comparisons.
+    :param arr: input array
     :return: second maximum
     """
     pairs = []
@@ -62,8 +62,7 @@ def max2(arr):
             idx = p.index(max_1)
             p.pop(idx)
             max2_candidates.append(p[0])
-    return max(max2_candidates) # log2(n) - 1 = recursion depth comparisons
-
+    return max(max2_candidates)     # log2(n) - 1 = recursion depth comparisons
 
 def test_max_1():
     # print("\n")

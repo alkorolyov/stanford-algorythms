@@ -1,8 +1,12 @@
+import math
+
 from setuptools import setup, Extension
 from time import time
 from Cython.Build import cythonize
 import pstats, cProfile
 import numpy as np
+
+import mincut_py
 
 ext_options = {}
 
@@ -18,6 +22,11 @@ extensions = [Extension('closestpair',
                         ),
               Extension('selection',
                         sources=['selection.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
+              Extension('mincut',
+                        sources=['mincut.pyx'],
                         include_dirs=[np.get_include()],
                         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
                         )
@@ -37,6 +46,7 @@ start_time = time()
 import sorting
 import selection
 import closestpair
+import mincut
 
 sorting.test_swap_c()
 sorting.test_partition_c_1()
@@ -88,7 +98,27 @@ closestpair.test_min_dist_c_3()
 
 closestpair.test_mindist32_1()
 
+mincut.test_create_graph()
+mincut.test_read_graph_c_1()
+mincut.test_read_graph_c_2()
+mincut.test_read_graph_c_3()
+mincut.test_read_graph_c_4()
+mincut.test_read_graph_c_random()
 
+
+mincut.test_copy_graph()
+mincut.test_random_pair()
+mincut.test_pop_from_graph()
+mincut.test_pop_from_graph_1()
+mincut.test_delete_self_loops()
+mincut.test_transfer_vertices()
+mincut.test_delete_vertex()
+mincut.test_delete_vertex_1()
+mincut.test_replace_references()
+mincut.test_contract()
+mincut.test_mincut()
+mincut.test_mincut_1()
+mincut.test_mincut_N()
 
 print(f"PASSED {time() - start_time:.2f}s")
 
@@ -98,15 +128,20 @@ from sorting import quicksort_c, mergesort_c
 from selection import d_select, r_select
 from closestpair import min_dist_c
 
+from mincut import mincut_n, gen_random_graph
+
+graph = gen_random_graph(100, 1000)
+cProfile.runctx("mincut_n(graph, 200, mem_type=1)", globals(), locals(), "Profile.prof")
+
 # arr = np.random.randn(100000)
 # cProfile.runctx("quicksort_c(arr)", globals(), locals(), "Profile.prof")
 
 # arr = np.random.randn(10000000)
 # cProfile.runctx("r_select(arr, arr.shape[0] // 2)", globals(), locals(), "Profile.prof")
 
-arr = np.random.randn(100000, 2)
-cProfile.runctx("min_dist_c(arr)", globals(), locals(), "Profile.prof")
-
+# arr = np.random.randn(100000, 2)
+# cProfile.runctx("min_dist_c(arr)", globals(), locals(), "Profile.prof")
+#
 s = pstats.Stats("Profile.prof")
 s.strip_dirs().sort_stats("time").print_stats()
 
@@ -143,9 +178,9 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
           "arr = np.random.randn(n)\n"
 
 
-timeit_func("r_select", "arr.copy(), n // 2", imports)
-timeit_func("d_select", "arr.copy(), n // 2", imports)
-timeit_func("np.median", "arr.copy()", imports)
+# timeit_func("r_select", "arr.copy(), n // 2", imports)
+# timeit_func("d_select", "arr.copy(), n // 2", imports)
+# timeit_func("np.median", "arr.copy()", imports)
 
 # timeit_func("quicksort_c", "arr.copy()", imports)
 # timeit_func("np.sort", "arr.copy(), kind='mergesort'", imports)
@@ -159,5 +194,10 @@ timeit_func("np.median", "arr.copy()", imports)
 # timeit_func("min_dist32", "arr.copy().astype(np.float32)", imports)
 
 
+graph = mincut.read_file()
+n = len(graph)
+N = n * n * math.log2(n)
+mincut.mincut_n(graph, N, mem_type=0)
 
+# mincut_py.mincut_n(graph, 200)
 
