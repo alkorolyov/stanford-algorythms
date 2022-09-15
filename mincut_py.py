@@ -18,28 +18,6 @@ def read_file() -> dict:
     return graph
 
 
-# pprint(read_file(), compact=True)
-
-g = read_file()
-sum_deg_v = 0
-
-for v in g:
-    # print(v, g[v])
-    sum_deg_v += len(g[v])
-
-n = len(g)
-m = sum_deg_v // 2
-print("n", n)
-print("m", m)
-
-
-g = {1: [2, 3, 4],
-     2: [1, 3],
-     3: [2, 1, 4],
-     4: [1, 3]}
-
-print(g)
-
 
 
 def get_size(g: dict) -> int:
@@ -71,13 +49,6 @@ def random_edge(g: dict, r_idx: int = None):
             delta = idx - r_idx
             return i, v[len(v) - delta - 1]
 
-
-print(flatten(g))
-print(random_edge(g, 8))
-
-# flat_g = flatten(g)
-# for i in range(get_size(g)):
-#     assert flat_g[i] == random_edge(g, i)[1]
 
 def delete_loops(g: dict, i: int, j: int):
     while True:
@@ -122,29 +93,48 @@ def mincut_n(g: dict, n: int):
     min_cut = len(g)
     start_time = time()
     for i in range(n):
-        if i % 100 == 0:
-            print(f"{i} / {n}: {time() - start_time:.1f}s")
+
+        # if i % 100 == 0:
+        #     print(f"{i} / {n}: {time() - start_time:.1f}s")
+
         graph = copy.deepcopy(g)
         m = mincut(graph)
         if m < min_cut:
             min_cut = m
-            print("mincut:", min_cut)
+            # print("mincut:", min_cut)
     return mincut
 
-graph = {1: [2, 3, 4],
-         2: [1, 3],
-         3: [2, 1, 4],
-         4: [1, 3]}
+
+# pprint(read_file(), compact=True)
+
+# g = read_file()
+# sum_deg_v = 0
+#
+# for v in g:
+#     print(v, g[v])
+#     sum_deg_v += len(g[v])
+#
+# n = len(g)
+# m = sum_deg_v // 2
+# print("n", n)
+# print("m", m)
 
 
-print("================")
-while len(graph) > 2:
-    print(graph)
-    contract(graph)
-print(graph)
+# g = {1: [2, 3, 4],
+#      2: [1, 3],
+#      3: [2, 1, 4],
+#      4: [1, 3]}
+#
+# print(g)
+
+# print("================")
+# while len(graph) > 2:
+#     print(graph)
+#     contract(graph)
+# print(graph)
 
 
-print("================")
+# print("================")
 # # print(g.values())
 # print(mincut(g))
 # print(g)

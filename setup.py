@@ -6,8 +6,6 @@ from Cython.Build import cythonize
 import pstats, cProfile
 import numpy as np
 
-import mincut_py
-
 ext_options = {}
 
 extensions = [Extension('closestpair',
@@ -124,14 +122,12 @@ print(f"PASSED {time() - start_time:.2f}s")
 
 print("============================ PROFILING ====================================")
 from sorting import quicksort_c, mergesort_c
-
 from selection import d_select, r_select
 from closestpair import min_dist_c
-
 from mincut import mincut_n, gen_random_graph
 
-graph = gen_random_graph(100, 1000)
-cProfile.runctx("mincut_n(graph, 200, mem_type=1)", globals(), locals(), "Profile.prof")
+graph = gen_random_graph(200, 3000)
+cProfile.runctx("mincut_n(graph, 200, mem_mode=0)", globals(), locals(), "Profile.prof")
 
 # arr = np.random.randn(100000)
 # cProfile.runctx("quicksort_c(arr)", globals(), locals(), "Profile.prof")
@@ -172,10 +168,13 @@ def timeit_func(func, arg_string: str, import_string: str, post_string: str=""):
 imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
           "from selection import r_select, d_select\n" \
           "from closestpair import min_dist_naive_mv, min_dist_naive, min_dist_mv, min_dist_c, max_points_c, min_dist32\n" \
+          "import mincut\n" \
+          "import mincut_py\n" \
           "import numpy as np\n" \
           "from scipy.spatial.distance import pdist\n" \
-          "n = 100000\n" \
-          "arr = np.random.randn(n)\n"
+          "graph = mincut.read_file()"
+          # "n = 100000\n" \
+          # "arr = np.random.randn(n)\n"
 
 
 # timeit_func("r_select", "arr.copy(), n // 2", imports)
@@ -193,11 +192,11 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
 # timeit_func("pdist", "arr.copy()", imports, ".min()")
 # timeit_func("min_dist32", "arr.copy().astype(np.float32)", imports)
 
+timeit_func("mincut.mincut_n", "graph, 1, mem_mode=1", imports)
+timeit_func("mincut_py.mincut_n", "graph, 1", imports)
 
-graph = mincut.read_file()
-n = len(graph)
-N = n * n * math.log2(n)
-mincut.mincut_n(graph, N, mem_type=0)
-
-# mincut_py.mincut_n(graph, 200)
+# graph = mincut.read_file()
+# n = len(graph)
+# N = n * n * math.log2(n)
+# mincut.mincut_n(graph, N)
 
