@@ -26,7 +26,7 @@ cdef size_t C_MALLOC = 0
 cdef size_t PY_MALLOC = 1
 
 @cython.wraparound
-def read_file():
+def read_file() -> dict:
     with open("kargerMinCut.txt", "r") as f:
         # print(f.read().split("\n")[:-1])
         lines = [s for s in f.read().split("\n")[:-1]]
@@ -49,27 +49,25 @@ def get_size(graph: dict) -> int:
         size += len(v)
     return size
 
-cdef struct Node:
+
+ctypedef struct node_c:
     size_t  vertex
     size_t  len
     size_t* next
-ctypedef Node node_c
 
 
-cdef struct Graph:
+ctypedef struct graph_c:
     size_t   mem_mode
     size_t   len
     node_c*  node
     size_t   buff_len
     size_t*  buff
-ctypedef Graph graph_c
 
 
 cdef void print_debug(graph_c *g):
     print("size_t:  ", sizeof(size_t), "bytes")
     print("buff:    ", hex(<size_t>g.buff))
     print("g.node:  ", hex(<size_t>g.node))
-
 
     cdef size_t* nd
     nd = <size_t*>g.node
@@ -598,8 +596,7 @@ def test_delete_self_loops():
     assert g.node[0].next[0] == 3
     assert g.node[1].next[0] == 3
 
-    free(g.node)
-    free(g.buff)
+    free_graph(g)
 
 def test_random_pair():
     print_func_name()
@@ -615,9 +612,7 @@ def test_random_pair():
         assert j != k
         assert j in graph.keys()
         assert k in graph.keys()
-    free(g.node)
-    free(g.buff)
-
+    free_graph(g)
 
 def test_read_graph_c_1():
     print_func_name()
@@ -720,14 +715,6 @@ def test_copy_graph():
             continue
         for j in range(g.node[i].len):
             assert g.node[i].next[j] == g_copy.node[i].next[j]
-
-    contract(g_copy)
-    print("copy:")
-    print_graph(g_copy)
-    print("orig:")
-    print_graph(g)
-
-
 
     free_graph(g)
     free_graph(g_copy)

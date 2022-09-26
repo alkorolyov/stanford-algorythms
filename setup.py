@@ -27,6 +27,11 @@ extensions = [Extension('closestpair',
                         sources=['mincut.pyx'],
                         include_dirs=[np.get_include()],
                         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
+              Extension('scc',
+                        sources=['scc.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
                         )
               ]
 
@@ -45,6 +50,7 @@ import sorting
 import selection
 import closestpair
 import mincut
+import scc
 
 sorting.test_swap_c()
 sorting.test_partition_c_1()
@@ -118,6 +124,12 @@ mincut.test_mincut()
 mincut.test_mincut_1()
 mincut.test_mincut_N()
 
+scc.test_create_graph()
+scc.test_print_l_list()
+scc.test_create_l_list()
+scc.test_read_arr()
+scc.test_read_graph()
+
 print(f"PASSED {time() - start_time:.2f}s")
 
 print("============================ PROFILING ====================================")
@@ -126,8 +138,8 @@ from selection import d_select, r_select
 from closestpair import min_dist_c
 from mincut import mincut_n, gen_random_graph
 
-graph = gen_random_graph(200, 3000)
-cProfile.runctx("mincut_n(graph, 200, mem_mode=0)", globals(), locals(), "Profile.prof")
+# graph = gen_random_graph(200, 3000)
+# cProfile.runctx("mincut_n(graph, 200, mem_mode=0)", globals(), locals(), "Profile.prof")
 
 # arr = np.random.randn(100000)
 # cProfile.runctx("quicksort_c(arr)", globals(), locals(), "Profile.prof")
@@ -138,8 +150,8 @@ cProfile.runctx("mincut_n(graph, 200, mem_mode=0)", globals(), locals(), "Profil
 # arr = np.random.randn(100000, 2)
 # cProfile.runctx("min_dist_c(arr)", globals(), locals(), "Profile.prof")
 #
-s = pstats.Stats("Profile.prof")
-s.strip_dirs().sort_stats("time").print_stats()
+# s = pstats.Stats("Profile.prof")
+# s.strip_dirs().sort_stats("time").print_stats()
 
 print("============================ TIMING =======================================")
 
@@ -192,11 +204,23 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
 # timeit_func("pdist", "arr.copy()", imports, ".min()")
 # timeit_func("min_dist32", "arr.copy().astype(np.float32)", imports)
 
-timeit_func("mincut.mincut_n", "graph, 1, mem_mode=1", imports)
-timeit_func("mincut_py.mincut_n", "graph, 1", imports)
+# timeit_func("mincut.mincut_n", "graph, 1, mem_mode=1", imports)
+# timeit_func("mincut_py.mincut_n", "graph, 1", imports)
 
-# graph = mincut.read_file()
-# n = len(graph)
-# N = n * n * math.log2(n)
-# mincut.mincut_n(graph, N)
+
+
+import scc
+
+# vertices = list(scc.read_file().keys())
+# v_sorted = vertices.copy()
+# v_sorted.sort()
+# for i in range(len(vertices)):
+#     assert vertices[i] == v_sorted[i]
+# start_time = time()
+graph = scc.read_file()
+# print(f"{time() - start_time:.2f}s")
+start_time = time()
+scc.test_read_graph_1(graph)
+print(f"{time() - start_time:.2f}s")
+# input("Press Enter to continue...")
 
