@@ -124,11 +124,28 @@ mincut.test_mincut()
 mincut.test_mincut_1()
 mincut.test_mincut_N()
 
-scc.test_create_graph()
-scc.test_print_l_list()
+
 scc.test_create_l_list()
+scc.test_create_l_list_random()
+scc.test_insert_l_list()
+scc.test_print_l_list()
+scc.test_stack_1()
+scc.test_stack_2()
+scc.test_stack_3()
 scc.test_read_arr()
+scc.test_create_graph()
 scc.test_read_graph()
+scc.test_read_graph_1()
+scc.test_read_graph_random()
+scc.test_reverse_graph()
+scc.test_dfs_1()
+scc.test_dfs_2()
+scc.test_dfs_3()
+scc.test_dfs_4()
+# scc.test_dfs_random()
+scc.test_dfs_loop_1()
+scc.test_dfs_loop_2()
+# scc.test_dfs_big()
 
 print(f"PASSED {time() - start_time:.2f}s")
 
@@ -211,16 +228,16 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
 
 import scc
 
-# vertices = list(scc.read_file().keys())
-# v_sorted = vertices.copy()
-# v_sorted.sort()
-# for i in range(len(vertices)):
-#     assert vertices[i] == v_sorted[i]
+
 # start_time = time()
-graph = scc.read_file()
+# graph, g_rev = scc.read_file()
 # print(f"{time() - start_time:.2f}s")
-start_time = time()
-scc.test_read_graph_1(graph)
-print(f"{time() - start_time:.2f}s")
+# print(len(graph), len(g_rev))
+# print(graph)
+
+# start_time = time()
+# scc.test_read_graph_1(graph)
+# print(f"{time() - start_time:.2f}s")
+
 # input("Press Enter to continue...")
 
