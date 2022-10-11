@@ -6,9 +6,19 @@ from Cython.Build import cythonize
 import pstats, cProfile
 import numpy as np
 
-ext_options = {}
+ext_options = {"annotate": True}
 
-extensions = [Extension('closestpair',
+extensions = [Extension('array_c',
+                        sources=['array_c.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
+              Extension('stack',
+                        sources=['stack.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
+              Extension('closestpair',
                         sources=['closestpair.pyx'],
                         include_dirs=[np.get_include()],
                         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
@@ -51,6 +61,17 @@ import selection
 import closestpair
 import mincut
 import scc
+import stack
+import array_c
+
+stack.test_stack_push()
+stack.test_stack_empty()
+stack.test_stack_full()
+stack.test_stack_size()
+stack.test_stack_random()
+
+array_c.test_create_arr()
+array_c.test_resize_arr()
 
 sorting.test_swap_c()
 sorting.test_partition_c_1()
@@ -125,13 +146,13 @@ mincut.test_mincut_1()
 mincut.test_mincut_N()
 
 
+scc.test_ascii2int()
+scc.test_read_edge_1()
+scc.test_read_buf_1()
 scc.test_create_l_list()
 scc.test_create_l_list_random()
 scc.test_insert_l_list()
 scc.test_print_l_list()
-scc.test_stack_1()
-scc.test_stack_2()
-scc.test_stack_3()
 scc.test_read_arr()
 scc.test_create_graph()
 scc.test_read_graph()
@@ -142,10 +163,16 @@ scc.test_dfs_1()
 scc.test_dfs_2()
 scc.test_dfs_3()
 scc.test_dfs_4()
-# scc.test_dfs_random()
+scc.test_dfs_random()
 scc.test_dfs_loop_1()
 scc.test_dfs_loop_2()
+scc.test_scc_1()
+scc.test_scc_2()
+scc.test_scc_3()
+scc.test_scc_4()
 # scc.test_dfs_big()
+# scc.test_scc_big()
+
 
 print(f"PASSED {time() - start_time:.2f}s")
 
