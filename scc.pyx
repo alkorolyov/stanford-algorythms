@@ -17,7 +17,8 @@ import pickle
 import sys
 import random
 
-from stack cimport stack_c, create_stack, push, pop, peek, free_stack, size_s, print_stack, is_empty_s
+from stack cimport stack_c, create_stack, push, pop, peek, \
+    free_stack, size_s, print_stack, is_empty_s
 
 from libc.stddef cimport ptrdiff_t
 from libc.stdlib cimport malloc, realloc, free, EXIT_FAILURE, rand, qsort
@@ -385,7 +386,7 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL)
     :param g: inpur C graph
     :param s: starting vertice
     :param output: (optional) stack for output
-    :param ft: variable for finishing time counter
+    :param ft: (optional) variable for finishing time counter
     :return: void
     """
     cdef:
@@ -669,78 +670,6 @@ def test_read_arr():
     assert arr[2] == 3
 
 
-def test_read_graph():
-    print_func_name()
-    graph = {0: [1, 2],
-             1: [],
-             2: [1]}
-    cdef graph_c* g = read_graph_c(graph)
-
-    cdef l_list* temp = g.node[0].adj_list
-    assert temp.id == 1
-    temp = temp.next
-    assert temp.id == 2
-    temp = temp.next
-    assert temp == NULL
-
-    assert g.node[1].adj_list == NULL
-
-    temp = g.node[2].adj_list
-    assert temp.id == 1
-    temp = temp.next
-    assert temp == NULL
-
-    # print(graph)
-    # print_graph(g)
-    free_graph(g)
-
-
-def test_read_graph_1():
-    print_func_name()
-    graph = {0: [1, 2, 3]}
-    cdef graph_c* g = read_graph_c(graph)
-    cdef node_c* nd = g.node[0]
-    cdef l_list* l = nd.adj_list
-    for i in range(nd.degree):
-        assert l.id == graph[0][i]
-        l = l.next
-
-    print_graph(g)
-    free_graph(g)
-
-
-def test_read_graph_2():
-    print_func_name()
-    graph = {0: [1, 2],
-             2: [0]}
-    cdef graph_c* g = read_graph_c(graph)
-    cdef node_c* nd = g.node[0]
-    cdef l_list* l = nd.adj_list
-
-    for i in range(nd.degree):
-        assert l.id == graph[0][i]
-        l = l.next
-
-    print_graph(g)
-    free_graph(g)
-
-
-
-def test_read_graph_random():
-    print_func_name()
-    cdef graph_c* g
-    cdef node_c * nd
-    cdef l_list * l
-    cdef size_t i
-    for i in range(100):
-        graph = gen_rand_dgraph(50, 50)
-        g = read_graph_c(graph)
-        for key in graph:
-            nd = g.node[key]
-            l = nd.adj_list
-            for val in graph[key]:
-                assert l.id == val
-                l = l.next
 
 def test_reverse_graph():
     print_func_name()

@@ -10,7 +10,7 @@
 # cython: cdivision=True
 
 from libc.stdlib cimport malloc, free, EXIT_FAILURE
-from utils import print_func_name
+from utils import print_func_name, set_stdout, restore_stdout
 import numpy as np
 
 """ ###################### Stack in C ########################## """
@@ -38,7 +38,7 @@ cdef size_t size_s(stack_c* s):
 
 cdef void push(stack_c* s, size_t x):
     if is_full_s(s):
-        print("stack full")
+        print("stack push error: stack full")
         exit(EXIT_FAILURE)
     else:
         s.top += 1
@@ -47,7 +47,7 @@ cdef void push(stack_c* s, size_t x):
 cdef size_t pop(stack_c* s):
     cdef size_t temp
     if is_empty_s(s):
-        print("stack empty")
+        print("stack pop error: stack empty")
         exit(EXIT_FAILURE)
     else:
         temp = s.items[s.top]
@@ -60,12 +60,11 @@ cdef size_t peek(stack_c* s):
 cdef void print_stack(stack_c* s):
     cdef size_t n = size_s(s)
 
-    print("[", end="")
-
     if is_empty_s(s):
-        print("]")
+        print("[]")
         return
 
+    print("[", end="")
     for i in range(n - 1):
         print(s.items[i], end=", ")
     print(s.items[n - 1], end="]\n")
@@ -74,10 +73,11 @@ cdef void free_stack(stack_c* s):
     free(s.items)
     free(s)
 
+""" ################################################################ """
+""" ######################### UNIT TESTS ########################### """
+""" ################################################################ """
 
-""" ############################# UNIT TESTS ######################### """
-
-def test_stack_push():
+def test_push():
     print_func_name()
     cdef stack_c* s = create_stack(5)
     push(s, 1)
@@ -88,7 +88,25 @@ def test_stack_push():
     assert pop(s) == 1
     free_stack(s)
 
-def test_stack_empty():
+def test_print():
+    print_func_name()
+    cdef stack_c* s = create_stack(5)
+    push(s, 1)
+    push(s, 2)
+    push(s, 3)
+
+    s_out = set_stdout()
+    print_stack(s)
+    out = s_out.getvalue()
+    restore_stdout()
+
+    assert out == '[1, 2, 3]\n'
+
+
+    free_stack(s)
+
+
+def test_empty():
     print_func_name()
     cdef stack_c* s = create_stack(5)
     assert is_empty_s(s)
@@ -97,7 +115,7 @@ def test_stack_empty():
     assert is_empty_s(s)
     free_stack(s)
 
-def test_stack_full():
+def test_full():
     print_func_name()
     cdef stack_c* s = create_stack(1)
     assert is_empty_s(s)
@@ -105,7 +123,7 @@ def test_stack_full():
     assert is_full_s(s)
     free_stack(s)
 
-def test_stack_size():
+def test_size():
     print_func_name()
     cdef stack_c* s = create_stack(5)
     push(s, 1)
@@ -120,8 +138,7 @@ def test_stack_size():
     assert size_s(s) == 1
     free_stack(s)
 
-
-def test_stack_random():
+def test_random():
     print_func_name()
     DEF size = 1000
     cdef size_t i, j
