@@ -96,48 +96,6 @@ cdef void print_mem(size_t * mem, size_t size):
         print(f"{addr} : {val}")
 
 
-cdef inline (size_t, size_t) str2int(char* buf):
-    """
-    Converts space-terminated char string to unsigned integer
-    :param buf: pointer to char buffer
-    :return: integer value, bytes read including space
-    """
-    cdef:
-        size_t x = 0
-        size_t i = 0
-    while buf[i] != 0x20:
-        x = x * 10 + buf[i] - 48
-        i += 1
-    return x, i + 1
-
-cdef (size_t, size_t, size_t) read_edge(char* buf):
-    cdef:
-        size_t i = 0
-        size_t v1, v2, rb
-
-    v1, rb = str2int(buf + i)
-    i += rb
-    v2, rb = str2int(buf + i)
-    i += rb
-    i += 1
-    return v1, v2, i
-
-cdef void read_buff(char* buf, size_t n):
-    cdef:
-        size_t i = 0
-        size_t v1, v2, rb
-
-    while i <= n:
-        # read edge
-        v1, rb = str2int(buf + i)
-        i += rb
-        print(v1, i)
-        v2, rb = str2int(buf + i)
-        i += rb
-        print(v2, i)
-        i += 1
-
-    # buf = buf + i
 
 
 
@@ -561,36 +519,6 @@ cdef dict gen_rand_dgraph(size_t n, size_t m, bint selfloops=False):
 """ ######################### UNIT TESTS ########################### """
 """ ################################################################ """
 
-def test_ascii2int():
-    print_func_name()
-    cdef:
-        char * buf = "1234 \n"
-
-    assert str2int(buf)[0] == 1234
-    assert str2int(buf)[1] == 5
-
-def test_read_edge_1():
-    print_func_name()
-    cdef:
-        char * buf = "12 34 \n56 78 \n"
-        size_t v1, v2, i
-
-    v1, v2, i = read_edge(buf)
-    assert v1 == 12
-    assert v2 == 34
-    # print(v1, v2, i)
-    v1, v2, i = read_edge(buf + i)
-    assert v1 == 56
-    assert v2 == 78
-    # print(v1, v2, i)
-
-
-def test_read_buf_1():
-    print_func_name()
-    cdef:
-        char * buf = "12 34 \n56 78 \n"
-
-    read_buff(buf, 14)
 
 
 

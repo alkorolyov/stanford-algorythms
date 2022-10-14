@@ -25,6 +25,11 @@ extensions = [Extension('array_c',
                         include_dirs=[np.get_include()],
                         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
                         ),
+              Extension('readg',
+                        sources=['readg.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
               Extension('dfs',
                         sources=['dfs.pyx'],
                         include_dirs=[np.get_include()],
@@ -84,6 +89,7 @@ import graph
 import dfs
 import bfs
 import queue_c
+import readg
 
 stack.test_push()
 stack.test_print()
@@ -109,6 +115,15 @@ graph.test_dict2graph()
 graph.test_dict2graph_1()
 graph.test_dict2graph_2()
 graph.test_dict2graph_random()
+
+
+readg.test_ascii2int()
+readg.test_read_edge_1()
+readg.test_read_buf_1()
+readg.test_read_array()
+readg.test_read_graph()
+# readg.test_read_big()
+# readg.test_read_big_pair()
 
 bfs.test_bfs()
 

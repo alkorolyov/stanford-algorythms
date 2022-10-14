@@ -9,6 +9,7 @@
 # cython: initializedcheck=True
 # cython: cdivision=True
 
+
 from array_c cimport array_c, print_array, list2arr, create_arr, resize_arr, free_arr
 from libc.stdlib cimport malloc, free, rand
 from utils import print_func_name
@@ -20,12 +21,26 @@ ctypedef struct node_c:
     bint        explored
     size_t      leader
     size_t      fin_time
-    size_t      degree          # total number of adjacent vertices
     array_c*    adj             # array of adjacent vertices
 
 ctypedef struct graph_c:
     size_t      len
     node_c**    node
+
+
+cdef node_c* create_node_c():
+    """
+    Create empty graph node
+    :return: pointer to node
+    """
+
+cdef void print_mem(size_t * mem, size_t size):
+    cdef size_t i
+    for i in range(size):
+        addr = hex(<size_t>(&mem[i]))
+        val = hex(mem[i])
+        print(f"{addr} : {val}")
+
 
 
 cdef graph_c* create_graph_c(size_t n):
@@ -45,28 +60,30 @@ cdef graph_c* create_graph_c(size_t n):
 
     for i in range(n):
         nd = g.node[0] + i
-        nd.degree = 0
         nd.explored = False
         nd.fin_time = -1
         nd.adj = NULL
         g.node[i] = nd
         # print(f"g.node[{i}]: ", hex(<size_t>g.node[i]))
+        # print_mem(<size_t *> g.node[i], sizeof(node_c)/sizeof(size_t))
 
     # print_mem(<size_t*>g.node, g.len)
-
     return g
 
 cdef inline void _add_edge(node_c* nd, size_t v):
-    cdef size_t i
-    i = nd.degree
-    nd.adj.items[i] = v
-    nd.degree += 1
+    cdef:
+        size_t i
+        array_c* arr = nd.adj
+    i = arr.size
+    arr.items[i] = v
+    arr.size += 1
+
 
 cdef void add_edge(graph_c* g, size_t v1, size_t v2):
     cdef node_c* nd = g.node[v1]
     if nd.adj == NULL:
         nd.adj = create_arr(4)
-    elif nd.degree == nd.adj.maxsize:
+    elif nd.adj.size == nd.adj.maxsize:
         resize_arr(nd.adj)
     _add_edge(nd, v2)
 
@@ -83,7 +100,6 @@ cdef graph_c* dict2graph(dict graph):
 
     for i in range(g.len):
         nd = g.node[i]
-        nd.degree = len(graph[i])
         if graph[i]:
             nd.adj = list2arr(graph[i])
     # print_mem(<size_t*>g.node[0], g.len*5)
@@ -108,7 +124,10 @@ cdef void print_graph(graph_c *g, size_t length=-1):
     for i in range(min(g.len, length)):
         nd = g.node[i]
         print(i, end=": ")
-        print_array(nd.adj, nd.degree)
+        if nd.adj:
+            print_array(nd.adj)
+        else:
+            print("[]")
 
 
 cdef void print_graph_ext(graph_c *g, size_t length=-1):
@@ -119,7 +138,7 @@ cdef void print_graph_ext(graph_c *g, size_t length=-1):
     for i in range(max(g.len, length)):
         nd = g.node[i]
         print(i, end=": ")
-        print_array(nd.adj, nd.degree)
+        print_array(nd.adj)
         print("   exp:   ", nd.explored)
         print("   ft:    ", hex(nd.fin_time))
         print("   leader:", nd.leader)
@@ -132,7 +151,7 @@ cdef void mem_size(graph_c *g):
     mem_size += g.len * (sizeof(node_c) + sizeof(node_c*))
 
     for i in range(g.len):
-        mem_size += g.node[i].degree * sizeof(array_c)
+        mem_size += g.node[i].adj.size * sizeof(array_c)
     print("c size: ", mem_size)
 
 
@@ -170,12 +189,9 @@ def test_create_graph():
     assert g.node[0].adj.items[0] == 1
     assert g.node[0].adj.items[1] == 2
     assert g.node[1].adj.items[0] == 2
+    assert g.node[0].adj.size == 2
+    assert g.node[1].adj.size == 1
     assert g.node[2].adj == NULL
-    assert g.node[0].degree == 2
-    assert g.node[1].degree == 1
-    assert g.node[2].degree == 0
-
-
     free_graph(g)
 
 def test_add_edge():
@@ -217,7 +233,7 @@ def test_dict2graph_1():
     cdef graph_c* g = dict2graph(graph)
     cdef node_c* nd = g.node[0]
     cdef array_c* arr = g.node[0].adj
-    for i in range(nd.degree):
+    for i in range(arr.size):
         assert arr.items[i] == graph[0][i]
 
     free_graph(g)
@@ -232,7 +248,7 @@ def test_dict2graph_2():
 
     cdef node_c* nd = g.node[0]
     cdef array_c * arr = nd.adj
-    for i in range(nd.degree):
+    for i in range(arr.size):
         assert arr.items[i] == graph[0][i]
 
     free_graph(g)

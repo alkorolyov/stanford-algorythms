@@ -15,5 +15,5 @@ def restore_stdout():
     global saved_stdout
     sys.stdout = saved_stdout
 
-def print_func_name():
-    print(inspect.stack()[1].code_context[0].strip('\n'))
+def print_func_name(end="\n"):
+    print(inspect.stack()[1].code_context[0].strip('\n'), end=end)

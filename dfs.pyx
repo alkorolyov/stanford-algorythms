@@ -26,10 +26,11 @@ cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):
     if output:
         push(output, s)
 
-    for i in range(nd.degree):
-        j = nd.adj.items[i]
-        if not g.node[j].explored:
-            dfs_rec(g, j, output, ft)
+    if nd.adj:
+        for i in range(nd.adj.size):
+            j = nd.adj.items[i]
+            if not g.node[j].explored:
+                dfs_rec(g, j, output, ft)
 
     if ft:
         nd.fin_time = ft[0]
@@ -85,10 +86,13 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL)
         # print(v)
 
         # push each edge of v
-        for i in range(nd.degree):
-            j = nd.adj.items[i]
-            if not g.node[j].explored:
-                push(stack, j)
+        if nd.adj:
+            for i in range(nd.adj.size):
+                j = nd.adj.items[i]
+                if not g.node[j].explored:
+                    push(stack, j)
+
+
 
     free_stack(stack)
 
@@ -130,11 +134,17 @@ def test_dfs_3():
              3: [],
              4: []}
     cdef graph_c* g = dict2graph(graph)
-    # print_graph(g)
     cdef stack_c* s = create_stack(g.len)
+
     dfs_rec(g, 0, s)
-    # print("dfs len:", size_s(s))
-    print_stack(s)
+
+    assert s.items[0] == 0
+    assert s.items[1] == 2
+    assert s.items[2] == 4
+    assert s.items[3] == 3
+    assert s.items[4] == 1
+    # print_stack(s)
+
     free_graph(g)
     free_stack(s)
 
@@ -150,6 +160,13 @@ def test_dfs_4():
     cdef stack_c* s = create_stack(g.len)
     dfs_stack(g, 0, s)
     # print("dfs len:", size_s(s))
+
+    assert s.items[0] == 0
+    assert s.items[1] == 2
+    assert s.items[2] == 4
+    assert s.items[3] == 3
+    assert s.items[4] == 1
+
     # print_stack(s)
     free_graph(g)
     free_stack(s)

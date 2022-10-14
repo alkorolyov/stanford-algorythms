@@ -9,7 +9,7 @@ cdef void bfs(graph_c* g, size_t s):
     cdef:
         size_t i, j, v
         node_c* nd
-        queue * q = create_queue(g.len * 2)
+        queue * q = create_queue(g.len)
 
     enqueue(q, s)
 
@@ -17,17 +17,18 @@ cdef void bfs(graph_c* g, size_t s):
         v = dequeue(q)
         nd = g.node[v]
 
-        if not nd.explored:
-            nd.explored = True
-        else:
+        if nd.explored:
             continue
+        else:
+            nd.explored = True
 
         print(v)
 
-        for i in range(nd.degree):
-            j = nd.adj.items[i]
-            if not g.node[j].explored:
-                enqueue(q, j)
+        if nd.adj:
+            for i in range(nd.adj.size):
+                j = nd.adj.items[i]
+                if not g.node[j].explored:
+                    enqueue(q, j)
 
 """ ################################################################ """
 """ ######################### UNIT TESTS ########################### """

@@ -5,7 +5,6 @@ ctypedef struct node_c:
     bint        explored
     size_t      leader
     size_t      fin_time
-    size_t      degree          # total number of adjacent vertices
     array_c*    adj             # array of adjacent vertices
 
 ctypedef struct graph_c:
