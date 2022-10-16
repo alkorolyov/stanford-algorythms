@@ -4,13 +4,13 @@
 # cython: linetrace=False
 # cython: binding=False
 
-# cython: boundscheck=True
-# cython: wraparound=True
-# cython: initializedcheck=True
+# cython: boundscheck=False
+# cython: wraparound=False
+# cython: initializedcheck=False
 # cython: cdivision=True
 
 
-from array_c cimport array_c, print_array, list2arr, create_arr, resize_arr, free_arr
+from array_c cimport array_c, print_array, list2arr, create_arr, push_back_arr, resize_arr, free_arr
 from libc.stdlib cimport malloc, free, rand
 from utils import print_func_name
 
@@ -70,22 +70,34 @@ cdef graph_c* create_graph_c(size_t n):
     # print_mem(<size_t*>g.node, g.len)
     return g
 
-cdef inline void _add_edge(node_c* nd, size_t v):
-    cdef:
-        size_t i
-        array_c* arr = nd.adj
-    i = arr.size
-    arr.items[i] = v
-    arr.size += 1
-
+# cdef inline void _add_edge(node_c* nd, size_t v):
+#     cdef:
+#         size_t i
+#         array_c* arr = nd.adj
+#     i = arr.size
+#     arr.items[i] = v
+#     arr.size += 1
 
 cdef void add_edge(graph_c* g, size_t v1, size_t v2):
-    cdef node_c* nd = g.node[v1]
-    if nd.adj == NULL:
+    """
+    Adds edge [v1, v2] to the directed graph G
+    :param g: graph_c G
+    :param v1: tail vertex
+    :param v2: head vertex
+    :return: void
+    """
+    cdef:
+        node_c* nd = g.node[v1]
+    if not nd.adj:
         nd.adj = create_arr(4)
-    elif nd.adj.size == nd.adj.maxsize:
-        resize_arr(nd.adj)
-    _add_edge(nd, v2)
+
+    push_back_arr(nd.adj, v2)
+
+    # if nd.adj == NULL:
+    #     nd.adj = create_arr(4)
+    # elif nd.adj.size == nd.adj.capacity:
+    #     resize_arr(nd.adj)
+    # _add_edge(nd, v2)
 
 cdef graph_c* dict2graph(dict graph):
     """
@@ -245,27 +257,31 @@ def test_dict2graph_2():
              1: [],
              2: [0]}
     cdef graph_c* g = dict2graph(graph)
-
-    cdef node_c* nd = g.node[0]
-    cdef array_c * arr = nd.adj
+    cdef array_c * arr = g.node[0].adj
     for i in range(arr.size):
         assert arr.items[i] == graph[0][i]
+
+    assert g.node[1].adj == NULL
+
+    arr = g.node[2].adj
+    for i in range(arr.size):
+        assert arr.items[i] == graph[2][i]
+
 
     free_graph(g)
 
 
 def test_dict2graph_random():
     print_func_name()
-    cdef graph_c* g
-    cdef node_c * nd
-    cdef array_c * arr
-    cdef size_t i, j
+    cdef:
+        graph_c* g
+        array_c * arr
+        size_t i, j
     for i in range(100):
         graph = rand_dict_graph(50, 250)
         g = dict2graph(graph)
         for key in graph:
-            nd = g.node[key]
-            arr = nd.adj
+            arr = g.node[key].adj
             for j, val in enumerate(graph[key]):
                 assert arr.items[j] == val
         free_graph(g)

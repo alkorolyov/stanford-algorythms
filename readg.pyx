@@ -23,7 +23,7 @@ cdef (size_t, size_t, size_t) read_edge(char* buf):
     """
     Read edge from space separated line. Terminated by \n or \r\n
     :param buf: input char buf
-    :return: v1, v2 indexes, total bytes read
+    :return: [v1, v2] indexes, total bytes read
     """
     cdef:
         size_t i = 0
@@ -65,8 +65,8 @@ cdef void read_buff(char* buf, size_t n):
 cdef array_c* read_array(str filename):
     """
     Read graph as C array of directed edges.
-    :param filename: 
-    :return: array of edges [v1, v2], size of array
+    :param filename: str
+    :return: array of edges [v1, v2]
     """
 
     with open(filename, 'rb') as f:
@@ -88,7 +88,7 @@ cdef array_c* read_array(str filename):
 
         i += rb
 
-        if 2*j >= v_arr.maxsize:
+        if 2*j >= v_arr.capacity:
             resize_arr(v_arr)
 
         v_arr.items[2*j] = v1
@@ -264,9 +264,3 @@ def test_read_big_pair():
     print(f"{time() - start_time:.2f}s")
 
     free_graph(g)
-
-
-
-
-
-

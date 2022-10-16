@@ -1,7 +1,9 @@
 # cython: language_level=3
 
+from time import time
 from stack cimport stack_c, create_stack, push, pop, peek, \
     free_stack, size_s, print_stack, is_empty_s
+from readg cimport read_graph, read_graphs
 from graph cimport graph_c, node_c, free_graph, dict2graph, rand_dict_graph
 from utils import print_func_name
 from libc.stdlib cimport rand
@@ -171,7 +173,6 @@ def test_dfs_4():
     free_graph(g)
     free_stack(s)
 
-
 def test_dfs_random():
     print_func_name()
     DEF size = 30
@@ -196,3 +197,15 @@ def test_dfs_random():
         out.top = -1
         free_graph(g)
     free_stack(out)
+
+def test_dfs_big():
+    print_func_name(end=" ... ")
+    cdef:
+        graph_c* g
+        graph_c* g_rev
+
+    start = time()
+    g = read_graph("scc.txt")
+    dfs_stack(g, 0)
+    print(f"{time() - start:.2f}s")
+

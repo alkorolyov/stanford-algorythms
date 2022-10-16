@@ -40,7 +40,11 @@ extensions = [Extension('array_c',
                         include_dirs=[np.get_include()],
                         define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
                         ),
-
+              Extension('topsort',
+                        sources=['topsort.pyx'],
+                        include_dirs=[np.get_include()],
+                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+                        ),
               Extension('closestpair',
                         sources=['closestpair.pyx'],
                         include_dirs=[np.get_include()],
@@ -90,6 +94,7 @@ import dfs
 import bfs
 import queue_c
 import readg
+import topsort
 
 stack.test_push()
 stack.test_print()
@@ -122,7 +127,7 @@ readg.test_read_edge_1()
 readg.test_read_buf_1()
 readg.test_read_array()
 readg.test_read_graph()
-# readg.test_read_big()
+readg.test_read_big()
 # readg.test_read_big_pair()
 
 bfs.test_bfs()
@@ -131,8 +136,10 @@ dfs.test_dfs_1()
 dfs.test_dfs_2()
 dfs.test_dfs_3()
 dfs.test_dfs_4()
-dfs.test_dfs_random()
+# dfs.test_dfs_random()
+# dfs.test_dfs_big()
 
+topsort.test_topsort()
 
 # sorting.test_swap_c()
 # sorting.test_partition_c_1()

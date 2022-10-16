@@ -16,22 +16,22 @@ import numpy as np
 """ ###################### Stack in C ########################## """
 
 ctypedef struct stack_c:
-    size_t      maxsize
+    size_t      capacity
     size_t      top
     size_t*     items
 
-cdef stack_c* create_stack(size_t n):
+cdef stack_c* create_stack(size_t capacity):
     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
-    s.maxsize = n
+    s.capacity = capacity
     s.top = -1
-    s.items = <size_t*>malloc(sizeof(size_t) * n)
+    s.items = <size_t*>malloc(sizeof(size_t) * capacity)
     return s
 
 cdef bint is_empty_s(stack_c* s):
     return s.top == -1
 
 cdef bint is_full_s(stack_c* s):
-    return s.top == (s.maxsize - 1)
+    return s.top == (s.capacity - 1)
 
 cdef size_t size_s(stack_c* s):
     return s.top + 1

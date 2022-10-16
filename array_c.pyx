@@ -18,7 +18,7 @@ import numpy as np
 """ ################## Arrays in C ######################### """
 
 ctypedef struct array_c:
-    size_t maxsize
+    size_t capacity
     size_t size
     size_t* items
 
@@ -47,16 +47,27 @@ cdef array_c* list2arr(list py_list):
         arr.items[i] = py_list[i]
     return arr
 
-cdef array_c* create_arr(size_t maxsize):
+cdef array_c* create_arr(size_t n):
     cdef array_c* arr = <array_c*> malloc(sizeof(array_c))
-    arr.maxsize = maxsize
+    arr.capacity = n
     arr.size = 0
-    arr.items = <size_t*>malloc(sizeof(size_t) * maxsize)
+    arr.items = <size_t*>malloc(sizeof(size_t) * n)
     return arr
 
+cdef void push_back_arr(array_c* arr, size_t val):
+    cdef:
+        size_t i = arr.size
+
+    if arr.size == arr.capacity:
+        resize_arr(arr)
+
+    arr.items[i] = val
+    arr.size += 1
+
+
 cdef inline void resize_arr(array_c* arr):
-    arr.maxsize = 2 * arr.maxsize
-    arr.items = <size_t*>realloc(arr.items, arr.maxsize * sizeof(size_t))
+    arr.capacity = 2 * arr.capacity
+    arr.items = <size_t*>realloc(arr.items, arr.capacity * sizeof(size_t))
 
 cdef void free_arr(array_c* arr):
     free(arr.items)
@@ -91,7 +102,7 @@ def test_list2arr():
 def test_create_arr():
     print_func_name()
     cdef array_c* arr = create_arr(10)
-    assert arr.maxsize == 10
+    assert arr.capacity == 10
     arr.items[9] = 1
     assert arr.items[9] == 1
     free_arr(arr)
@@ -100,7 +111,7 @@ def test_resize_arr():
     print_func_name()
     cdef array_c* arr = create_arr(10)
     resize_arr(arr)
-    assert arr.maxsize == 20
+    assert arr.capacity == 20
     arr.items[19] = 1
     free_arr(arr)
 

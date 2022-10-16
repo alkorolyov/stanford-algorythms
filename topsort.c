@@ -9,16 +9,15 @@
                 "NPY_1_7_API_VERSION"
             ]
         ],
-        "depends": [],
         "include_dirs": [
             "C:\\Users\\ergot\\anaconda3\\lib\\site-packages\\numpy\\core\\include"
         ],
-        "name": "stack",
+        "name": "topsort",
         "sources": [
-            "stack.pyx"
+            "topsort.pyx"
         ]
     },
-    "module_name": "stack"
+    "module_name": "topsort"
 }
 END: Cython Metadata */
 
@@ -712,11 +711,9 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__stack
-#define __PYX_HAVE_API__stack
+#define __PYX_HAVE__topsort
+#define __PYX_HAVE_API__topsort
 /* Early includes */
-#include <string.h>
-#include <stdlib.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -926,10 +923,92 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "stack.pyx",
+  "topsort.pyx",
 };
 
 /*--- Type declarations ---*/
+struct __pyx_t_7array_c_array_c;
+typedef struct __pyx_t_7array_c_array_c __pyx_t_7array_c_array_c;
+
+/* "array_c.pxd":2
+ * # cython: language_level=3
+ * ctypedef struct array_c:             # <<<<<<<<<<<<<<
+ *     size_t capacity
+ *     size_t size
+ */
+struct __pyx_t_7array_c_array_c {
+  size_t capacity;
+  size_t size;
+  size_t *items;
+};
+struct __pyx_t_5graph_node_c;
+typedef struct __pyx_t_5graph_node_c __pyx_t_5graph_node_c;
+struct __pyx_t_5graph_graph_c;
+typedef struct __pyx_t_5graph_graph_c __pyx_t_5graph_graph_c;
+struct __pyx_opt_args_5graph_print_graph;
+struct __pyx_opt_args_5graph_print_graph_ext;
+struct __pyx_opt_args_5graph_rand_dict_graph;
+
+/* "graph.pxd":4
+ * from array_c cimport array_c
+ * 
+ * ctypedef struct node_c:             # <<<<<<<<<<<<<<
+ *     bint        explored
+ *     size_t      leader
+ */
+struct __pyx_t_5graph_node_c {
+  int explored;
+  size_t leader;
+  size_t fin_time;
+  __pyx_t_7array_c_array_c *adj;
+};
+
+/* "graph.pxd":10
+ *     array_c*    adj             # array of adjacent vertices
+ * 
+ * ctypedef struct graph_c:             # <<<<<<<<<<<<<<
+ *     size_t      len
+ *     node_c**    node
+ */
+struct __pyx_t_5graph_graph_c {
+  size_t len;
+  __pyx_t_5graph_node_c **node;
+};
+
+/* "graph.pxd":19
+ *     graph_c* dict2graph(dict graph)
+ *     void free_graph(graph_c *g)
+ *     void print_graph(graph_c *g, size_t length=*)             # <<<<<<<<<<<<<<
+ *     void print_graph_ext(graph_c *g, size_t length=*)
+ *     void mem_size(graph_c *g)
+ */
+struct __pyx_opt_args_5graph_print_graph {
+  int __pyx_n;
+  size_t length;
+};
+
+/* "graph.pxd":20
+ *     void free_graph(graph_c *g)
+ *     void print_graph(graph_c *g, size_t length=*)
+ *     void print_graph_ext(graph_c *g, size_t length=*)             # <<<<<<<<<<<<<<
+ *     void mem_size(graph_c *g)
+ *     dict rand_dict_graph(size_t n, size_t m, bint selfloops=*, bint directed=*)
+ */
+struct __pyx_opt_args_5graph_print_graph_ext {
+  int __pyx_n;
+  size_t length;
+};
+
+/* "graph.pxd":22
+ *     void print_graph_ext(graph_c *g, size_t length=*)
+ *     void mem_size(graph_c *g)
+ *     dict rand_dict_graph(size_t n, size_t m, bint selfloops=*, bint directed=*)             # <<<<<<<<<<<<<<
+ */
+struct __pyx_opt_args_5graph_rand_dict_graph {
+  int __pyx_n;
+  int selfloops;
+  int directed;
+};
 struct __pyx_t_5stack_stack_c;
 typedef struct __pyx_t_5stack_stack_c __pyx_t_5stack_stack_c;
 
@@ -943,6 +1022,31 @@ struct __pyx_t_5stack_stack_c {
   size_t capacity;
   size_t top;
   size_t *items;
+};
+struct __pyx_opt_args_3dfs_dfs_rec;
+struct __pyx_opt_args_3dfs_dfs_stack;
+
+/* "dfs.pxd":8
+ * 
+ * cdef:
+ *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)             # <<<<<<<<<<<<<<
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)
+ */
+struct __pyx_opt_args_3dfs_dfs_rec {
+  int __pyx_n;
+  __pyx_t_5stack_stack_c *output;
+  size_t *ft;
+};
+
+/* "dfs.pxd":9
+ * cdef:
+ *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)             # <<<<<<<<<<<<<<
+ */
+struct __pyx_opt_args_3dfs_dfs_stack {
+  int __pyx_n;
+  __pyx_t_5stack_stack_c *output;
+  size_t *ft;
 };
 
 /* --- Runtime support code (head) --- */
@@ -1019,100 +1123,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
-/* PyObjectCall.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
-#else
-#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
-#endif
-
-/* PyCFunctionFastCall.proto */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
-#else
-#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
-#endif
-
-/* PyFunctionFastCall.proto */
-#if CYTHON_FAST_PYCALL
-#define __Pyx_PyFunction_FastCall(func, args, nargs)\
-    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
-#if 1 || PY_VERSION_HEX < 0x030600B1
-static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
-#else
-#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
-#endif
-#define __Pyx_BUILD_ASSERT_EXPR(cond)\
-    (sizeof(char [1 - 2*!(cond)]) - 1)
-#ifndef Py_MEMBER_SIZE
-#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
-#endif
-#if CYTHON_FAST_PYCALL
-  static size_t __pyx_pyframe_localsplus_offset = 0;
-  #include "frameobject.h"
-#if PY_VERSION_HEX >= 0x030b00a6
-  #ifndef Py_BUILD_CORE
-    #define Py_BUILD_CORE 1
-  #endif
-  #include "internal/pycore_frame.h"
-#endif
-  #define __Pxy_PyFrame_Initialize_Offsets()\
-    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
-     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
-  #define __Pyx_PyFrame_GetLocalsplus(frame)\
-    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
-#endif // CYTHON_FAST_PYCALL
-#endif
-
-/* PyObjectCallMethO.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
-#endif
-
-/* PyObjectCallOneArg.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
-
-/* PyThreadStateGet.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
-#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
-#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
-#else
-#define __Pyx_PyThreadState_declare
-#define __Pyx_PyThreadState_assign
-#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
-#endif
-
-/* PyErrFetchRestore.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
-#else
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#endif
-#else
-#define __Pyx_PyErr_Clear() PyErr_Clear()
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
-#endif
-
-/* WriteUnraisableException.proto */
-static void __Pyx_WriteUnraisable(const char *name, int clineno,
-                                  int lineno, const char *filename,
-                                  int full_traceback, int nogil);
-
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 #define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
@@ -1160,6 +1170,49 @@ static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_ve
 static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
 #endif
 
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+#if CYTHON_FAST_PYCALL
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+#if PY_VERSION_HEX >= 0x030b00a6
+  #ifndef Py_BUILD_CORE
+    #define Py_BUILD_CORE 1
+  #endif
+  #include "internal/pycore_frame.h"
+#endif
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif // CYTHON_FAST_PYCALL
+#endif
+
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
+#else
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
+#endif
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
 /* PyObjectCallNoArg.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
@@ -1167,42 +1220,57 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 #define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
 #endif
 
-/* IncludeStringH.proto */
-#include <string.h>
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
 
-/* BytesEquals.proto */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* GetItemInt.proto */
-#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
-    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
-               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
-#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
-                                                     int is_list, int wraparound, int boundscheck);
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
+
+/* PyThreadStateGet.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
+#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
+#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
+#else
+#define __Pyx_PyThreadState_declare
+#define __Pyx_PyThreadState_assign
+#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
+#endif
+
+/* PyErrFetchRestore.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
+#else
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#endif
+#else
+#define __Pyx_PyErr_Clear() PyErr_Clear()
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
+#endif
 
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
@@ -1235,9 +1303,6 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 #define __Pyx_HAS_GCC_DIAGNOSTIC
 #endif
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
-
 /* CIntFromPy.proto */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
 
@@ -1266,1906 +1331,544 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
-/* FunctionExport.proto */
-static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+/* FunctionImport.proto */
+static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig);
 
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'libc.string' */
+/* Module declarations from 'array_c' */
 
-/* Module declarations from 'libc.stdlib' */
+/* Module declarations from 'graph' */
+static __pyx_t_5graph_graph_c *(*__pyx_f_5graph_dict2graph)(PyObject *); /*proto*/
 
 /* Module declarations from 'stack' */
-static __pyx_t_5stack_stack_c *__pyx_f_5stack_create_stack(size_t); /*proto*/
-static int __pyx_f_5stack_is_empty_s(__pyx_t_5stack_stack_c *); /*proto*/
-static int __pyx_f_5stack_is_full_s(__pyx_t_5stack_stack_c *); /*proto*/
-static size_t __pyx_f_5stack_size_s(__pyx_t_5stack_stack_c *); /*proto*/
-static void __pyx_f_5stack_push(__pyx_t_5stack_stack_c *, size_t); /*proto*/
-static size_t __pyx_f_5stack_pop(__pyx_t_5stack_stack_c *); /*proto*/
-static void __pyx_f_5stack_print_stack(__pyx_t_5stack_stack_c *); /*proto*/
-static void __pyx_f_5stack_free_stack(__pyx_t_5stack_stack_c *); /*proto*/
-#define __Pyx_MODULE_NAME "stack"
-extern int __pyx_module_is_main_stack;
-int __pyx_module_is_main_stack = 0;
 
-/* Implementation of 'stack' */
-static PyObject *__pyx_builtin_print;
-static PyObject *__pyx_builtin_exit;
+/* Module declarations from 'dfs' */
+static void (*__pyx_f_3dfs_dfs_stack)(__pyx_t_5graph_graph_c *, size_t, struct __pyx_opt_args_3dfs_dfs_stack *__pyx_optional_args); /*proto*/
+
+/* Module declarations from 'topsort' */
+static void __pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *); /*proto*/
+#define __Pyx_MODULE_NAME "topsort"
+extern int __pyx_module_is_main_topsort;
+int __pyx_module_is_main_topsort = 0;
+
+/* Implementation of 'topsort' */
 static PyObject *__pyx_builtin_range;
-static const char __pyx_k_a[] = "a";
+static PyObject *__pyx_builtin_print;
+static const char __pyx_k_g[] = "g";
 static const char __pyx_k_i[] = "i";
-static const char __pyx_k_j[] = "j";
-static const char __pyx_k_s[] = "s";
-static const char __pyx_k__3[] = "[]";
-static const char __pyx_k__5[] = "[";
-static const char __pyx_k__7[] = "";
-static const char __pyx_k__8[] = ", ";
-static const char __pyx_k__9[] = "]\n";
-static const char __pyx_k_np[] = "np";
-static const char __pyx_k_end[] = "end";
-static const char __pyx_k_out[] = "out";
-static const char __pyx_k_exit[] = "exit";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
+static const char __pyx_k_node[] = "node:";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_1_2_3[] = "[1, 2, 3]\n";
-static const char __pyx_k_numpy[] = "numpy";
+static const char __pyx_k_graph[] = "graph";
 static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_s_out[] = "s_out";
-static const char __pyx_k_stack[] = "stack";
 static const char __pyx_k_utils[] = "utils";
 static const char __pyx_k_import[] = "__import__";
-static const char __pyx_k_random[] = "random";
-static const char __pyx_k_randint[] = "randint";
-static const char __pyx_k_getvalue[] = "getvalue";
-static const char __pyx_k_stack_pyx[] = "stack.pyx";
-static const char __pyx_k_test_full[] = "test_full";
-static const char __pyx_k_test_push[] = "test_push";
-static const char __pyx_k_test_size[] = "test_size";
-static const char __pyx_k_set_stdout[] = "set_stdout";
-static const char __pyx_k_test_empty[] = "test_empty";
-static const char __pyx_k_test_print[] = "test_print";
-static const char __pyx_k_test_random[] = "test_random";
-static const char __pyx_k_restore_stdout[] = "restore_stdout";
+static const char __pyx_k_topsort[] = "topsort";
+static const char __pyx_k_fin_time[] = "fin time:";
+static const char __pyx_k_topsort_pyx[] = "topsort.pyx";
+static const char __pyx_k_test_topsort[] = "test_topsort";
+static const char __pyx_k_test_topsort_1[] = "test_topsort_1";
 static const char __pyx_k_print_func_name[] = "print_func_name";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_stack_pop_error_stack_empty[] = "stack pop error: stack empty";
-static const char __pyx_k_stack_push_error_stack_full[] = "stack push error: stack full";
-static PyObject *__pyx_kp_u_1_2_3;
-static PyObject *__pyx_kp_u__3;
-static PyObject *__pyx_kp_u__5;
-static PyObject *__pyx_kp_u__7;
-static PyObject *__pyx_kp_u__8;
-static PyObject *__pyx_kp_u__9;
-static PyObject *__pyx_n_s_a;
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_n_s_end;
-static PyObject *__pyx_n_s_exit;
-static PyObject *__pyx_n_s_getvalue;
+static PyObject *__pyx_kp_u_fin_time;
+static PyObject *__pyx_n_s_g;
+static PyObject *__pyx_n_s_graph;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_import;
-static PyObject *__pyx_n_s_j;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_np;
-static PyObject *__pyx_n_s_numpy;
-static PyObject *__pyx_n_s_out;
+static PyObject *__pyx_kp_u_node;
 static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_print_func_name;
-static PyObject *__pyx_n_s_randint;
-static PyObject *__pyx_n_s_random;
 static PyObject *__pyx_n_s_range;
-static PyObject *__pyx_n_s_restore_stdout;
-static PyObject *__pyx_n_s_s;
-static PyObject *__pyx_n_s_s_out;
-static PyObject *__pyx_n_s_set_stdout;
-static PyObject *__pyx_n_s_stack;
-static PyObject *__pyx_kp_u_stack_pop_error_stack_empty;
-static PyObject *__pyx_kp_u_stack_push_error_stack_full;
-static PyObject *__pyx_kp_s_stack_pyx;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_test_empty;
-static PyObject *__pyx_n_s_test_full;
-static PyObject *__pyx_n_s_test_print;
-static PyObject *__pyx_n_s_test_push;
-static PyObject *__pyx_n_s_test_random;
-static PyObject *__pyx_n_s_test_size;
+static PyObject *__pyx_n_s_test_topsort;
+static PyObject *__pyx_n_s_test_topsort_1;
+static PyObject *__pyx_n_s_topsort;
+static PyObject *__pyx_kp_s_topsort_pyx;
 static PyObject *__pyx_n_s_utils;
-static PyObject *__pyx_pf_5stack_test_push(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_5stack_2test_print(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_5stack_4test_empty(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_5stack_6test_full(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_5stack_8test_size(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_5stack_10test_random(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_int_0;
-static PyObject *__pyx_int_1000;
+static PyObject *__pyx_int_1;
+static PyObject *__pyx_int_2;
 static PyObject *__pyx_tuple_;
-static PyObject *__pyx_tuple__2;
-static PyObject *__pyx_tuple__4;
-static PyObject *__pyx_tuple__6;
-static PyObject *__pyx_tuple__10;
-static PyObject *__pyx_tuple__11;
-static PyObject *__pyx_tuple__13;
-static PyObject *__pyx_tuple__15;
-static PyObject *__pyx_tuple__17;
-static PyObject *__pyx_tuple__19;
-static PyObject *__pyx_tuple__21;
-static PyObject *__pyx_codeobj__12;
-static PyObject *__pyx_codeobj__14;
-static PyObject *__pyx_codeobj__16;
-static PyObject *__pyx_codeobj__18;
-static PyObject *__pyx_codeobj__20;
-static PyObject *__pyx_codeobj__22;
+static PyObject *__pyx_tuple__3;
+static PyObject *__pyx_codeobj__2;
+static PyObject *__pyx_codeobj__4;
 /* Late includes */
 
-/* "stack.pyx":23
- *     size_t*     items
+/* "topsort.pyx":11
  * 
- * cdef stack_c* create_stack(size_t capacity):             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
- *     s.capacity = capacity
+ * 
+ * cdef void topsort(graph_c* g):             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         size_t i
  */
 
-static __pyx_t_5stack_stack_c *__pyx_f_5stack_create_stack(size_t __pyx_v_capacity) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  __pyx_t_5stack_stack_c *__pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("create_stack", 0);
-
-  /* "stack.pyx":24
- * 
- * cdef stack_c* create_stack(size_t capacity):
- *     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))             # <<<<<<<<<<<<<<
- *     s.capacity = capacity
- *     s.top = -1
- */
-  __pyx_v_s = ((__pyx_t_5stack_stack_c *)malloc((sizeof(__pyx_t_5stack_stack_c))));
-
-  /* "stack.pyx":25
- * cdef stack_c* create_stack(size_t capacity):
- *     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
- *     s.capacity = capacity             # <<<<<<<<<<<<<<
- *     s.top = -1
- *     s.items = <size_t*>malloc(sizeof(size_t) * capacity)
- */
-  __pyx_v_s->capacity = __pyx_v_capacity;
-
-  /* "stack.pyx":26
- *     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
- *     s.capacity = capacity
- *     s.top = -1             # <<<<<<<<<<<<<<
- *     s.items = <size_t*>malloc(sizeof(size_t) * capacity)
- *     return s
- */
-  __pyx_v_s->top = -1L;
-
-  /* "stack.pyx":27
- *     s.capacity = capacity
- *     s.top = -1
- *     s.items = <size_t*>malloc(sizeof(size_t) * capacity)             # <<<<<<<<<<<<<<
- *     return s
- * 
- */
-  __pyx_v_s->items = ((size_t *)malloc(((sizeof(size_t)) * __pyx_v_capacity)));
-
-  /* "stack.pyx":28
- *     s.top = -1
- *     s.items = <size_t*>malloc(sizeof(size_t) * capacity)
- *     return s             # <<<<<<<<<<<<<<
- * 
- * cdef bint is_empty_s(stack_c* s):
- */
-  __pyx_r = __pyx_v_s;
-  goto __pyx_L0;
-
-  /* "stack.pyx":23
- *     size_t*     items
- * 
- * cdef stack_c* create_stack(size_t capacity):             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
- *     s.capacity = capacity
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":30
- *     return s
- * 
- * cdef bint is_empty_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top == -1
- * 
- */
-
-static int __pyx_f_5stack_is_empty_s(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("is_empty_s", 0);
-
-  /* "stack.pyx":31
- * 
- * cdef bint is_empty_s(stack_c* s):
- *     return s.top == -1             # <<<<<<<<<<<<<<
- * 
- * cdef bint is_full_s(stack_c* s):
- */
-  __pyx_r = (__pyx_v_s->top == -1L);
-  goto __pyx_L0;
-
-  /* "stack.pyx":30
- *     return s
- * 
- * cdef bint is_empty_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top == -1
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":33
- *     return s.top == -1
- * 
- * cdef bint is_full_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top == (s.capacity - 1)
- * 
- */
-
-static int __pyx_f_5stack_is_full_s(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("is_full_s", 0);
-
-  /* "stack.pyx":34
- * 
- * cdef bint is_full_s(stack_c* s):
- *     return s.top == (s.capacity - 1)             # <<<<<<<<<<<<<<
- * 
- * cdef size_t size_s(stack_c* s):
- */
-  __pyx_r = (__pyx_v_s->top == (__pyx_v_s->capacity - 1));
-  goto __pyx_L0;
-
-  /* "stack.pyx":33
- *     return s.top == -1
- * 
- * cdef bint is_full_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top == (s.capacity - 1)
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":36
- *     return s.top == (s.capacity - 1)
- * 
- * cdef size_t size_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top + 1
- * 
- */
-
-static size_t __pyx_f_5stack_size_s(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  size_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("size_s", 0);
-
-  /* "stack.pyx":37
- * 
- * cdef size_t size_s(stack_c* s):
- *     return s.top + 1             # <<<<<<<<<<<<<<
- * 
- * cdef void push(stack_c* s, size_t x):
- */
-  __pyx_r = (__pyx_v_s->top + 1);
-  goto __pyx_L0;
-
-  /* "stack.pyx":36
- *     return s.top == (s.capacity - 1)
- * 
- * cdef size_t size_s(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.top + 1
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":39
- *     return s.top + 1
- * 
- * cdef void push(stack_c* s, size_t x):             # <<<<<<<<<<<<<<
- *     if is_full_s(s):
- *         print("stack push error: stack full")
- */
-
-static void __pyx_f_5stack_push(__pyx_t_5stack_stack_c *__pyx_v_s, size_t __pyx_v_x) {
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("push", 0);
-
-  /* "stack.pyx":40
- * 
- * cdef void push(stack_c* s, size_t x):
- *     if is_full_s(s):             # <<<<<<<<<<<<<<
- *         print("stack push error: stack full")
- *         exit(EXIT_FAILURE)
- */
-  __pyx_t_1 = (__pyx_f_5stack_is_full_s(__pyx_v_s) != 0);
-  if (__pyx_t_1) {
-
-    /* "stack.pyx":41
- * cdef void push(stack_c* s, size_t x):
- *     if is_full_s(s):
- *         print("stack push error: stack full")             # <<<<<<<<<<<<<<
- *         exit(EXIT_FAILURE)
- *     else:
- */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "stack.pyx":42
- *     if is_full_s(s):
- *         print("stack push error: stack full")
- *         exit(EXIT_FAILURE)             # <<<<<<<<<<<<<<
- *     else:
- *         s.top += 1
- */
-    __pyx_t_2 = __Pyx_PyInt_From_int(EXIT_FAILURE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_exit, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 42, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "stack.pyx":40
- * 
- * cdef void push(stack_c* s, size_t x):
- *     if is_full_s(s):             # <<<<<<<<<<<<<<
- *         print("stack push error: stack full")
- *         exit(EXIT_FAILURE)
- */
-    goto __pyx_L3;
-  }
-
-  /* "stack.pyx":44
- *         exit(EXIT_FAILURE)
- *     else:
- *         s.top += 1             # <<<<<<<<<<<<<<
- *         s.items[s.top] = x
- * 
- */
-  /*else*/ {
-    __pyx_v_s->top = (__pyx_v_s->top + 1);
-
-    /* "stack.pyx":45
- *     else:
- *         s.top += 1
- *         s.items[s.top] = x             # <<<<<<<<<<<<<<
- * 
- * cdef size_t pop(stack_c* s):
- */
-    (__pyx_v_s->items[__pyx_v_s->top]) = __pyx_v_x;
-  }
-  __pyx_L3:;
-
-  /* "stack.pyx":39
- *     return s.top + 1
- * 
- * cdef void push(stack_c* s, size_t x):             # <<<<<<<<<<<<<<
- *     if is_full_s(s):
- *         print("stack push error: stack full")
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("stack.push", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "stack.pyx":47
- *         s.items[s.top] = x
- * 
- * cdef size_t pop(stack_c* s):             # <<<<<<<<<<<<<<
- *     cdef size_t temp
- *     if is_empty_s(s):
- */
-
-static size_t __pyx_f_5stack_pop(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  size_t __pyx_v_temp;
-  size_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("pop", 0);
-
-  /* "stack.pyx":49
- * cdef size_t pop(stack_c* s):
- *     cdef size_t temp
- *     if is_empty_s(s):             # <<<<<<<<<<<<<<
- *         print("stack pop error: stack empty")
- *         exit(EXIT_FAILURE)
- */
-  __pyx_t_1 = (__pyx_f_5stack_is_empty_s(__pyx_v_s) != 0);
-  if (__pyx_t_1) {
-
-    /* "stack.pyx":50
- *     cdef size_t temp
- *     if is_empty_s(s):
- *         print("stack pop error: stack empty")             # <<<<<<<<<<<<<<
- *         exit(EXIT_FAILURE)
- *     else:
- */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "stack.pyx":51
- *     if is_empty_s(s):
- *         print("stack pop error: stack empty")
- *         exit(EXIT_FAILURE)             # <<<<<<<<<<<<<<
- *     else:
- *         temp = s.items[s.top]
- */
-    __pyx_t_2 = __Pyx_PyInt_From_int(EXIT_FAILURE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_exit, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "stack.pyx":49
- * cdef size_t pop(stack_c* s):
- *     cdef size_t temp
- *     if is_empty_s(s):             # <<<<<<<<<<<<<<
- *         print("stack pop error: stack empty")
- *         exit(EXIT_FAILURE)
- */
-    goto __pyx_L3;
-  }
-
-  /* "stack.pyx":53
- *         exit(EXIT_FAILURE)
- *     else:
- *         temp = s.items[s.top]             # <<<<<<<<<<<<<<
- *         s.top -= 1
- *         return temp
- */
-  /*else*/ {
-    __pyx_v_temp = (__pyx_v_s->items[__pyx_v_s->top]);
-
-    /* "stack.pyx":54
- *     else:
- *         temp = s.items[s.top]
- *         s.top -= 1             # <<<<<<<<<<<<<<
- *         return temp
- * 
- */
-    __pyx_v_s->top = (__pyx_v_s->top - 1);
-
-    /* "stack.pyx":55
- *         temp = s.items[s.top]
- *         s.top -= 1
- *         return temp             # <<<<<<<<<<<<<<
- * 
- * cdef size_t peek(stack_c* s):
- */
-    __pyx_r = __pyx_v_temp;
-    goto __pyx_L0;
-  }
-  __pyx_L3:;
-
-  /* "stack.pyx":47
- *         s.items[s.top] = x
- * 
- * cdef size_t pop(stack_c* s):             # <<<<<<<<<<<<<<
- *     cdef size_t temp
- *     if is_empty_s(s):
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("stack.pop", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":57
- *         return temp
- * 
- * cdef size_t peek(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.items[s.top]
- * 
- */
-
-static size_t __pyx_f_5stack_peek(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  size_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("peek", 0);
-
-  /* "stack.pyx":58
- * 
- * cdef size_t peek(stack_c* s):
- *     return s.items[s.top]             # <<<<<<<<<<<<<<
- * 
- * cdef void print_stack(stack_c* s):
- */
-  __pyx_r = (__pyx_v_s->items[__pyx_v_s->top]);
-  goto __pyx_L0;
-
-  /* "stack.pyx":57
- *         return temp
- * 
- * cdef size_t peek(stack_c* s):             # <<<<<<<<<<<<<<
- *     return s.items[s.top]
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":60
- *     return s.items[s.top]
- * 
- * cdef void print_stack(stack_c* s):             # <<<<<<<<<<<<<<
- *     cdef size_t n = size_s(s)
- * 
- */
-
-static void __pyx_f_5stack_print_stack(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  size_t __pyx_v_n;
+static void __pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *__pyx_v_g) {
   size_t __pyx_v_i;
+  size_t __pyx_v_ft;
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
+  size_t __pyx_t_1;
+  size_t __pyx_t_2;
+  size_t __pyx_t_3;
+  int __pyx_t_4;
+  struct __pyx_opt_args_3dfs_dfs_stack __pyx_t_5;
+  __Pyx_RefNannySetupContext("topsort", 0);
+
+  /* "topsort.pyx":14
+ *     cdef:
+ *         size_t i
+ *         size_t ft = 0             # <<<<<<<<<<<<<<
+ *     for i in range(g.len):
+ *         if not g.node[i].explored:
+ */
+  __pyx_v_ft = 0;
+
+  /* "topsort.pyx":15
+ *         size_t i
+ *         size_t ft = 0
+ *     for i in range(g.len):             # <<<<<<<<<<<<<<
+ *         if not g.node[i].explored:
+ *             dfs_stack(g, i, NULL, &ft)
+ */
+  __pyx_t_1 = __pyx_v_g->len;
+  __pyx_t_2 = __pyx_t_1;
+  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
+    __pyx_v_i = __pyx_t_3;
+
+    /* "topsort.pyx":16
+ *         size_t ft = 0
+ *     for i in range(g.len):
+ *         if not g.node[i].explored:             # <<<<<<<<<<<<<<
+ *             dfs_stack(g, i, NULL, &ft)
+ * 
+ */
+    __pyx_t_4 = ((!((__pyx_v_g->node[__pyx_v_i])->explored != 0)) != 0);
+    if (__pyx_t_4) {
+
+      /* "topsort.pyx":17
+ *     for i in range(g.len):
+ *         if not g.node[i].explored:
+ *             dfs_stack(g, i, NULL, &ft)             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+      __pyx_t_5.__pyx_n = 2;
+      __pyx_t_5.output = NULL;
+      __pyx_t_5.ft = (&__pyx_v_ft);
+      __pyx_f_3dfs_dfs_stack(__pyx_v_g, __pyx_v_i, &__pyx_t_5); 
+
+      /* "topsort.pyx":16
+ *         size_t ft = 0
+ *     for i in range(g.len):
+ *         if not g.node[i].explored:             # <<<<<<<<<<<<<<
+ *             dfs_stack(g, i, NULL, &ft)
+ * 
+ */
+    }
+  }
+
+  /* "topsort.pyx":11
+ * 
+ * 
+ * cdef void topsort(graph_c* g):             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         size_t i
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "topsort.pyx":24
+ * """ ################################################################ """
+ * 
+ * def test_topsort():             # <<<<<<<<<<<<<<
+ *     print_func_name()
+ *     graph = {0: [0, 1],
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7topsort_1test_topsort(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_7topsort_1test_topsort = {"test_topsort", (PyCFunction)__pyx_pw_7topsort_1test_topsort, METH_NOARGS, 0};
+static PyObject *__pyx_pw_7topsort_1test_topsort(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("test_topsort (wrapper)", 0);
+  __pyx_r = __pyx_pf_7topsort_test_topsort(__pyx_self);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_v_graph = NULL;
+  __pyx_t_5graph_graph_c *__pyx_v_g;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("test_topsort", 0);
+
+  /* "topsort.pyx":25
+ * 
+ * def test_topsort():
+ *     print_func_name()             # <<<<<<<<<<<<<<
+ *     graph = {0: [0, 1],
+ *              1: [2],
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "topsort.pyx":26
+ * def test_topsort():
+ *     print_func_name()
+ *     graph = {0: [0, 1],             # <<<<<<<<<<<<<<
+ *              1: [2],
+ *              2: []}
+ */
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_0);
+  __Pyx_INCREF(__pyx_int_1);
+  __Pyx_GIVEREF(__pyx_int_1);
+  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "topsort.pyx":27
+ *     print_func_name()
+ *     graph = {0: [0, 1],
+ *              1: [2],             # <<<<<<<<<<<<<<
+ *              2: []}
+ *     cdef:
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_2);
+  __Pyx_GIVEREF(__pyx_int_2);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_2);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "topsort.pyx":28
+ *     graph = {0: [0, 1],
+ *              1: [2],
+ *              2: []}             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         size_t i
+ */
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_graph = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "topsort.pyx":31
+ *     cdef:
+ *         size_t i
+ *         graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
+ * 
+ *     topsort(g)
+ */
+  __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
+
+  /* "topsort.pyx":33
+ *         graph_c* g = dict2graph(graph)
+ * 
+ *     topsort(g)             # <<<<<<<<<<<<<<
+ * 
+ *     assert g.node[0].fin_time == 2
+ */
+  __pyx_f_7topsort_topsort(__pyx_v_g);
+
+  /* "topsort.pyx":35
+ *     topsort(g)
+ * 
+ *     assert g.node[0].fin_time == 2             # <<<<<<<<<<<<<<
+ *     assert g.node[1].fin_time == 1
+ *     assert g.node[2].fin_time == 0
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_g->node[0])->fin_time == 2) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 35, __pyx_L1_error)
+    }
+  }
+  #endif
+
+  /* "topsort.pyx":36
+ * 
+ *     assert g.node[0].fin_time == 2
+ *     assert g.node[1].fin_time == 1             # <<<<<<<<<<<<<<
+ *     assert g.node[2].fin_time == 0
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_g->node[1])->fin_time == 1) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 36, __pyx_L1_error)
+    }
+  }
+  #endif
+
+  /* "topsort.pyx":37
+ *     assert g.node[0].fin_time == 2
+ *     assert g.node[1].fin_time == 1
+ *     assert g.node[2].fin_time == 0             # <<<<<<<<<<<<<<
+ * 
+ * def test_topsort_1():
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_g->node[2])->fin_time == 0) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 37, __pyx_L1_error)
+    }
+  }
+  #endif
+
+  /* "topsort.pyx":24
+ * """ ################################################################ """
+ * 
+ * def test_topsort():             # <<<<<<<<<<<<<<
+ *     print_func_name()
+ *     graph = {0: [0, 1],
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("topsort.test_topsort", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_graph);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "topsort.pyx":39
+ *     assert g.node[2].fin_time == 0
+ * 
+ * def test_topsort_1():             # <<<<<<<<<<<<<<
+ *     print_func_name()
+ *     graph = {0: [1],
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7topsort_3test_topsort_1(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_7topsort_3test_topsort_1 = {"test_topsort_1", (PyCFunction)__pyx_pw_7topsort_3test_topsort_1, METH_NOARGS, 0};
+static PyObject *__pyx_pw_7topsort_3test_topsort_1(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("test_topsort_1 (wrapper)", 0);
+  __pyx_r = __pyx_pf_7topsort_2test_topsort_1(__pyx_self);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_v_graph = NULL;
+  size_t __pyx_v_i;
+  __pyx_t_5graph_graph_c *__pyx_v_g;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   size_t __pyx_t_4;
   size_t __pyx_t_5;
   size_t __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("print_stack", 0);
+  __Pyx_RefNannySetupContext("test_topsort_1", 0);
 
-  /* "stack.pyx":61
+  /* "topsort.pyx":40
  * 
- * cdef void print_stack(stack_c* s):
- *     cdef size_t n = size_s(s)             # <<<<<<<<<<<<<<
- * 
- *     if is_empty_s(s):
+ * def test_topsort_1():
+ *     print_func_name()             # <<<<<<<<<<<<<<
+ *     graph = {0: [1],
+ *              1: [2],
  */
-  __pyx_v_n = __pyx_f_5stack_size_s(__pyx_v_s);
-
-  /* "stack.pyx":63
- *     cdef size_t n = size_s(s)
- * 
- *     if is_empty_s(s):             # <<<<<<<<<<<<<<
- *         print("[]")
- *         return
- */
-  __pyx_t_1 = (__pyx_f_5stack_is_empty_s(__pyx_v_s) != 0);
-  if (__pyx_t_1) {
-
-    /* "stack.pyx":64
- * 
- *     if is_empty_s(s):
- *         print("[]")             # <<<<<<<<<<<<<<
- *         return
- * 
- */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "stack.pyx":65
- *     if is_empty_s(s):
- *         print("[]")
- *         return             # <<<<<<<<<<<<<<
- * 
- *     print("[", end="")
- */
-    goto __pyx_L0;
-
-    /* "stack.pyx":63
- *     cdef size_t n = size_s(s)
- * 
- *     if is_empty_s(s):             # <<<<<<<<<<<<<<
- *         print("[]")
- *         return
- */
-  }
-
-  /* "stack.pyx":67
- *         return
- * 
- *     print("[", end="")             # <<<<<<<<<<<<<<
- *     for i in range(n - 1):
- *         print(s.items[i], end=", ")
- */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_end, __pyx_kp_u__7) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "stack.pyx":68
- * 
- *     print("[", end="")
- *     for i in range(n - 1):             # <<<<<<<<<<<<<<
- *         print(s.items[i], end=", ")
- *     print(s.items[n - 1], end="]\n")
+  /* "topsort.pyx":41
+ * def test_topsort_1():
+ *     print_func_name()
+ *     graph = {0: [1],             # <<<<<<<<<<<<<<
+ *              1: [2],
+ *              2: [0]}
  */
-  __pyx_t_4 = (__pyx_v_n - 1);
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_1);
+  __Pyx_GIVEREF(__pyx_int_1);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "topsort.pyx":42
+ *     print_func_name()
+ *     graph = {0: [1],
+ *              1: [2],             # <<<<<<<<<<<<<<
+ *              2: [0]}
+ *     cdef:
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_2);
+  __Pyx_GIVEREF(__pyx_int_2);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_2);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "topsort.pyx":43
+ *     graph = {0: [1],
+ *              1: [2],
+ *              2: [0]}             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         size_t i
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_0);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_graph = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "topsort.pyx":46
+ *     cdef:
+ *         size_t i
+ *         graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
+ * 
+ *     topsort(g)
+ */
+  __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
+
+  /* "topsort.pyx":48
+ *         graph_c* g = dict2graph(graph)
+ * 
+ *     topsort(g)             # <<<<<<<<<<<<<<
+ * 
+ *     for i in range(g.len):
+ */
+  __pyx_f_7topsort_topsort(__pyx_v_g);
+
+  /* "topsort.pyx":50
+ *     topsort(g)
+ * 
+ *     for i in range(g.len):             # <<<<<<<<<<<<<<
+ *         print("node:", i, "fin time:", g.node[i].fin_time)
+ * 
+ */
+  __pyx_t_4 = __pyx_v_g->len;
   __pyx_t_5 = __pyx_t_4;
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "stack.pyx":69
- *     print("[", end="")
- *     for i in range(n - 1):
- *         print(s.items[i], end=", ")             # <<<<<<<<<<<<<<
- *     print(s.items[n - 1], end="]\n")
+    /* "topsort.pyx":51
  * 
- */
-    __pyx_t_3 = __Pyx_PyInt_FromSize_t((__pyx_v_s->items[__pyx_v_i])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_3);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
-    __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_end, __pyx_kp_u__8) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  }
-
-  /* "stack.pyx":70
- *     for i in range(n - 1):
- *         print(s.items[i], end=", ")
- *     print(s.items[n - 1], end="]\n")             # <<<<<<<<<<<<<<
- * 
- * cdef void free_stack(stack_c* s):
- */
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t((__pyx_v_s->items[(__pyx_v_n - 1)])); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 70, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_7);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7);
-  __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 70, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_end, __pyx_kp_u__9) < 0) __PYX_ERR(0, 70, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_3, __pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":60
- *     return s.items[s.top]
- * 
- * cdef void print_stack(stack_c* s):             # <<<<<<<<<<<<<<
- *     cdef size_t n = size_s(s)
- * 
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_WriteUnraisable("stack.print_stack", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "stack.pyx":72
- *     print(s.items[n - 1], end="]\n")
- * 
- * cdef void free_stack(stack_c* s):             # <<<<<<<<<<<<<<
- *     free(s.items)
- *     free(s)
- */
-
-static void __pyx_f_5stack_free_stack(__pyx_t_5stack_stack_c *__pyx_v_s) {
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("free_stack", 0);
-
-  /* "stack.pyx":73
- * 
- * cdef void free_stack(stack_c* s):
- *     free(s.items)             # <<<<<<<<<<<<<<
- *     free(s)
- * 
- */
-  free(__pyx_v_s->items);
-
-  /* "stack.pyx":74
- * cdef void free_stack(stack_c* s):
- *     free(s.items)
- *     free(s)             # <<<<<<<<<<<<<<
- * 
- * """ ################################################################ """
- */
-  free(__pyx_v_s);
-
-  /* "stack.pyx":72
- *     print(s.items[n - 1], end="]\n")
- * 
- * cdef void free_stack(stack_c* s):             # <<<<<<<<<<<<<<
- *     free(s.items)
- *     free(s)
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "stack.pyx":80
- * """ ################################################################ """
- * 
- * def test_push():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_1test_push(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_1test_push = {"test_push", (PyCFunction)__pyx_pw_5stack_1test_push, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_1test_push(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_push (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_test_push(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_test_push(CYTHON_UNUSED PyObject *__pyx_self) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_push", 0);
-
-  /* "stack.pyx":81
- * 
- * def test_push():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":82
- * def test_push():
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     push(s, 2)
- */
-  __pyx_v_s = __pyx_f_5stack_create_stack(5);
-
-  /* "stack.pyx":83
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     push(s, 2)
- *     push(s, 3)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":84
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- *     push(s, 2)             # <<<<<<<<<<<<<<
- *     push(s, 3)
- *     assert pop(s) == 3
- */
-  __pyx_f_5stack_push(__pyx_v_s, 2);
-
-  /* "stack.pyx":85
- *     push(s, 1)
- *     push(s, 2)
- *     push(s, 3)             # <<<<<<<<<<<<<<
- *     assert pop(s) == 3
- *     assert pop(s) == 2
- */
-  __pyx_f_5stack_push(__pyx_v_s, 3);
-
-  /* "stack.pyx":86
- *     push(s, 2)
- *     push(s, 3)
- *     assert pop(s) == 3             # <<<<<<<<<<<<<<
- *     assert pop(s) == 2
- *     assert pop(s) == 1
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_pop(__pyx_v_s) == 3) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 86, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":87
- *     push(s, 3)
- *     assert pop(s) == 3
- *     assert pop(s) == 2             # <<<<<<<<<<<<<<
- *     assert pop(s) == 1
- *     free_stack(s)
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_pop(__pyx_v_s) == 2) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 87, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":88
- *     assert pop(s) == 3
- *     assert pop(s) == 2
- *     assert pop(s) == 1             # <<<<<<<<<<<<<<
- *     free_stack(s)
- * 
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_pop(__pyx_v_s) == 1) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 88, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":89
- *     assert pop(s) == 2
- *     assert pop(s) == 1
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- * def test_print():
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":80
- * """ ################################################################ """
- * 
- * def test_push():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_push", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":91
- *     free_stack(s)
- * 
- * def test_print():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_3test_print(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_3test_print = {"test_print", (PyCFunction)__pyx_pw_5stack_3test_print, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_3test_print(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_print (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_2test_print(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_2test_print(CYTHON_UNUSED PyObject *__pyx_self) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_v_s_out = NULL;
-  PyObject *__pyx_v_out = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_print", 0);
-
-  /* "stack.pyx":92
- * 
- * def test_print():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":93
- * def test_print():
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     push(s, 2)
- */
-  __pyx_v_s = __pyx_f_5stack_create_stack(5);
-
-  /* "stack.pyx":94
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     push(s, 2)
- *     push(s, 3)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":95
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- *     push(s, 2)             # <<<<<<<<<<<<<<
- *     push(s, 3)
- * 
- */
-  __pyx_f_5stack_push(__pyx_v_s, 2);
-
-  /* "stack.pyx":96
- *     push(s, 1)
- *     push(s, 2)
- *     push(s, 3)             # <<<<<<<<<<<<<<
- * 
- *     s_out = set_stdout()
- */
-  __pyx_f_5stack_push(__pyx_v_s, 3);
-
-  /* "stack.pyx":98
- *     push(s, 3)
- * 
- *     s_out = set_stdout()             # <<<<<<<<<<<<<<
- *     print_stack(s)
- *     out = s_out.getvalue()
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_set_stdout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_s_out = __pyx_t_1;
-  __pyx_t_1 = 0;
-
-  /* "stack.pyx":99
- * 
- *     s_out = set_stdout()
- *     print_stack(s)             # <<<<<<<<<<<<<<
- *     out = s_out.getvalue()
- *     restore_stdout()
- */
-  __pyx_f_5stack_print_stack(__pyx_v_s);
-
-  /* "stack.pyx":100
- *     s_out = set_stdout()
- *     print_stack(s)
- *     out = s_out.getvalue()             # <<<<<<<<<<<<<<
- *     restore_stdout()
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_s_out, __pyx_n_s_getvalue); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_out = __pyx_t_1;
-  __pyx_t_1 = 0;
-
-  /* "stack.pyx":101
- *     print_stack(s)
- *     out = s_out.getvalue()
- *     restore_stdout()             # <<<<<<<<<<<<<<
- * 
- *     assert out == '[1, 2, 3]\n'
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_restore_stdout); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":103
- *     restore_stdout()
- * 
- *     assert out == '[1, 2, 3]\n'             # <<<<<<<<<<<<<<
+ *     for i in range(g.len):
+ *         print("node:", i, "fin time:", g.node[i].fin_time)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_4 = (__Pyx_PyUnicode_Equals(__pyx_v_out, __pyx_kp_u_1_2_3, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 103, __pyx_L1_error)
-    if (unlikely(!__pyx_t_4)) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 103, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":106
- * 
- * 
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":91
- *     free_stack(s)
- * 
- * def test_print():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_print", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_s_out);
-  __Pyx_XDECREF(__pyx_v_out);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":109
- * 
- * 
- * def test_empty():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_5test_empty(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_5test_empty = {"test_empty", (PyCFunction)__pyx_pw_5stack_5test_empty, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_5test_empty(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_empty (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_4test_empty(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_4test_empty(CYTHON_UNUSED PyObject *__pyx_self) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_empty", 0);
-
-  /* "stack.pyx":110
- * 
- * def test_empty():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = create_stack(5)
- *     assert is_empty_s(s)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":111
- * def test_empty():
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)             # <<<<<<<<<<<<<<
- *     assert is_empty_s(s)
- *     push(s, 1)
- */
-  __pyx_v_s = __pyx_f_5stack_create_stack(5);
-
-  /* "stack.pyx":112
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- *     assert is_empty_s(s)             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     pop(s)
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!(__pyx_f_5stack_is_empty_s(__pyx_v_s) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 112, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":113
- *     cdef stack_c* s = create_stack(5)
- *     assert is_empty_s(s)
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     pop(s)
- *     assert is_empty_s(s)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":114
- *     assert is_empty_s(s)
- *     push(s, 1)
- *     pop(s)             # <<<<<<<<<<<<<<
- *     assert is_empty_s(s)
- *     free_stack(s)
- */
-  (void)(__pyx_f_5stack_pop(__pyx_v_s));
-
-  /* "stack.pyx":115
- *     push(s, 1)
- *     pop(s)
- *     assert is_empty_s(s)             # <<<<<<<<<<<<<<
- *     free_stack(s)
- * 
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!(__pyx_f_5stack_is_empty_s(__pyx_v_s) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 115, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":116
- *     pop(s)
- *     assert is_empty_s(s)
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- * def test_full():
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":109
- * 
- * 
- * def test_empty():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_empty", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":118
- *     free_stack(s)
- * 
- * def test_full():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_7test_full(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_7test_full = {"test_full", (PyCFunction)__pyx_pw_5stack_7test_full, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_7test_full(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_full (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_6test_full(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_6test_full(CYTHON_UNUSED PyObject *__pyx_self) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_full", 0);
-
-  /* "stack.pyx":119
- * 
- * def test_full():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = create_stack(1)
- *     assert is_empty_s(s)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":120
- * def test_full():
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)             # <<<<<<<<<<<<<<
- *     assert is_empty_s(s)
- *     push(s, 0)
- */
-  __pyx_v_s = __pyx_f_5stack_create_stack(1);
-
-  /* "stack.pyx":121
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)
- *     assert is_empty_s(s)             # <<<<<<<<<<<<<<
- *     push(s, 0)
- *     assert is_full_s(s)
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!(__pyx_f_5stack_is_empty_s(__pyx_v_s) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 121, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":122
- *     cdef stack_c* s = create_stack(1)
- *     assert is_empty_s(s)
- *     push(s, 0)             # <<<<<<<<<<<<<<
- *     assert is_full_s(s)
- *     free_stack(s)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 0);
-
-  /* "stack.pyx":123
- *     assert is_empty_s(s)
- *     push(s, 0)
- *     assert is_full_s(s)             # <<<<<<<<<<<<<<
- *     free_stack(s)
- * 
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!(__pyx_f_5stack_is_full_s(__pyx_v_s) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 123, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":124
- *     push(s, 0)
- *     assert is_full_s(s)
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- * def test_size():
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":118
- *     free_stack(s)
- * 
- * def test_full():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_full", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":126
- *     free_stack(s)
- * 
- * def test_size():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_9test_size(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_9test_size = {"test_size", (PyCFunction)__pyx_pw_5stack_9test_size, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_9test_size(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_size (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_8test_size(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_8test_size(CYTHON_UNUSED PyObject *__pyx_self) {
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_size", 0);
-
-  /* "stack.pyx":127
- * 
- * def test_size():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 127, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":128
- * def test_size():
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     assert size_s(s) == 1
- */
-  __pyx_v_s = __pyx_f_5stack_create_stack(5);
-
-  /* "stack.pyx":129
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     assert size_s(s) == 1
- *     push(s, 1)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":130
- *     cdef stack_c* s = create_stack(5)
- *     push(s, 1)
- *     assert size_s(s) == 1             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     assert size_s(s) == 2
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_s) == 1) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 130, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":131
- *     push(s, 1)
- *     assert size_s(s) == 1
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     assert size_s(s) == 2
- *     push(s, 1)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":132
- *     assert size_s(s) == 1
- *     push(s, 1)
- *     assert size_s(s) == 2             # <<<<<<<<<<<<<<
- *     push(s, 1)
- *     assert size_s(s) == 3
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_s) == 2) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 132, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":133
- *     push(s, 1)
- *     assert size_s(s) == 2
- *     push(s, 1)             # <<<<<<<<<<<<<<
- *     assert size_s(s) == 3
- *     pop(s)
- */
-  __pyx_f_5stack_push(__pyx_v_s, 1);
-
-  /* "stack.pyx":134
- *     assert size_s(s) == 2
- *     push(s, 1)
- *     assert size_s(s) == 3             # <<<<<<<<<<<<<<
- *     pop(s)
- *     assert size_s(s) == 2
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_s) == 3) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 134, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":135
- *     push(s, 1)
- *     assert size_s(s) == 3
- *     pop(s)             # <<<<<<<<<<<<<<
- *     assert size_s(s) == 2
- *     pop(s)
- */
-  (void)(__pyx_f_5stack_pop(__pyx_v_s));
-
-  /* "stack.pyx":136
- *     assert size_s(s) == 3
- *     pop(s)
- *     assert size_s(s) == 2             # <<<<<<<<<<<<<<
- *     pop(s)
- *     assert size_s(s) == 1
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_s) == 2) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 136, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":137
- *     pop(s)
- *     assert size_s(s) == 2
- *     pop(s)             # <<<<<<<<<<<<<<
- *     assert size_s(s) == 1
- *     free_stack(s)
- */
-  (void)(__pyx_f_5stack_pop(__pyx_v_s));
-
-  /* "stack.pyx":138
- *     assert size_s(s) == 2
- *     pop(s)
- *     assert size_s(s) == 1             # <<<<<<<<<<<<<<
- *     free_stack(s)
- * 
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_s) == 1) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 138, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "stack.pyx":139
- *     pop(s)
- *     assert size_s(s) == 1
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- * def test_random():
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":126
- *     free_stack(s)
- * 
- * def test_size():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_size", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "stack.pyx":141
- *     free_stack(s)
- * 
- * def test_random():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     DEF size = 1000
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5stack_11test_random(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_5stack_11test_random = {"test_random", (PyCFunction)__pyx_pw_5stack_11test_random, METH_NOARGS, 0};
-static PyObject *__pyx_pw_5stack_11test_random(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_random (wrapper)", 0);
-  __pyx_r = __pyx_pf_5stack_10test_random(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5stack_10test_random(CYTHON_UNUSED PyObject *__pyx_self) {
-  size_t __pyx_v_i;
-  CYTHON_UNUSED size_t __pyx_v_j;
-  __pyx_t_5stack_stack_c *__pyx_v_s;
-  PyObject *__pyx_v_a = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  size_t __pyx_t_4;
-  size_t __pyx_t_5;
-  size_t __pyx_t_6;
-  int __pyx_t_7;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_random", 0);
-
-  /* "stack.pyx":142
- * 
- * def test_random():
- *     print_func_name()             # <<<<<<<<<<<<<<
- *     DEF size = 1000
- *     cdef size_t i, j
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "stack.pyx":145
- *     DEF size = 1000
- *     cdef size_t i, j
- *     cdef stack_c* s = <stack_c*>create_stack(size)             # <<<<<<<<<<<<<<
- * 
- *     for j in range(100):
- */
-  __pyx_v_s = ((__pyx_t_5stack_stack_c *)__pyx_f_5stack_create_stack(0x3E8));
-
-  /* "stack.pyx":147
- *     cdef stack_c* s = <stack_c*>create_stack(size)
- * 
- *     for j in range(100):             # <<<<<<<<<<<<<<
- *         a = np.random.randint(0, 1000, size)
- *         for i in range(size):
- */
-  for (__pyx_t_4 = 0; __pyx_t_4 < 0x64; __pyx_t_4+=1) {
-    __pyx_v_j = __pyx_t_4;
-
-    /* "stack.pyx":148
- * 
- *     for j in range(100):
- *         a = np.random.randint(0, 1000, size)             # <<<<<<<<<<<<<<
- *         for i in range(size):
- *             push(s, a[i])
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_i); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_FromSize_t((__pyx_v_g->node[__pyx_v_i])->fin_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_randint); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_a, __pyx_t_2);
+    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_INCREF(__pyx_kp_u_node);
+    __Pyx_GIVEREF(__pyx_kp_u_node);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_node);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
+    __Pyx_INCREF(__pyx_kp_u_fin_time);
+    __Pyx_GIVEREF(__pyx_kp_u_fin_time);
+    PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_kp_u_fin_time);
+    __Pyx_GIVEREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_t_2);
+    __pyx_t_1 = 0;
     __pyx_t_2 = 0;
-
-    /* "stack.pyx":149
- *     for j in range(100):
- *         a = np.random.randint(0, 1000, size)
- *         for i in range(size):             # <<<<<<<<<<<<<<
- *             push(s, a[i])
- *         for i in range(size):
- */
-    for (__pyx_t_5 = 0; __pyx_t_5 < 0x3E8; __pyx_t_5+=1) {
-      __pyx_v_i = __pyx_t_5;
-
-      /* "stack.pyx":150
- *         a = np.random.randint(0, 1000, size)
- *         for i in range(size):
- *             push(s, a[i])             # <<<<<<<<<<<<<<
- *         for i in range(size):
- *             assert pop(s) == a[size - 1 - i]
- */
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_a, __pyx_v_i, size_t, 0, __Pyx_PyInt_FromSize_t, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_6 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 150, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_f_5stack_push(__pyx_v_s, __pyx_t_6);
-    }
-
-    /* "stack.pyx":151
- *         for i in range(size):
- *             push(s, a[i])
- *         for i in range(size):             # <<<<<<<<<<<<<<
- *             assert pop(s) == a[size - 1 - i]
- * 
- */
-    for (__pyx_t_5 = 0; __pyx_t_5 < 0x3E8; __pyx_t_5+=1) {
-      __pyx_v_i = __pyx_t_5;
-
-      /* "stack.pyx":152
- *             push(s, a[i])
- *         for i in range(size):
- *             assert pop(s) == a[size - 1 - i]             # <<<<<<<<<<<<<<
- * 
- *     free_stack(s)
- */
-      #ifndef CYTHON_WITHOUT_ASSERTIONS
-      if (unlikely(!Py_OptimizeFlag)) {
-        __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_f_5stack_pop(__pyx_v_s)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_6 = (0x3E7 - __pyx_v_i);
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_a, __pyx_t_6, size_t, 0, __Pyx_PyInt_FromSize_t, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = PyObject_RichCompare(__pyx_t_2, __pyx_t_1, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 152, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_7)) {
-          PyErr_SetNone(PyExc_AssertionError);
-          __PYX_ERR(0, 152, __pyx_L1_error)
-        }
-      }
-      #endif
-    }
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
 
-  /* "stack.pyx":154
- *             assert pop(s) == a[size - 1 - i]
+  /* "topsort.pyx":39
+ *     assert g.node[2].fin_time == 0
  * 
- *     free_stack(s)             # <<<<<<<<<<<<<<
- * 
- */
-  __pyx_f_5stack_free_stack(__pyx_v_s);
-
-  /* "stack.pyx":141
- *     free_stack(s)
- * 
- * def test_random():             # <<<<<<<<<<<<<<
+ * def test_topsort_1():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     DEF size = 1000
+ *     graph = {0: [1],
  */
 
   /* function exit code */
@@ -3175,10 +1878,10 @@ static PyObject *__pyx_pf_5stack_10test_random(CYTHON_UNUSED PyObject *__pyx_sel
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("stack.test_random", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("topsort.test_topsort_1", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_a);
+  __Pyx_XDECREF(__pyx_v_graph);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -3191,17 +1894,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_stack(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_topsort(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_stack},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_topsort},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "stack",
+    "topsort",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -3230,52 +1933,29 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_u_1_2_3, __pyx_k_1_2_3, sizeof(__pyx_k_1_2_3), 0, 1, 0, 0},
-  {&__pyx_kp_u__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0, 0},
-  {&__pyx_kp_u__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 1, 0, 0},
-  {&__pyx_kp_u__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 1, 0, 0},
-  {&__pyx_kp_u__8, __pyx_k__8, sizeof(__pyx_k__8), 0, 1, 0, 0},
-  {&__pyx_kp_u__9, __pyx_k__9, sizeof(__pyx_k__9), 0, 1, 0, 0},
-  {&__pyx_n_s_a, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
-  {&__pyx_n_s_exit, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
-  {&__pyx_n_s_getvalue, __pyx_k_getvalue, sizeof(__pyx_k_getvalue), 0, 0, 1, 1},
+  {&__pyx_kp_u_fin_time, __pyx_k_fin_time, sizeof(__pyx_k_fin_time), 0, 1, 0, 0},
+  {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
+  {&__pyx_n_s_graph, __pyx_k_graph, sizeof(__pyx_k_graph), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
-  {&__pyx_n_s_j, __pyx_k_j, sizeof(__pyx_k_j), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
-  {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
-  {&__pyx_n_s_out, __pyx_k_out, sizeof(__pyx_k_out), 0, 0, 1, 1},
+  {&__pyx_kp_u_node, __pyx_k_node, sizeof(__pyx_k_node), 0, 1, 0, 0},
   {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_print_func_name, __pyx_k_print_func_name, sizeof(__pyx_k_print_func_name), 0, 0, 1, 1},
-  {&__pyx_n_s_randint, __pyx_k_randint, sizeof(__pyx_k_randint), 0, 0, 1, 1},
-  {&__pyx_n_s_random, __pyx_k_random, sizeof(__pyx_k_random), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
-  {&__pyx_n_s_restore_stdout, __pyx_k_restore_stdout, sizeof(__pyx_k_restore_stdout), 0, 0, 1, 1},
-  {&__pyx_n_s_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 0, 1, 1},
-  {&__pyx_n_s_s_out, __pyx_k_s_out, sizeof(__pyx_k_s_out), 0, 0, 1, 1},
-  {&__pyx_n_s_set_stdout, __pyx_k_set_stdout, sizeof(__pyx_k_set_stdout), 0, 0, 1, 1},
-  {&__pyx_n_s_stack, __pyx_k_stack, sizeof(__pyx_k_stack), 0, 0, 1, 1},
-  {&__pyx_kp_u_stack_pop_error_stack_empty, __pyx_k_stack_pop_error_stack_empty, sizeof(__pyx_k_stack_pop_error_stack_empty), 0, 1, 0, 0},
-  {&__pyx_kp_u_stack_push_error_stack_full, __pyx_k_stack_push_error_stack_full, sizeof(__pyx_k_stack_push_error_stack_full), 0, 1, 0, 0},
-  {&__pyx_kp_s_stack_pyx, __pyx_k_stack_pyx, sizeof(__pyx_k_stack_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_test_empty, __pyx_k_test_empty, sizeof(__pyx_k_test_empty), 0, 0, 1, 1},
-  {&__pyx_n_s_test_full, __pyx_k_test_full, sizeof(__pyx_k_test_full), 0, 0, 1, 1},
-  {&__pyx_n_s_test_print, __pyx_k_test_print, sizeof(__pyx_k_test_print), 0, 0, 1, 1},
-  {&__pyx_n_s_test_push, __pyx_k_test_push, sizeof(__pyx_k_test_push), 0, 0, 1, 1},
-  {&__pyx_n_s_test_random, __pyx_k_test_random, sizeof(__pyx_k_test_random), 0, 0, 1, 1},
-  {&__pyx_n_s_test_size, __pyx_k_test_size, sizeof(__pyx_k_test_size), 0, 0, 1, 1},
+  {&__pyx_n_s_test_topsort, __pyx_k_test_topsort, sizeof(__pyx_k_test_topsort), 0, 0, 1, 1},
+  {&__pyx_n_s_test_topsort_1, __pyx_k_test_topsort_1, sizeof(__pyx_k_test_topsort_1), 0, 0, 1, 1},
+  {&__pyx_n_s_topsort, __pyx_k_topsort, sizeof(__pyx_k_topsort), 0, 0, 1, 1},
+  {&__pyx_kp_s_topsort_pyx, __pyx_k_topsort_pyx, sizeof(__pyx_k_topsort_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_utils, __pyx_k_utils, sizeof(__pyx_k_utils), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 41, __pyx_L1_error)
-  __pyx_builtin_exit = __Pyx_GetBuiltinName(__pyx_n_s_exit); if (!__pyx_builtin_exit) __PYX_ERR(0, 42, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 51, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -3285,132 +1965,29 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "stack.pyx":41
- * cdef void push(stack_c* s, size_t x):
- *     if is_full_s(s):
- *         print("stack push error: stack full")             # <<<<<<<<<<<<<<
- *         exit(EXIT_FAILURE)
- *     else:
- */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_stack_push_error_stack_full); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 41, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
-
-  /* "stack.pyx":50
- *     cdef size_t temp
- *     if is_empty_s(s):
- *         print("stack pop error: stack empty")             # <<<<<<<<<<<<<<
- *         exit(EXIT_FAILURE)
- *     else:
- */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_stack_pop_error_stack_empty); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 50, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__2);
-  __Pyx_GIVEREF(__pyx_tuple__2);
-
-  /* "stack.pyx":64
- * 
- *     if is_empty_s(s):
- *         print("[]")             # <<<<<<<<<<<<<<
- *         return
- * 
- */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u__3); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 64, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
-
-  /* "stack.pyx":67
- *         return
- * 
- *     print("[", end="")             # <<<<<<<<<<<<<<
- *     for i in range(n - 1):
- *         print(s.items[i], end=", ")
- */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u__5); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
-
-  /* "stack.pyx":148
- * 
- *     for j in range(100):
- *         a = np.random.randint(0, 1000, size)             # <<<<<<<<<<<<<<
- *         for i in range(size):
- *             push(s, a[i])
- */
-  __pyx_tuple__10 = PyTuple_Pack(3, __pyx_int_0, __pyx_int_1000, __pyx_int_1000); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 148, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
-
-  /* "stack.pyx":80
+  /* "topsort.pyx":24
  * """ ################################################################ """
  * 
- * def test_push():             # <<<<<<<<<<<<<<
+ * def test_topsort():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
+ *     graph = {0: [0, 1],
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_n_s_s); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_push, 80, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple_);
+  __Pyx_GIVEREF(__pyx_tuple_);
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 24, __pyx_L1_error)
 
-  /* "stack.pyx":91
- *     free_stack(s)
+  /* "topsort.pyx":39
+ *     assert g.node[2].fin_time == 0
  * 
- * def test_print():             # <<<<<<<<<<<<<<
+ * def test_topsort_1():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
+ *     graph = {0: [1],
  */
-  __pyx_tuple__13 = PyTuple_Pack(3, __pyx_n_s_s, __pyx_n_s_s_out, __pyx_n_s_out); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 91, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_print, 91, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 91, __pyx_L1_error)
-
-  /* "stack.pyx":109
- * 
- * 
- * def test_empty():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_n_s_s); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(0, 109, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
-  __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_empty, 109, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) __PYX_ERR(0, 109, __pyx_L1_error)
-
-  /* "stack.pyx":118
- *     free_stack(s)
- * 
- * def test_full():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)
- */
-  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_n_s_s); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 118, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__17);
-  __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_full, 118, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 118, __pyx_L1_error)
-
-  /* "stack.pyx":126
- *     free_stack(s)
- * 
- * def test_size():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_n_s_s); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__19);
-  __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_size, 126, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 126, __pyx_L1_error)
-
-  /* "stack.pyx":141
- *     free_stack(s)
- * 
- * def test_random():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     DEF size = 1000
- */
-  __pyx_tuple__21 = PyTuple_Pack(4, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_s, __pyx_n_s_a); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 141, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stack_pyx, __pyx_n_s_test_random, 141, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort_1, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3421,7 +1998,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_1000 = PyInt_FromLong(1000); if (unlikely(!__pyx_int_1000)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -3453,25 +2031,10 @@ static int __Pyx_modinit_variable_export_code(void) {
 
 static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("create_stack", (void (*)(void))__pyx_f_5stack_create_stack, "__pyx_t_5stack_stack_c *(size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("is_empty_s", (void (*)(void))__pyx_f_5stack_is_empty_s, "int (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("is_full_s", (void (*)(void))__pyx_f_5stack_is_full_s, "int (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("size_s", (void (*)(void))__pyx_f_5stack_size_s, "size_t (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("push", (void (*)(void))__pyx_f_5stack_push, "void (__pyx_t_5stack_stack_c *, size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("pop", (void (*)(void))__pyx_f_5stack_pop, "size_t (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("peek", (void (*)(void))__pyx_f_5stack_peek, "size_t (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("print_stack", (void (*)(void))__pyx_f_5stack_print_stack, "void (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("free_stack", (void (*)(void))__pyx_f_5stack_free_stack, "void (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -3500,10 +2063,26 @@ static int __Pyx_modinit_variable_import_code(void) {
 
 static int __Pyx_modinit_function_import_code(void) {
   __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_import_code", 0);
   /*--- Function import code ---*/
+  __pyx_t_1 = PyImport_ImportModule("graph"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (__Pyx_ImportFunction(__pyx_t_1, "dict2graph", (void (**)(void))&__pyx_f_5graph_dict2graph, "__pyx_t_5graph_graph_c *(PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyImport_ImportModule("dfs"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (__Pyx_ImportFunction(__pyx_t_1, "dfs_stack", (void (**)(void))&__pyx_f_3dfs_dfs_stack, "void (__pyx_t_5graph_graph_c *, size_t, struct __pyx_opt_args_3dfs_dfs_stack *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 
@@ -3525,11 +2104,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initstack(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initstack(void)
+__Pyx_PyMODINIT_FUNC inittopsort(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC inittopsort(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_stack(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_stack(void)
+__Pyx_PyMODINIT_FUNC PyInit_topsort(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_topsort(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -3596,7 +2175,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_stack(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_topsort(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -3609,7 +2188,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_stack(PyObject *__pyx_pyinit_modul
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'stack' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'topsort' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -3624,7 +2203,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_stack(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_topsort(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -3661,7 +2240,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("stack", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("topsort", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -3679,14 +2258,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_stack) {
+  if (__pyx_module_is_main_topsort) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "stack")) {
-      if (unlikely(PyDict_SetItemString(modules, "stack", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "topsort")) {
+      if (unlikely(PyDict_SetItemString(modules, "topsort", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -3697,139 +2276,65 @@ if (!__Pyx_RefNanny) {
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
-  if (unlikely(__Pyx_modinit_function_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  (void)__Pyx_modinit_function_export_code();
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
-  (void)__Pyx_modinit_function_import_code();
+  if (unlikely(__Pyx_modinit_function_import_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "stack.pyx":13
+  /* "topsort.pyx":6
+ * from graph cimport graph_c, dict2graph
+ * from dfs cimport dfs_stack
+ * from utils import print_func_name             # <<<<<<<<<<<<<<
  * 
- * from libc.stdlib cimport malloc, free, EXIT_FAILURE
- * from utils import print_func_name, set_stdout, restore_stdout             # <<<<<<<<<<<<<<
- * import numpy as np
  * 
  */
-  __pyx_t_1 = PyList_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_print_func_name);
   __Pyx_GIVEREF(__pyx_n_s_print_func_name);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_print_func_name);
-  __Pyx_INCREF(__pyx_n_s_set_stdout);
-  __Pyx_GIVEREF(__pyx_n_s_set_stdout);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_s_set_stdout);
-  __Pyx_INCREF(__pyx_n_s_restore_stdout);
-  __Pyx_GIVEREF(__pyx_n_s_restore_stdout);
-  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_s_restore_stdout);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_utils, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_utils, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_func_name, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_set_stdout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_set_stdout, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_restore_stdout); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_restore_stdout, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_func_name, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stack.pyx":14
- * from libc.stdlib cimport malloc, free, EXIT_FAILURE
- * from utils import print_func_name, set_stdout, restore_stdout
- * import numpy as np             # <<<<<<<<<<<<<<
- * 
- * """ ###################### Stack in C ########################## """
- */
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_2) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":80
+  /* "topsort.pyx":24
  * """ ################################################################ """
  * 
- * def test_push():             # <<<<<<<<<<<<<<
+ * def test_topsort():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
+ *     graph = {0: [0, 1],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_1test_push, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_1test_topsort, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_push, __pyx_t_2) < 0) __PYX_ERR(0, 80, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort, __pyx_t_2) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stack.pyx":91
- *     free_stack(s)
+  /* "topsort.pyx":39
+ *     assert g.node[2].fin_time == 0
  * 
- * def test_print():             # <<<<<<<<<<<<<<
+ * def test_topsort_1():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
+ *     graph = {0: [1],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_3test_print, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_3test_topsort_1, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_print, __pyx_t_2) < 0) __PYX_ERR(0, 91, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort_1, __pyx_t_2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stack.pyx":109
- * 
- * 
- * def test_empty():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_5test_empty, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_empty, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":118
- *     free_stack(s)
- * 
- * def test_full():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(1)
- */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_7test_full, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_full, __pyx_t_2) < 0) __PYX_ERR(0, 118, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":126
- *     free_stack(s)
- * 
- * def test_size():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     cdef stack_c* s = create_stack(5)
- */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_9test_size, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_size, __pyx_t_2) < 0) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":141
- *     free_stack(s)
- * 
- * def test_random():             # <<<<<<<<<<<<<<
- *     print_func_name()
- *     DEF size = 1000
- */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stack_11test_random, NULL, __pyx_n_s_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_random, __pyx_t_2) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "stack.pyx":1
+  /* "topsort.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * 
- * # cython: profile=False
+ * 
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -3844,11 +2349,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init stack", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init topsort", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init stack");
+    PyErr_SetString(PyExc_ImportError, "init topsort");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -3907,48 +2412,66 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     return result;
 }
 
-/* PyObjectCall */
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
 #if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
-    PyObject *result;
-    ternaryfunc call = Py_TYPE(func)->tp_call;
-    if (unlikely(!call))
-        return PyObject_Call(func, arg, kw);
-    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
-        return NULL;
-    result = (*call)(func, arg, kw);
-    Py_LeaveRecursiveCall();
-    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
-        PyErr_SetString(
-            PyExc_SystemError,
-            "NULL result without error in PyObject_Call");
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
     }
-    return result;
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
 }
 #endif
 
-/* PyCFunctionFastCall */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
-    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
-    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
-    PyObject *self = PyCFunction_GET_SELF(func);
-    int flags = PyCFunction_GET_FLAGS(func);
-    assert(PyCFunction_Check(func));
-    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
-    assert(nargs >= 0);
-    assert(nargs == 0 || args != NULL);
-    /* _PyCFunction_FastCallDict() must not be called with an exception set,
-       because it may clear it (directly or indirectly) and so the
-       caller loses its exception */
-    assert(!PyErr_Occurred());
-    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
-        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
-    } else {
-        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
-    }
-}
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
 #endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
 
 /* PyFunctionFastCall */
 #if CYTHON_FAST_PYCALL
@@ -4069,6 +2592,26 @@ done:
 #endif
 #endif
 
+/* PyObjectCall */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = Py_TYPE(func)->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
 /* PyObjectCallMethO */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
@@ -4086,6 +2629,51 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
             "NULL result without error in PyObject_Call");
     }
     return result;
+}
+#endif
+
+/* PyObjectCallNoArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
+#else
+    if (likely(PyCFunction_Check(func)))
+#endif
+    {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
+}
+#endif
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
 }
 #endif
 
@@ -4128,391 +2716,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
     return result;
 }
 #endif
-
-/* PyErrFetchRestore */
-#if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
-}
-#endif
-
-/* WriteUnraisableException */
-static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
-                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
-                                  int full_traceback, CYTHON_UNUSED int nogil) {
-    PyObject *old_exc, *old_val, *old_tb;
-    PyObject *ctx;
-    __Pyx_PyThreadState_declare
-#ifdef WITH_THREAD
-    PyGILState_STATE state;
-    if (nogil)
-        state = PyGILState_Ensure();
-#ifdef _MSC_VER
-    else state = (PyGILState_STATE)-1;
-#endif
-#endif
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
-    if (full_traceback) {
-        Py_XINCREF(old_exc);
-        Py_XINCREF(old_val);
-        Py_XINCREF(old_tb);
-        __Pyx_ErrRestore(old_exc, old_val, old_tb);
-        PyErr_PrintEx(1);
-    }
-    #if PY_MAJOR_VERSION < 3
-    ctx = PyString_FromString(name);
-    #else
-    ctx = PyUnicode_FromString(name);
-    #endif
-    __Pyx_ErrRestore(old_exc, old_val, old_tb);
-    if (!ctx) {
-        PyErr_WriteUnraisable(Py_None);
-    } else {
-        PyErr_WriteUnraisable(ctx);
-        Py_DECREF(ctx);
-    }
-#ifdef WITH_THREAD
-    if (nogil)
-        PyGILState_Release(state);
-#endif
-}
-
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
-    }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* GetModuleGlobalName */
-#if CYTHON_USE_DICT_VERSIONS
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
-#else
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
-#endif
-{
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        return NULL;
-    }
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-    PyErr_Clear();
-#endif
-    return __Pyx_GetBuiltinName(name);
-}
-
-/* PyObjectCallNoArg */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, NULL, 0);
-    }
-#endif
-#ifdef __Pyx_CyFunction_USED
-    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
-#else
-    if (likely(PyCFunction_Check(func)))
-#endif
-    {
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
-            return __Pyx_PyObject_CallMethO(func, NULL);
-        }
-    }
-    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
-}
-#endif
-
-/* BytesEquals */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-    if (s1 == s2) {
-        return (equals == Py_EQ);
-    } else if (PyBytes_CheckExact(s1) & PyBytes_CheckExact(s2)) {
-        const char *ps1, *ps2;
-        Py_ssize_t length = PyBytes_GET_SIZE(s1);
-        if (length != PyBytes_GET_SIZE(s2))
-            return (equals == Py_NE);
-        ps1 = PyBytes_AS_STRING(s1);
-        ps2 = PyBytes_AS_STRING(s2);
-        if (ps1[0] != ps2[0]) {
-            return (equals == Py_NE);
-        } else if (length == 1) {
-            return (equals == Py_EQ);
-        } else {
-            int result;
-#if CYTHON_USE_UNICODE_INTERNALS && (PY_VERSION_HEX < 0x030B0000)
-            Py_hash_t hash1, hash2;
-            hash1 = ((PyBytesObject*)s1)->ob_shash;
-            hash2 = ((PyBytesObject*)s2)->ob_shash;
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                return (equals == Py_NE);
-            }
-#endif
-            result = memcmp(ps1, ps2, (size_t)length);
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & PyBytes_CheckExact(s2)) {
-        return (equals == Py_NE);
-    } else if ((s2 == Py_None) & PyBytes_CheckExact(s1)) {
-        return (equals == Py_NE);
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-#endif
-}
-
-/* UnicodeEquals */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-#if PY_MAJOR_VERSION < 3
-    PyObject* owned_ref = NULL;
-#endif
-    int s1_is_unicode, s2_is_unicode;
-    if (s1 == s2) {
-        goto return_eq;
-    }
-    s1_is_unicode = PyUnicode_CheckExact(s1);
-    s2_is_unicode = PyUnicode_CheckExact(s2);
-#if PY_MAJOR_VERSION < 3
-    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
-        owned_ref = PyUnicode_FromObject(s2);
-        if (unlikely(!owned_ref))
-            return -1;
-        s2 = owned_ref;
-        s2_is_unicode = 1;
-    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
-        owned_ref = PyUnicode_FromObject(s1);
-        if (unlikely(!owned_ref))
-            return -1;
-        s1 = owned_ref;
-        s1_is_unicode = 1;
-    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
-        return __Pyx_PyBytes_Equals(s1, s2, equals);
-    }
-#endif
-    if (s1_is_unicode & s2_is_unicode) {
-        Py_ssize_t length;
-        int kind;
-        void *data1, *data2;
-        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
-            return -1;
-        length = __Pyx_PyUnicode_GET_LENGTH(s1);
-        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
-            goto return_ne;
-        }
-#if CYTHON_USE_UNICODE_INTERNALS
-        {
-            Py_hash_t hash1, hash2;
-        #if CYTHON_PEP393_ENABLED
-            hash1 = ((PyASCIIObject*)s1)->hash;
-            hash2 = ((PyASCIIObject*)s2)->hash;
-        #else
-            hash1 = ((PyUnicodeObject*)s1)->hash;
-            hash2 = ((PyUnicodeObject*)s2)->hash;
-        #endif
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                goto return_ne;
-            }
-        }
-#endif
-        kind = __Pyx_PyUnicode_KIND(s1);
-        if (kind != __Pyx_PyUnicode_KIND(s2)) {
-            goto return_ne;
-        }
-        data1 = __Pyx_PyUnicode_DATA(s1);
-        data2 = __Pyx_PyUnicode_DATA(s2);
-        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
-            goto return_ne;
-        } else if (length == 1) {
-            goto return_eq;
-        } else {
-            int result = memcmp(data1, data2, (size_t)(length * kind));
-            #if PY_MAJOR_VERSION < 3
-            Py_XDECREF(owned_ref);
-            #endif
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & s2_is_unicode) {
-        goto return_ne;
-    } else if ((s2 == Py_None) & s1_is_unicode) {
-        goto return_ne;
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        #if PY_MAJOR_VERSION < 3
-        Py_XDECREF(owned_ref);
-        #endif
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-return_eq:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_EQ);
-return_ne:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_NE);
-#endif
-}
-
-/* GetItemInt */
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
-    PyObject *r;
-    if (!j) return NULL;
-    r = PyObject_GetItem(o, j);
-    Py_DECREF(j);
-    return r;
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyList_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyList_GET_SIZE(o)))) {
-        PyObject *r = PyList_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyTuple_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyTuple_GET_SIZE(o)))) {
-        PyObject *r = PyTuple_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
-                                                     CYTHON_NCP_UNUSED int wraparound,
-                                                     CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
-    if (is_list || PyList_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
-        if ((!boundscheck) || (likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o))))) {
-            PyObject *r = PyList_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    }
-    else if (PyTuple_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
-        if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyTuple_GET_SIZE(o)))) {
-            PyObject *r = PyTuple_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    } else {
-        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
-        if (likely(m && m->sq_item)) {
-            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
-                Py_ssize_t l = m->sq_length(o);
-                if (likely(l >= 0)) {
-                    i += l;
-                } else {
-                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
-                        return NULL;
-                    PyErr_Clear();
-                }
-            }
-            return m->sq_item(o, i);
-        }
-    }
-#else
-    if (is_list || PySequence_Check(o)) {
-        return PySequence_GetItem(o, i);
-    }
-#endif
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-}
 
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
@@ -4592,6 +2795,30 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
     }
     return value;
 }
+
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+}
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
 
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
@@ -4843,44 +3070,6 @@ bad:
         }\
         return (target_type) value;\
     }
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const int neg_one = (int) -1, const_zero = (int) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
-}
 
 /* CIntFromPy */
 static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
@@ -5646,42 +3835,59 @@ static int __Pyx_check_binary_version(void) {
     return 0;
 }
 
-/* FunctionExport */
-static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+/* FunctionImport */
+#ifndef __PYX_HAVE_RT_ImportFunction
+#define __PYX_HAVE_RT_ImportFunction
+static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig) {
     PyObject *d = 0;
     PyObject *cobj = 0;
     union {
         void (*fp)(void);
         void *p;
     } tmp;
-    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
-    if (!d) {
-        PyErr_Clear();
-        d = PyDict_New();
-        if (!d)
-            goto bad;
-        Py_INCREF(d);
-        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
-            goto bad;
+    d = PyObject_GetAttrString(module, (char *)"__pyx_capi__");
+    if (!d)
+        goto bad;
+    cobj = PyDict_GetItemString(d, funcname);
+    if (!cobj) {
+        PyErr_Format(PyExc_ImportError,
+            "%.200s does not export expected C function %.200s",
+                PyModule_GetName(module), funcname);
+        goto bad;
     }
-    tmp.fp = f;
 #if PY_VERSION_HEX >= 0x02070000
-    cobj = PyCapsule_New(tmp.p, sig, 0);
+    if (!PyCapsule_IsValid(cobj, sig)) {
+        PyErr_Format(PyExc_TypeError,
+            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
+             PyModule_GetName(module), funcname, sig, PyCapsule_GetName(cobj));
+        goto bad;
+    }
+    tmp.p = PyCapsule_GetPointer(cobj, sig);
 #else
-    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+    {const char *desc, *s1, *s2;
+    desc = (const char *)PyCObject_GetDesc(cobj);
+    if (!desc)
+        goto bad;
+    s1 = desc; s2 = sig;
+    while (*s1 != '\0' && *s1 == *s2) { s1++; s2++; }
+    if (*s1 != *s2) {
+        PyErr_Format(PyExc_TypeError,
+            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
+             PyModule_GetName(module), funcname, sig, desc);
+        goto bad;
+    }
+    tmp.p = PyCObject_AsVoidPtr(cobj);}
 #endif
-    if (!cobj)
+    *f = tmp.fp;
+    if (!(*f))
         goto bad;
-    if (PyDict_SetItemString(d, name, cobj) < 0)
-        goto bad;
-    Py_DECREF(cobj);
     Py_DECREF(d);
     return 0;
 bad:
-    Py_XDECREF(cobj);
     Py_XDECREF(d);
     return -1;
 }
+#endif
 
 /* InitStrings */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

@@ -1,6 +1,6 @@
 # cython: language_level=3
 ctypedef struct stack_c:
-    size_t      maxsize
+    size_t      capacity
     size_t      top
     size_t*     items
 

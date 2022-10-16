@@ -930,31 +930,17 @@ static const char *__pyx_f[] = {
 };
 
 /*--- Type declarations ---*/
-struct __pyx_t_5stack_stack_c;
-typedef struct __pyx_t_5stack_stack_c __pyx_t_5stack_stack_c;
-
-/* "stack.pxd":2
- * # cython: language_level=3
- * ctypedef struct stack_c:             # <<<<<<<<<<<<<<
- *     size_t      maxsize
- *     size_t      top
- */
-struct __pyx_t_5stack_stack_c {
-  size_t maxsize;
-  size_t top;
-  size_t *items;
-};
 struct __pyx_t_7array_c_array_c;
 typedef struct __pyx_t_7array_c_array_c __pyx_t_7array_c_array_c;
 
 /* "array_c.pxd":2
  * # cython: language_level=3
  * ctypedef struct array_c:             # <<<<<<<<<<<<<<
- *     size_t maxsize
+ *     size_t capacity
  *     size_t size
  */
 struct __pyx_t_7array_c_array_c {
-  size_t maxsize;
+  size_t capacity;
   size_t size;
   size_t *items;
 };
@@ -1026,15 +1012,69 @@ struct __pyx_opt_args_5graph_rand_dict_graph {
   int selfloops;
   int directed;
 };
+struct __pyx_t_5stack_stack_c;
+typedef struct __pyx_t_5stack_stack_c __pyx_t_5stack_stack_c;
+
+/* "stack.pxd":2
+ * # cython: language_level=3
+ * ctypedef struct stack_c:             # <<<<<<<<<<<<<<
+ *     size_t      capacity
+ *     size_t      top
+ */
+struct __pyx_t_5stack_stack_c {
+  size_t capacity;
+  size_t top;
+  size_t *items;
+};
+struct __pyx_ctuple_size_t__and_size_t;
+typedef struct __pyx_ctuple_size_t__and_size_t __pyx_ctuple_size_t__and_size_t;
+struct __pyx_ctuple_size_t__and_size_t__and_size_t;
+typedef struct __pyx_ctuple_size_t__and_size_t__and_size_t __pyx_ctuple_size_t__and_size_t__and_size_t;
+struct __pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc;
+typedef struct __pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc __pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc;
+
+/* "readg.pxd":6
+ * 
+ * cdef:
+ *     (size_t, size_t) str2int(char* buf)             # <<<<<<<<<<<<<<
+ *     (size_t, size_t, size_t) read_edge(char * buf)
+ *     array_c * read_array(str filename)
+ */
+struct __pyx_ctuple_size_t__and_size_t {
+  size_t f0;
+  size_t f1;
+};
+
+/* "readg.pxd":7
+ * cdef:
+ *     (size_t, size_t) str2int(char* buf)
+ *     (size_t, size_t, size_t) read_edge(char * buf)             # <<<<<<<<<<<<<<
+ *     array_c * read_array(str filename)
+ *     graph_c * read_graph(str filename)
+ */
+struct __pyx_ctuple_size_t__and_size_t__and_size_t {
+  size_t f0;
+  size_t f1;
+  size_t f2;
+};
+
+/* "readg.pxd":10
+ *     array_c * read_array(str filename)
+ *     graph_c * read_graph(str filename)
+ *     (graph_c *, graph_c *) read_graphs(str filename)             # <<<<<<<<<<<<<<
+ */
+struct __pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc {
+  __pyx_t_5graph_graph_c *f0;
+  __pyx_t_5graph_graph_c *f1;
+};
 struct __pyx_opt_args_3dfs_dfs_rec;
 struct __pyx_opt_args_3dfs_dfs_stack;
 
-/* "dfs.pyx":12
- * """ ################### Depth-First Search using Recursion ############# """
+/* "dfs.pxd":8
  * 
- * cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
- *     """
- *     Recursive DFS starting from s vertex
+ * cdef:
+ *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)             # <<<<<<<<<<<<<<
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)
  */
 struct __pyx_opt_args_3dfs_dfs_rec {
   int __pyx_n;
@@ -1042,12 +1082,10 @@ struct __pyx_opt_args_3dfs_dfs_rec {
   size_t *ft;
 };
 
-/* "dfs.pyx":44
- * """ ######### Depth-First Search using Stack data-structure ########### """
- * 
- * cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
- *     """
- *     DFS using stack. The difference from classical realization is that during exploration
+/* "dfs.pxd":9
+ * cdef:
+ *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)             # <<<<<<<<<<<<<<
  */
 struct __pyx_opt_args_3dfs_dfs_stack {
   int __pyx_n;
@@ -1239,6 +1277,13 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 /* ModInt[long].proto */
 static CYTHON_INLINE long __Pyx_mod_long(long, long);
 
+/* PyObjectFormat.proto */
+#if CYTHON_USE_UNICODE_WRITER
+static PyObject* __Pyx_PyObject_Format(PyObject* s, PyObject* f);
+#else
+#define __Pyx_PyObject_Format(s, f) PyObject_Format(s, f)
+#endif
+
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -1340,12 +1385,22 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
+/* FunctionExport.proto */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+
 /* FunctionImport.proto */
 static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig);
 
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
+
+/* Module declarations from 'array_c' */
+
+/* Module declarations from 'graph' */
+static __pyx_t_5graph_graph_c *(*__pyx_f_5graph_dict2graph)(PyObject *); /*proto*/
+static void (*__pyx_f_5graph_free_graph)(__pyx_t_5graph_graph_c *); /*proto*/
+static PyObject *(*__pyx_f_5graph_rand_dict_graph)(size_t, size_t, struct __pyx_opt_args_5graph_rand_dict_graph *__pyx_optional_args); /*proto*/
 
 /* Module declarations from 'stack' */
 static __pyx_t_5stack_stack_c *(*__pyx_f_5stack_create_stack)(size_t); /*proto*/
@@ -1357,12 +1412,9 @@ static size_t (*__pyx_f_5stack_peek)(__pyx_t_5stack_stack_c *); /*proto*/
 static void (*__pyx_f_5stack_print_stack)(__pyx_t_5stack_stack_c *); /*proto*/
 static void (*__pyx_f_5stack_free_stack)(__pyx_t_5stack_stack_c *); /*proto*/
 
-/* Module declarations from 'array_c' */
-
-/* Module declarations from 'graph' */
-static __pyx_t_5graph_graph_c *(*__pyx_f_5graph_dict2graph)(PyObject *); /*proto*/
-static void (*__pyx_f_5graph_free_graph)(__pyx_t_5graph_graph_c *); /*proto*/
-static PyObject *(*__pyx_f_5graph_rand_dict_graph)(size_t, size_t, struct __pyx_opt_args_5graph_rand_dict_graph *__pyx_optional_args); /*proto*/
+/* Module declarations from 'readg' */
+static __pyx_t_5graph_graph_c *(*__pyx_f_5readg_read_graph)(PyObject *); /*proto*/
+static __pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc (*__pyx_f_5readg_read_graphs)(PyObject *); /*proto*/
 
 /* Module declarations from 'libc.string' */
 
@@ -1377,33 +1429,47 @@ int __pyx_module_is_main_dfs = 0;
 
 /* Implementation of 'dfs' */
 static PyObject *__pyx_builtin_range;
+static PyObject *__pyx_builtin_print;
+static const char __pyx_k_[] = " ... ";
 static const char __pyx_k_g[] = "g";
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_j[] = "j";
 static const char __pyx_k_k[] = "k";
 static const char __pyx_k_s[] = "s";
+static const char __pyx_k_2f[] = ".2f";
 static const char __pyx_k_nd[] = "nd";
 static const char __pyx_k_dfs[] = "dfs";
+static const char __pyx_k_end[] = "end";
 static const char __pyx_k_out[] = "out";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_time[] = "time";
+static const char __pyx_k_g_rev[] = "g_rev";
 static const char __pyx_k_graph[] = "graph";
+static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
+static const char __pyx_k_start[] = "start";
 static const char __pyx_k_utils[] = "utils";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_dfs_pyx[] = "dfs.pyx";
+static const char __pyx_k_scc_txt[] = "scc.txt";
 static const char __pyx_k_test_dfs_1[] = "test_dfs_1";
 static const char __pyx_k_test_dfs_2[] = "test_dfs_2";
 static const char __pyx_k_test_dfs_3[] = "test_dfs_3";
 static const char __pyx_k_test_dfs_4[] = "test_dfs_4";
+static const char __pyx_k_test_dfs_big[] = "test_dfs_big";
 static const char __pyx_k_print_func_name[] = "print_func_name";
 static const char __pyx_k_test_dfs_random[] = "test_dfs_random";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static PyObject *__pyx_kp_u_;
+static PyObject *__pyx_kp_u_2f;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_dfs;
 static PyObject *__pyx_kp_s_dfs_pyx;
+static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_n_s_g;
+static PyObject *__pyx_n_s_g_rev;
 static PyObject *__pyx_n_s_graph;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_import;
@@ -1413,39 +1479,48 @@ static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_nd;
 static PyObject *__pyx_n_s_out;
+static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_print_func_name;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_s;
+static PyObject *__pyx_n_u_s;
+static PyObject *__pyx_kp_u_scc_txt;
+static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_test_dfs_1;
 static PyObject *__pyx_n_s_test_dfs_2;
 static PyObject *__pyx_n_s_test_dfs_3;
 static PyObject *__pyx_n_s_test_dfs_4;
+static PyObject *__pyx_n_s_test_dfs_big;
 static PyObject *__pyx_n_s_test_dfs_random;
+static PyObject *__pyx_n_s_time;
 static PyObject *__pyx_n_s_utils;
 static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_3dfs_10test_dfs_big(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_3;
 static PyObject *__pyx_int_4;
-static PyObject *__pyx_tuple_;
-static PyObject *__pyx_tuple__3;
-static PyObject *__pyx_tuple__5;
-static PyObject *__pyx_tuple__7;
-static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_codeobj__2;
-static PyObject *__pyx_codeobj__4;
-static PyObject *__pyx_codeobj__6;
-static PyObject *__pyx_codeobj__8;
-static PyObject *__pyx_codeobj__10;
+static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_tuple__4;
+static PyObject *__pyx_tuple__6;
+static PyObject *__pyx_tuple__8;
+static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__12;
+static PyObject *__pyx_codeobj__3;
+static PyObject *__pyx_codeobj__5;
+static PyObject *__pyx_codeobj__7;
+static PyObject *__pyx_codeobj__9;
+static PyObject *__pyx_codeobj__11;
+static PyObject *__pyx_codeobj__13;
 /* Late includes */
 
-/* "dfs.pyx":12
+/* "dfs.pyx":14
  * """ ################### Depth-First Search using Recursion ############# """
  * 
  * cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
@@ -1476,7 +1551,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
     }
   }
 
-  /* "dfs.pyx":22
+  /* "dfs.pyx":24
  *         node_c* nd
  * 
  *     nd = g.node[s]             # <<<<<<<<<<<<<<
@@ -1485,7 +1560,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   __pyx_v_nd = (__pyx_v_g->node[__pyx_v_s]);
 
-  /* "dfs.pyx":23
+  /* "dfs.pyx":25
  * 
  *     nd = g.node[s]
  *     nd.explored = True             # <<<<<<<<<<<<<<
@@ -1494,7 +1569,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   __pyx_v_nd->explored = 1;
 
-  /* "dfs.pyx":26
+  /* "dfs.pyx":28
  * 
  *     #action
  *     if output:             # <<<<<<<<<<<<<<
@@ -1504,7 +1579,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
   __pyx_t_1 = (__pyx_v_output != 0);
   if (__pyx_t_1) {
 
-    /* "dfs.pyx":27
+    /* "dfs.pyx":29
  *     #action
  *     if output:
  *         push(output, s)             # <<<<<<<<<<<<<<
@@ -1513,7 +1588,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
     __pyx_f_5stack_push(__pyx_v_output, __pyx_v_s);
 
-    /* "dfs.pyx":26
+    /* "dfs.pyx":28
  * 
  *     #action
  *     if output:             # <<<<<<<<<<<<<<
@@ -1522,7 +1597,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   }
 
-  /* "dfs.pyx":29
+  /* "dfs.pyx":31
  *         push(output, s)
  * 
  *     if nd.adj:             # <<<<<<<<<<<<<<
@@ -1532,7 +1607,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
   __pyx_t_1 = (__pyx_v_nd->adj != 0);
   if (__pyx_t_1) {
 
-    /* "dfs.pyx":30
+    /* "dfs.pyx":32
  * 
  *     if nd.adj:
  *         for i in range(nd.adj.size):             # <<<<<<<<<<<<<<
@@ -1544,7 +1619,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "dfs.pyx":31
+      /* "dfs.pyx":33
  *     if nd.adj:
  *         for i in range(nd.adj.size):
  *             j = nd.adj.items[i]             # <<<<<<<<<<<<<<
@@ -1553,7 +1628,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
       __pyx_v_j = (__pyx_v_nd->adj->items[__pyx_v_i]);
 
-      /* "dfs.pyx":32
+      /* "dfs.pyx":34
  *         for i in range(nd.adj.size):
  *             j = nd.adj.items[i]
  *             if not g.node[j].explored:             # <<<<<<<<<<<<<<
@@ -1563,7 +1638,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
       __pyx_t_1 = ((!((__pyx_v_g->node[__pyx_v_j])->explored != 0)) != 0);
       if (__pyx_t_1) {
 
-        /* "dfs.pyx":33
+        /* "dfs.pyx":35
  *             j = nd.adj.items[i]
  *             if not g.node[j].explored:
  *                 dfs_rec(g, j, output, ft)             # <<<<<<<<<<<<<<
@@ -1575,7 +1650,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
         __pyx_t_5.ft = __pyx_v_ft;
         __pyx_f_3dfs_dfs_rec(__pyx_v_g, __pyx_v_j, &__pyx_t_5); 
 
-        /* "dfs.pyx":32
+        /* "dfs.pyx":34
  *         for i in range(nd.adj.size):
  *             j = nd.adj.items[i]
  *             if not g.node[j].explored:             # <<<<<<<<<<<<<<
@@ -1585,7 +1660,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
       }
     }
 
-    /* "dfs.pyx":29
+    /* "dfs.pyx":31
  *         push(output, s)
  * 
  *     if nd.adj:             # <<<<<<<<<<<<<<
@@ -1594,7 +1669,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   }
 
-  /* "dfs.pyx":35
+  /* "dfs.pyx":37
  *                 dfs_rec(g, j, output, ft)
  * 
  *     if ft:             # <<<<<<<<<<<<<<
@@ -1604,7 +1679,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
   __pyx_t_1 = (__pyx_v_ft != 0);
   if (__pyx_t_1) {
 
-    /* "dfs.pyx":36
+    /* "dfs.pyx":38
  * 
  *     if ft:
  *         nd.fin_time = ft[0]             # <<<<<<<<<<<<<<
@@ -1613,7 +1688,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
     __pyx_v_nd->fin_time = (__pyx_v_ft[0]);
 
-    /* "dfs.pyx":37
+    /* "dfs.pyx":39
  *     if ft:
  *         nd.fin_time = ft[0]
  *         ft[0] += 1             # <<<<<<<<<<<<<<
@@ -1623,7 +1698,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
     __pyx_t_6 = 0;
     (__pyx_v_ft[__pyx_t_6]) = ((__pyx_v_ft[__pyx_t_6]) + 1);
 
-    /* "dfs.pyx":35
+    /* "dfs.pyx":37
  *                 dfs_rec(g, j, output, ft)
  * 
  *     if ft:             # <<<<<<<<<<<<<<
@@ -1632,7 +1707,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   }
 
-  /* "dfs.pyx":39
+  /* "dfs.pyx":41
  *         ft[0] += 1
  * 
  *     return             # <<<<<<<<<<<<<<
@@ -1641,7 +1716,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
  */
   goto __pyx_L0;
 
-  /* "dfs.pyx":12
+  /* "dfs.pyx":14
  * """ ################### Depth-First Search using Recursion ############# """
  * 
  * cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
@@ -1654,7 +1729,7 @@ static void __pyx_f_3dfs_dfs_rec(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __pyx
   __Pyx_RefNannyFinishContext();
 }
 
-/* "dfs.pyx":44
+/* "dfs.pyx":46
  * """ ######### Depth-First Search using Stack data-structure ########### """
  * 
  * cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
@@ -1687,7 +1762,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     }
   }
 
-  /* "dfs.pyx":59
+  /* "dfs.pyx":61
  *         size_t i, j, v
  *         node_c* nd
  *         stack_c * stack = create_stack(g.len * 2)             # <<<<<<<<<<<<<<
@@ -1696,7 +1771,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
   __pyx_v_stack = __pyx_f_5stack_create_stack((__pyx_v_g->len * 2));
 
-  /* "dfs.pyx":61
+  /* "dfs.pyx":63
  *         stack_c * stack = create_stack(g.len * 2)
  * 
  *     push(stack, s)             # <<<<<<<<<<<<<<
@@ -1705,7 +1780,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
   __pyx_f_5stack_push(__pyx_v_stack, __pyx_v_s);
 
-  /* "dfs.pyx":63
+  /* "dfs.pyx":65
  *     push(stack, s)
  * 
  *     while not is_empty_s(stack):             # <<<<<<<<<<<<<<
@@ -1716,7 +1791,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     __pyx_t_1 = ((!(__pyx_f_5stack_is_empty_s(__pyx_v_stack) != 0)) != 0);
     if (!__pyx_t_1) break;
 
-    /* "dfs.pyx":64
+    /* "dfs.pyx":66
  * 
  *     while not is_empty_s(stack):
  *         v = peek(stack)             # <<<<<<<<<<<<<<
@@ -1725,7 +1800,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
     __pyx_v_v = __pyx_f_5stack_peek(__pyx_v_stack);
 
-    /* "dfs.pyx":65
+    /* "dfs.pyx":67
  *     while not is_empty_s(stack):
  *         v = peek(stack)
  *         nd = g.node[v]             # <<<<<<<<<<<<<<
@@ -1734,7 +1809,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
     __pyx_v_nd = (__pyx_v_g->node[__pyx_v_v]);
 
-    /* "dfs.pyx":66
+    /* "dfs.pyx":68
  *         v = peek(stack)
  *         nd = g.node[v]
  *         nd.leader = s             # <<<<<<<<<<<<<<
@@ -1743,7 +1818,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
     __pyx_v_nd->leader = __pyx_v_s;
 
-    /* "dfs.pyx":73
+    /* "dfs.pyx":75
  * 
  *         # pop vertex if already explored
  *         if nd.explored:             # <<<<<<<<<<<<<<
@@ -1753,7 +1828,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     __pyx_t_1 = (__pyx_v_nd->explored != 0);
     if (__pyx_t_1) {
 
-      /* "dfs.pyx":74
+      /* "dfs.pyx":76
  *         # pop vertex if already explored
  *         if nd.explored:
  *             pop(stack)             # <<<<<<<<<<<<<<
@@ -1762,7 +1837,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
       (void)(__pyx_f_5stack_pop(__pyx_v_stack));
 
-      /* "dfs.pyx":75
+      /* "dfs.pyx":77
  *         if nd.explored:
  *             pop(stack)
  *             if ft and nd.fin_time == -1:             # <<<<<<<<<<<<<<
@@ -1780,7 +1855,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
       __pyx_L7_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "dfs.pyx":77
+        /* "dfs.pyx":79
  *             if ft and nd.fin_time == -1:
  *                 # print("v", v, "ft:", ft[0])
  *                 nd.fin_time = ft[0]             # <<<<<<<<<<<<<<
@@ -1789,7 +1864,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
         __pyx_v_nd->fin_time = (__pyx_v_ft[0]);
 
-        /* "dfs.pyx":78
+        /* "dfs.pyx":80
  *                 # print("v", v, "ft:", ft[0])
  *                 nd.fin_time = ft[0]
  *                 ft[0] += 1             # <<<<<<<<<<<<<<
@@ -1799,7 +1874,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
         __pyx_t_3 = 0;
         (__pyx_v_ft[__pyx_t_3]) = ((__pyx_v_ft[__pyx_t_3]) + 1);
 
-        /* "dfs.pyx":75
+        /* "dfs.pyx":77
  *         if nd.explored:
  *             pop(stack)
  *             if ft and nd.fin_time == -1:             # <<<<<<<<<<<<<<
@@ -1808,7 +1883,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
       }
 
-      /* "dfs.pyx":79
+      /* "dfs.pyx":81
  *                 nd.fin_time = ft[0]
  *                 ft[0] += 1
  *             continue             # <<<<<<<<<<<<<<
@@ -1817,7 +1892,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
       goto __pyx_L3_continue;
 
-      /* "dfs.pyx":73
+      /* "dfs.pyx":75
  * 
  *         # pop vertex if already explored
  *         if nd.explored:             # <<<<<<<<<<<<<<
@@ -1826,7 +1901,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
     }
 
-    /* "dfs.pyx":81
+    /* "dfs.pyx":83
  *             continue
  *         else:
  *             nd.explored = True             # <<<<<<<<<<<<<<
@@ -1837,7 +1912,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
       __pyx_v_nd->explored = 1;
     }
 
-    /* "dfs.pyx":84
+    /* "dfs.pyx":86
  * 
  *         # action
  *         if output:             # <<<<<<<<<<<<<<
@@ -1847,7 +1922,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     __pyx_t_1 = (__pyx_v_output != 0);
     if (__pyx_t_1) {
 
-      /* "dfs.pyx":85
+      /* "dfs.pyx":87
  *         # action
  *         if output:
  *             push(output, v)             # <<<<<<<<<<<<<<
@@ -1856,7 +1931,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
       __pyx_f_5stack_push(__pyx_v_output, __pyx_v_v);
 
-      /* "dfs.pyx":84
+      /* "dfs.pyx":86
  * 
  *         # action
  *         if output:             # <<<<<<<<<<<<<<
@@ -1865,7 +1940,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
     }
 
-    /* "dfs.pyx":89
+    /* "dfs.pyx":91
  * 
  *         # push each edge of v
  *         if nd.adj:             # <<<<<<<<<<<<<<
@@ -1875,7 +1950,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     __pyx_t_1 = (__pyx_v_nd->adj != 0);
     if (__pyx_t_1) {
 
-      /* "dfs.pyx":90
+      /* "dfs.pyx":92
  *         # push each edge of v
  *         if nd.adj:
  *             for i in range(nd.adj.size):             # <<<<<<<<<<<<<<
@@ -1887,7 +1962,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
       for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
         __pyx_v_i = __pyx_t_6;
 
-        /* "dfs.pyx":91
+        /* "dfs.pyx":93
  *         if nd.adj:
  *             for i in range(nd.adj.size):
  *                 j = nd.adj.items[i]             # <<<<<<<<<<<<<<
@@ -1896,7 +1971,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
         __pyx_v_j = (__pyx_v_nd->adj->items[__pyx_v_i]);
 
-        /* "dfs.pyx":92
+        /* "dfs.pyx":94
  *             for i in range(nd.adj.size):
  *                 j = nd.adj.items[i]
  *                 if not g.node[j].explored:             # <<<<<<<<<<<<<<
@@ -1906,7 +1981,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
         __pyx_t_1 = ((!((__pyx_v_g->node[__pyx_v_j])->explored != 0)) != 0);
         if (__pyx_t_1) {
 
-          /* "dfs.pyx":93
+          /* "dfs.pyx":95
  *                 j = nd.adj.items[i]
  *                 if not g.node[j].explored:
  *                     push(stack, j)             # <<<<<<<<<<<<<<
@@ -1915,7 +1990,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
           __pyx_f_5stack_push(__pyx_v_stack, __pyx_v_j);
 
-          /* "dfs.pyx":92
+          /* "dfs.pyx":94
  *             for i in range(nd.adj.size):
  *                 j = nd.adj.items[i]
  *                 if not g.node[j].explored:             # <<<<<<<<<<<<<<
@@ -1925,7 +2000,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
         }
       }
 
-      /* "dfs.pyx":89
+      /* "dfs.pyx":91
  * 
  *         # push each edge of v
  *         if nd.adj:             # <<<<<<<<<<<<<<
@@ -1936,7 +2011,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
     __pyx_L3_continue:;
   }
 
-  /* "dfs.pyx":97
+  /* "dfs.pyx":99
  * 
  * 
  *     free_stack(stack)             # <<<<<<<<<<<<<<
@@ -1945,7 +2020,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
  */
   __pyx_f_5stack_free_stack(__pyx_v_stack);
 
-  /* "dfs.pyx":44
+  /* "dfs.pyx":46
  * """ ######### Depth-First Search using Stack data-structure ########### """
  * 
  * cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):             # <<<<<<<<<<<<<<
@@ -1957,7 +2032,7 @@ static void __pyx_f_3dfs_dfs_stack(__pyx_t_5graph_graph_c *__pyx_v_g, size_t __p
   __Pyx_RefNannyFinishContext();
 }
 
-/* "dfs.pyx":105
+/* "dfs.pyx":107
  * 
  * 
  * def test_dfs_1():             # <<<<<<<<<<<<<<
@@ -1992,14 +2067,14 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_dfs_1", 0);
 
-  /* "dfs.pyx":106
+  /* "dfs.pyx":108
  * 
  * def test_dfs_1():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     graph = {0: [0, 1, 2],
  *              1: [3],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2013,21 +2088,21 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":107
+  /* "dfs.pyx":109
  * def test_dfs_1():
  *     print_func_name()
  *     graph = {0: [0, 1, 2],             # <<<<<<<<<<<<<<
  *              1: [3],
  *              2: [],
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -2038,66 +2113,66 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_2, 2, __pyx_int_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":108
+  /* "dfs.pyx":110
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  *              1: [3],             # <<<<<<<<<<<<<<
  *              2: [],
  *              3: [4],
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_3);
   __Pyx_GIVEREF(__pyx_int_3);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_3);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":109
+  /* "dfs.pyx":111
  *     graph = {0: [0, 1, 2],
  *              1: [3],
  *              2: [],             # <<<<<<<<<<<<<<
  *              3: [4],
  *              4: []}
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":110
+  /* "dfs.pyx":112
  *              1: [3],
  *              2: [],
  *              3: [4],             # <<<<<<<<<<<<<<
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_4);
   __Pyx_GIVEREF(__pyx_int_4);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":111
+  /* "dfs.pyx":113
  *              2: [],
  *              3: [4],
  *              4: []}             # <<<<<<<<<<<<<<
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "dfs.pyx":112
+  /* "dfs.pyx":114
  *              3: [4],
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -2106,7 +2181,7 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "dfs.pyx":114
+  /* "dfs.pyx":116
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  *     dfs_rec(g, 0)             # <<<<<<<<<<<<<<
@@ -2115,7 +2190,7 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_3dfs_dfs_rec(__pyx_v_g, 0, NULL);
 
-  /* "dfs.pyx":115
+  /* "dfs.pyx":117
  *     # print_graph(g)
  *     dfs_rec(g, 0)
  *     free_graph(g)             # <<<<<<<<<<<<<<
@@ -2124,7 +2199,7 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_5graph_free_graph(__pyx_v_g);
 
-  /* "dfs.pyx":105
+  /* "dfs.pyx":107
  * 
  * 
  * def test_dfs_1():             # <<<<<<<<<<<<<<
@@ -2148,7 +2223,7 @@ static PyObject *__pyx_pf_3dfs_test_dfs_1(CYTHON_UNUSED PyObject *__pyx_self) {
   return __pyx_r;
 }
 
-/* "dfs.pyx":117
+/* "dfs.pyx":119
  *     free_graph(g)
  * 
  * def test_dfs_2():             # <<<<<<<<<<<<<<
@@ -2183,14 +2258,14 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_dfs_2", 0);
 
-  /* "dfs.pyx":118
+  /* "dfs.pyx":120
  * 
  * def test_dfs_2():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     graph = {0: [0, 1, 2],
  *              1: [3],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2204,21 +2279,21 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":119
+  /* "dfs.pyx":121
  * def test_dfs_2():
  *     print_func_name()
  *     graph = {0: [0, 1, 2],             # <<<<<<<<<<<<<<
  *              1: [3],
  *              2: [],
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -2229,66 +2304,66 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_2, 2, __pyx_int_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":120
+  /* "dfs.pyx":122
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  *              1: [3],             # <<<<<<<<<<<<<<
  *              2: [],
  *              3: [4],
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_3);
   __Pyx_GIVEREF(__pyx_int_3);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_3);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":121
+  /* "dfs.pyx":123
  *     graph = {0: [0, 1, 2],
  *              1: [3],
  *              2: [],             # <<<<<<<<<<<<<<
  *              3: [4],
  *              4: []}
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":122
+  /* "dfs.pyx":124
  *              1: [3],
  *              2: [],
  *              3: [4],             # <<<<<<<<<<<<<<
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 122, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_4);
   __Pyx_GIVEREF(__pyx_int_4);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":123
+  /* "dfs.pyx":125
  *              2: [],
  *              3: [4],
  *              4: []}             # <<<<<<<<<<<<<<
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "dfs.pyx":124
+  /* "dfs.pyx":126
  *              3: [4],
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -2297,7 +2372,7 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "dfs.pyx":126
+  /* "dfs.pyx":128
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  *     dfs_stack(g, 0)             # <<<<<<<<<<<<<<
@@ -2306,7 +2381,7 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_3dfs_dfs_stack(__pyx_v_g, 0, NULL);
 
-  /* "dfs.pyx":127
+  /* "dfs.pyx":129
  *     # print_graph(g)
  *     dfs_stack(g, 0)
  *     free_graph(g)             # <<<<<<<<<<<<<<
@@ -2315,7 +2390,7 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_5graph_free_graph(__pyx_v_g);
 
-  /* "dfs.pyx":117
+  /* "dfs.pyx":119
  *     free_graph(g)
  * 
  * def test_dfs_2():             # <<<<<<<<<<<<<<
@@ -2339,7 +2414,7 @@ static PyObject *__pyx_pf_3dfs_2test_dfs_2(CYTHON_UNUSED PyObject *__pyx_self) {
   return __pyx_r;
 }
 
-/* "dfs.pyx":129
+/* "dfs.pyx":131
  *     free_graph(g)
  * 
  * def test_dfs_3():             # <<<<<<<<<<<<<<
@@ -2376,14 +2451,14 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_dfs_3", 0);
 
-  /* "dfs.pyx":130
+  /* "dfs.pyx":132
  * 
  * def test_dfs_3():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     graph = {0: [2, 1, 4],
  *              1: [],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2397,21 +2472,21 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":131
+  /* "dfs.pyx":133
  * def test_dfs_3():
  *     print_func_name()
  *     graph = {0: [2, 1, 4],             # <<<<<<<<<<<<<<
  *              1: [],
  *              2: [4, 3],
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
@@ -2422,29 +2497,29 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_4);
   __Pyx_GIVEREF(__pyx_int_4);
   PyList_SET_ITEM(__pyx_t_2, 2, __pyx_int_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":132
+  /* "dfs.pyx":134
  *     print_func_name()
  *     graph = {0: [2, 1, 4],
  *              1: [],             # <<<<<<<<<<<<<<
  *              2: [4, 3],
  *              3: [],
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":133
+  /* "dfs.pyx":135
  *     graph = {0: [2, 1, 4],
  *              1: [],
  *              2: [4, 3],             # <<<<<<<<<<<<<<
  *              3: [],
  *              4: []}
  */
-  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_4);
   __Pyx_GIVEREF(__pyx_int_4);
@@ -2452,36 +2527,36 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_3);
   __Pyx_GIVEREF(__pyx_int_3);
   PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_3);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":134
+  /* "dfs.pyx":136
  *              1: [],
  *              2: [4, 3],
  *              3: [],             # <<<<<<<<<<<<<<
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":135
+  /* "dfs.pyx":137
  *              2: [4, 3],
  *              3: [],
  *              4: []}             # <<<<<<<<<<<<<<
  *     cdef graph_c* g = dict2graph(graph)
  *     cdef stack_c* s = create_stack(g.len)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "dfs.pyx":136
+  /* "dfs.pyx":138
  *              3: [],
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -2490,7 +2565,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "dfs.pyx":137
+  /* "dfs.pyx":139
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)
  *     cdef stack_c* s = create_stack(g.len)             # <<<<<<<<<<<<<<
@@ -2499,7 +2574,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_s = __pyx_f_5stack_create_stack(__pyx_v_g->len);
 
-  /* "dfs.pyx":139
+  /* "dfs.pyx":141
  *     cdef stack_c* s = create_stack(g.len)
  * 
  *     dfs_rec(g, 0, s)             # <<<<<<<<<<<<<<
@@ -2510,7 +2585,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   __pyx_t_4.output = __pyx_v_s;
   __pyx_f_3dfs_dfs_rec(__pyx_v_g, 0, &__pyx_t_4); 
 
-  /* "dfs.pyx":141
+  /* "dfs.pyx":143
  *     dfs_rec(g, 0, s)
  * 
  *     assert s.items[0] == 0             # <<<<<<<<<<<<<<
@@ -2521,12 +2596,12 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[0]) == 0) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 141, __pyx_L1_error)
+      __PYX_ERR(0, 143, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":142
+  /* "dfs.pyx":144
  * 
  *     assert s.items[0] == 0
  *     assert s.items[1] == 2             # <<<<<<<<<<<<<<
@@ -2537,12 +2612,12 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[1]) == 2) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 142, __pyx_L1_error)
+      __PYX_ERR(0, 144, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":143
+  /* "dfs.pyx":145
  *     assert s.items[0] == 0
  *     assert s.items[1] == 2
  *     assert s.items[2] == 4             # <<<<<<<<<<<<<<
@@ -2553,12 +2628,12 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[2]) == 4) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 143, __pyx_L1_error)
+      __PYX_ERR(0, 145, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":144
+  /* "dfs.pyx":146
  *     assert s.items[1] == 2
  *     assert s.items[2] == 4
  *     assert s.items[3] == 3             # <<<<<<<<<<<<<<
@@ -2569,12 +2644,12 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[3]) == 3) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 144, __pyx_L1_error)
+      __PYX_ERR(0, 146, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":145
+  /* "dfs.pyx":147
  *     assert s.items[2] == 4
  *     assert s.items[3] == 3
  *     assert s.items[4] == 1             # <<<<<<<<<<<<<<
@@ -2585,12 +2660,12 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[4]) == 1) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 145, __pyx_L1_error)
+      __PYX_ERR(0, 147, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":148
+  /* "dfs.pyx":150
  *     # print_stack(s)
  * 
  *     free_graph(g)             # <<<<<<<<<<<<<<
@@ -2599,7 +2674,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_5graph_free_graph(__pyx_v_g);
 
-  /* "dfs.pyx":149
+  /* "dfs.pyx":151
  * 
  *     free_graph(g)
  *     free_stack(s)             # <<<<<<<<<<<<<<
@@ -2608,7 +2683,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_5stack_free_stack(__pyx_v_s);
 
-  /* "dfs.pyx":129
+  /* "dfs.pyx":131
  *     free_graph(g)
  * 
  * def test_dfs_3():             # <<<<<<<<<<<<<<
@@ -2632,7 +2707,7 @@ static PyObject *__pyx_pf_3dfs_4test_dfs_3(CYTHON_UNUSED PyObject *__pyx_self) {
   return __pyx_r;
 }
 
-/* "dfs.pyx":151
+/* "dfs.pyx":153
  *     free_stack(s)
  * 
  * def test_dfs_4():             # <<<<<<<<<<<<<<
@@ -2669,14 +2744,14 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_dfs_4", 0);
 
-  /* "dfs.pyx":152
+  /* "dfs.pyx":154
  * 
  * def test_dfs_4():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     graph = {0: [1, 2],
  *              1: [],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2690,21 +2765,21 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":153
+  /* "dfs.pyx":155
  * def test_dfs_4():
  *     print_func_name()
  *     graph = {0: [1, 2],             # <<<<<<<<<<<<<<
  *              1: [],
  *              2: [3, 4],
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -2712,29 +2787,29 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":154
+  /* "dfs.pyx":156
  *     print_func_name()
  *     graph = {0: [1, 2],
  *              1: [],             # <<<<<<<<<<<<<<
  *              2: [3, 4],
  *              3: [],
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":155
+  /* "dfs.pyx":157
  *     graph = {0: [1, 2],
  *              1: [],
  *              2: [3, 4],             # <<<<<<<<<<<<<<
  *              3: [],
  *              4: []}
  */
-  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_3);
   __Pyx_GIVEREF(__pyx_int_3);
@@ -2742,36 +2817,36 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   __Pyx_INCREF(__pyx_int_4);
   __Pyx_GIVEREF(__pyx_int_4);
   PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":156
+  /* "dfs.pyx":158
  *              1: [],
  *              2: [3, 4],
  *              3: [],             # <<<<<<<<<<<<<<
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_3, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dfs.pyx":157
+  /* "dfs.pyx":159
  *              2: [3, 4],
  *              3: [],
  *              4: []}             # <<<<<<<<<<<<<<
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_4, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "dfs.pyx":158
+  /* "dfs.pyx":160
  *              3: [],
  *              4: []}
  *     cdef graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -2780,7 +2855,7 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "dfs.pyx":160
+  /* "dfs.pyx":162
  *     cdef graph_c* g = dict2graph(graph)
  *     # print_graph(g)
  *     cdef stack_c* s = create_stack(g.len)             # <<<<<<<<<<<<<<
@@ -2789,7 +2864,7 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_v_s = __pyx_f_5stack_create_stack(__pyx_v_g->len);
 
-  /* "dfs.pyx":161
+  /* "dfs.pyx":163
  *     # print_graph(g)
  *     cdef stack_c* s = create_stack(g.len)
  *     dfs_stack(g, 0, s)             # <<<<<<<<<<<<<<
@@ -2800,7 +2875,7 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   __pyx_t_4.output = __pyx_v_s;
   __pyx_f_3dfs_dfs_stack(__pyx_v_g, 0, &__pyx_t_4); 
 
-  /* "dfs.pyx":164
+  /* "dfs.pyx":166
  *     # print("dfs len:", size_s(s))
  * 
  *     assert s.items[0] == 0             # <<<<<<<<<<<<<<
@@ -2811,12 +2886,12 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[0]) == 0) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 164, __pyx_L1_error)
+      __PYX_ERR(0, 166, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":165
+  /* "dfs.pyx":167
  * 
  *     assert s.items[0] == 0
  *     assert s.items[1] == 2             # <<<<<<<<<<<<<<
@@ -2827,12 +2902,12 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[1]) == 2) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 165, __pyx_L1_error)
+      __PYX_ERR(0, 167, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":166
+  /* "dfs.pyx":168
  *     assert s.items[0] == 0
  *     assert s.items[1] == 2
  *     assert s.items[2] == 4             # <<<<<<<<<<<<<<
@@ -2843,12 +2918,12 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[2]) == 4) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 166, __pyx_L1_error)
+      __PYX_ERR(0, 168, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":167
+  /* "dfs.pyx":169
  *     assert s.items[1] == 2
  *     assert s.items[2] == 4
  *     assert s.items[3] == 3             # <<<<<<<<<<<<<<
@@ -2859,12 +2934,12 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[3]) == 3) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 167, __pyx_L1_error)
+      __PYX_ERR(0, 169, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":168
+  /* "dfs.pyx":170
  *     assert s.items[2] == 4
  *     assert s.items[3] == 3
  *     assert s.items[4] == 1             # <<<<<<<<<<<<<<
@@ -2875,12 +2950,12 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_s->items[4]) == 1) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 168, __pyx_L1_error)
+      __PYX_ERR(0, 170, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "dfs.pyx":171
+  /* "dfs.pyx":173
  * 
  *     # print_stack(s)
  *     free_graph(g)             # <<<<<<<<<<<<<<
@@ -2889,16 +2964,16 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
  */
   __pyx_f_5graph_free_graph(__pyx_v_g);
 
-  /* "dfs.pyx":172
+  /* "dfs.pyx":174
  *     # print_stack(s)
  *     free_graph(g)
  *     free_stack(s)             # <<<<<<<<<<<<<<
  * 
- * 
+ * def test_dfs_random():
  */
   __pyx_f_5stack_free_stack(__pyx_v_s);
 
-  /* "dfs.pyx":151
+  /* "dfs.pyx":153
  *     free_stack(s)
  * 
  * def test_dfs_4():             # <<<<<<<<<<<<<<
@@ -2922,8 +2997,8 @@ static PyObject *__pyx_pf_3dfs_6test_dfs_4(CYTHON_UNUSED PyObject *__pyx_self) {
   return __pyx_r;
 }
 
-/* "dfs.pyx":175
- * 
+/* "dfs.pyx":176
+ *     free_stack(s)
  * 
  * def test_dfs_random():             # <<<<<<<<<<<<<<
  *     print_func_name()
@@ -2970,14 +3045,14 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_dfs_random", 0);
 
-  /* "dfs.pyx":176
+  /* "dfs.pyx":177
  * 
  * def test_dfs_random():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     DEF size = 30
  *     cdef:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2991,12 +3066,12 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":182
+  /* "dfs.pyx":183
  *         node_c * nd
  *         size_t i, j, k
  *         stack_c * out = create_stack(size)             # <<<<<<<<<<<<<<
@@ -3005,7 +3080,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
  */
   __pyx_v_out = __pyx_f_5stack_create_stack(30);
 
-  /* "dfs.pyx":184
+  /* "dfs.pyx":185
  *         stack_c * out = create_stack(size)
  * 
  *     for i in range(1000):             # <<<<<<<<<<<<<<
@@ -3015,7 +3090,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
   for (__pyx_t_4 = 0; __pyx_t_4 < 0x3E8; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "dfs.pyx":185
+    /* "dfs.pyx":186
  * 
  *     for i in range(1000):
  *         graph = rand_dict_graph(size, rand() % (size), selfloops=True)             # <<<<<<<<<<<<<<
@@ -3024,12 +3099,12 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
  */
     __pyx_t_5.__pyx_n = 1;
     __pyx_t_5.selfloops = 1;
-    __pyx_t_1 = __pyx_f_5graph_rand_dict_graph(30, __Pyx_mod_long(rand(), 30), &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_5graph_rand_dict_graph(30, __Pyx_mod_long(rand(), 30), &__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF_SET(__pyx_v_graph, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "dfs.pyx":186
+    /* "dfs.pyx":187
  *     for i in range(1000):
  *         graph = rand_dict_graph(size, rand() % (size), selfloops=True)
  *         g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -3038,7 +3113,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
  */
     __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-    /* "dfs.pyx":187
+    /* "dfs.pyx":188
  *         graph = rand_dict_graph(size, rand() % (size), selfloops=True)
  *         g = dict2graph(graph)
  *         dfs_stack(g, 0, out)             # <<<<<<<<<<<<<<
@@ -3049,7 +3124,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
     __pyx_t_6.output = __pyx_v_out;
     __pyx_f_3dfs_dfs_stack(__pyx_v_g, 0, &__pyx_t_6); 
 
-    /* "dfs.pyx":189
+    /* "dfs.pyx":190
  *         dfs_stack(g, 0, out)
  * 
  *         assert size_s(out) <= g.len             # <<<<<<<<<<<<<<
@@ -3060,12 +3135,12 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
     if (unlikely(!Py_OptimizeFlag)) {
       if (unlikely(!((__pyx_f_5stack_size_s(__pyx_v_out) <= __pyx_v_g->len) != 0))) {
         PyErr_SetNone(PyExc_AssertionError);
-        __PYX_ERR(0, 189, __pyx_L1_error)
+        __PYX_ERR(0, 190, __pyx_L1_error)
       }
     }
     #endif
 
-    /* "dfs.pyx":192
+    /* "dfs.pyx":193
  * 
  *         # no duplicates
  *         for j in range(size_s(out) - 1):             # <<<<<<<<<<<<<<
@@ -3077,7 +3152,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
       __pyx_v_j = __pyx_t_9;
 
-      /* "dfs.pyx":193
+      /* "dfs.pyx":194
  *         # no duplicates
  *         for j in range(size_s(out) - 1):
  *             for k in range(j + 1, size_s(out)):             # <<<<<<<<<<<<<<
@@ -3089,7 +3164,7 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
       for (__pyx_t_12 = (__pyx_v_j + 1); __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
         __pyx_v_k = __pyx_t_12;
 
-        /* "dfs.pyx":194
+        /* "dfs.pyx":195
  *         for j in range(size_s(out) - 1):
  *             for k in range(j + 1, size_s(out)):
  *                 assert out.items[j] != out.items[k]             # <<<<<<<<<<<<<<
@@ -3100,14 +3175,14 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
         if (unlikely(!Py_OptimizeFlag)) {
           if (unlikely(!(((__pyx_v_out->items[__pyx_v_j]) != (__pyx_v_out->items[__pyx_v_k])) != 0))) {
             PyErr_SetNone(PyExc_AssertionError);
-            __PYX_ERR(0, 194, __pyx_L1_error)
+            __PYX_ERR(0, 195, __pyx_L1_error)
           }
         }
         #endif
       }
     }
 
-    /* "dfs.pyx":196
+    /* "dfs.pyx":197
  *                 assert out.items[j] != out.items[k]
  * 
  *         out.top = -1             # <<<<<<<<<<<<<<
@@ -3116,24 +3191,27 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
  */
     __pyx_v_out->top = -1L;
 
-    /* "dfs.pyx":197
+    /* "dfs.pyx":198
  * 
  *         out.top = -1
  *         free_graph(g)             # <<<<<<<<<<<<<<
  *     free_stack(out)
+ * 
  */
     __pyx_f_5graph_free_graph(__pyx_v_g);
   }
 
-  /* "dfs.pyx":198
+  /* "dfs.pyx":199
  *         out.top = -1
  *         free_graph(g)
  *     free_stack(out)             # <<<<<<<<<<<<<<
+ * 
+ * def test_dfs_big():
  */
   __pyx_f_5stack_free_stack(__pyx_v_out);
 
-  /* "dfs.pyx":175
- * 
+  /* "dfs.pyx":176
+ *     free_stack(s)
  * 
  * def test_dfs_random():             # <<<<<<<<<<<<<<
  *     print_func_name()
@@ -3151,6 +3229,165 @@ static PyObject *__pyx_pf_3dfs_8test_dfs_random(CYTHON_UNUSED PyObject *__pyx_se
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_graph);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "dfs.pyx":201
+ *     free_stack(out)
+ * 
+ * def test_dfs_big():             # <<<<<<<<<<<<<<
+ *     print_func_name(end=" ... ")
+ *     cdef:
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_3dfs_11test_dfs_big(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_3dfs_11test_dfs_big = {"test_dfs_big", (PyCFunction)__pyx_pw_3dfs_11test_dfs_big, METH_NOARGS, 0};
+static PyObject *__pyx_pw_3dfs_11test_dfs_big(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("test_dfs_big (wrapper)", 0);
+  __pyx_r = __pyx_pf_3dfs_10test_dfs_big(__pyx_self);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_3dfs_10test_dfs_big(CYTHON_UNUSED PyObject *__pyx_self) {
+  __pyx_t_5graph_graph_c *__pyx_v_g;
+  PyObject *__pyx_v_start = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("test_dfs_big", 0);
+
+  /* "dfs.pyx":202
+ * 
+ * def test_dfs_big():
+ *     print_func_name(end=" ... ")             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         graph_c* g
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_end, __pyx_kp_u_) < 0) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "dfs.pyx":207
+ *         graph_c* g_rev
+ * 
+ *     start = time()             # <<<<<<<<<<<<<<
+ *     g = read_graph("scc.txt")
+ *     dfs_stack(g, 0)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_1)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_1);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 207, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_start = __pyx_t_3;
+  __pyx_t_3 = 0;
+
+  /* "dfs.pyx":208
+ * 
+ *     start = time()
+ *     g = read_graph("scc.txt")             # <<<<<<<<<<<<<<
+ *     dfs_stack(g, 0)
+ *     print(f"{time() - start:.2f}s")
+ */
+  __pyx_v_g = __pyx_f_5readg_read_graph(__pyx_kp_u_scc_txt);
+
+  /* "dfs.pyx":209
+ *     start = time()
+ *     g = read_graph("scc.txt")
+ *     dfs_stack(g, 0)             # <<<<<<<<<<<<<<
+ *     print(f"{time() - start:.2f}s")
+ * 
+ */
+  __pyx_f_3dfs_dfs_stack(__pyx_v_g, 0, NULL);
+
+  /* "dfs.pyx":210
+ *     g = read_graph("scc.txt")
+ *     dfs_stack(g, 0)
+ *     print(f"{time() - start:.2f}s")             # <<<<<<<<<<<<<<
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_1)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_1);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_3, __pyx_v_start); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_PyObject_Format(__pyx_t_2, __pyx_kp_u_2f); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_t_3, __pyx_n_u_s); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "dfs.pyx":201
+ *     free_stack(out)
+ * 
+ * def test_dfs_big():             # <<<<<<<<<<<<<<
+ *     print_func_name(end=" ... ")
+ *     cdef:
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("dfs.test_dfs_big", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_start);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -3202,10 +3439,14 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_kp_u_, __pyx_k_, sizeof(__pyx_k_), 0, 1, 0, 0},
+  {&__pyx_kp_u_2f, __pyx_k_2f, sizeof(__pyx_k_2f), 0, 1, 0, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_dfs, __pyx_k_dfs, sizeof(__pyx_k_dfs), 0, 0, 1, 1},
   {&__pyx_kp_s_dfs_pyx, __pyx_k_dfs_pyx, sizeof(__pyx_k_dfs_pyx), 0, 0, 1, 0},
+  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
+  {&__pyx_n_s_g_rev, __pyx_k_g_rev, sizeof(__pyx_k_g_rev), 0, 0, 1, 1},
   {&__pyx_n_s_graph, __pyx_k_graph, sizeof(__pyx_k_graph), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
@@ -3215,20 +3456,27 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_nd, __pyx_k_nd, sizeof(__pyx_k_nd), 0, 0, 1, 1},
   {&__pyx_n_s_out, __pyx_k_out, sizeof(__pyx_k_out), 0, 0, 1, 1},
+  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_print_func_name, __pyx_k_print_func_name, sizeof(__pyx_k_print_func_name), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 0, 1, 1},
+  {&__pyx_n_u_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 1, 0, 1},
+  {&__pyx_kp_u_scc_txt, __pyx_k_scc_txt, sizeof(__pyx_k_scc_txt), 0, 1, 0, 0},
+  {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_test_dfs_1, __pyx_k_test_dfs_1, sizeof(__pyx_k_test_dfs_1), 0, 0, 1, 1},
   {&__pyx_n_s_test_dfs_2, __pyx_k_test_dfs_2, sizeof(__pyx_k_test_dfs_2), 0, 0, 1, 1},
   {&__pyx_n_s_test_dfs_3, __pyx_k_test_dfs_3, sizeof(__pyx_k_test_dfs_3), 0, 0, 1, 1},
   {&__pyx_n_s_test_dfs_4, __pyx_k_test_dfs_4, sizeof(__pyx_k_test_dfs_4), 0, 0, 1, 1},
+  {&__pyx_n_s_test_dfs_big, __pyx_k_test_dfs_big, sizeof(__pyx_k_test_dfs_big), 0, 0, 1, 1},
   {&__pyx_n_s_test_dfs_random, __pyx_k_test_dfs_random, sizeof(__pyx_k_test_dfs_random), 0, 0, 1, 1},
+  {&__pyx_n_s_time, __pyx_k_time, sizeof(__pyx_k_time), 0, 0, 1, 1},
   {&__pyx_n_s_utils, __pyx_k_utils, sizeof(__pyx_k_utils), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 210, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -3238,65 +3486,77 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "dfs.pyx":105
+  /* "dfs.pyx":107
  * 
  * 
  * def test_dfs_1():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  */
-  __pyx_tuple_ = PyTuple_Pack(2, __pyx_n_s_graph, __pyx_n_s_g); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_1, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(2, __pyx_n_s_graph, __pyx_n_s_g); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
+  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_1, 107, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 107, __pyx_L1_error)
 
-  /* "dfs.pyx":117
+  /* "dfs.pyx":119
  *     free_graph(g)
  * 
  * def test_dfs_2():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  */
-  __pyx_tuple__3 = PyTuple_Pack(2, __pyx_n_s_graph, __pyx_n_s_g); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 117, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_2, 117, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(2, __pyx_n_s_graph, __pyx_n_s_g); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_2, 119, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 119, __pyx_L1_error)
 
-  /* "dfs.pyx":129
+  /* "dfs.pyx":131
  *     free_graph(g)
  * 
  * def test_dfs_3():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [2, 1, 4],
  */
-  __pyx_tuple__5 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_g, __pyx_n_s_s); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 129, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_3, 129, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_g, __pyx_n_s_s); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_3, 131, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 131, __pyx_L1_error)
 
-  /* "dfs.pyx":151
+  /* "dfs.pyx":153
  *     free_stack(s)
  * 
  * def test_dfs_4():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [1, 2],
  */
-  __pyx_tuple__7 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_g, __pyx_n_s_s); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 151, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_4, 151, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_g, __pyx_n_s_s); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_4, 153, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 153, __pyx_L1_error)
 
-  /* "dfs.pyx":175
- * 
+  /* "dfs.pyx":176
+ *     free_stack(s)
  * 
  * def test_dfs_random():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     DEF size = 30
  */
-  __pyx_tuple__9 = PyTuple_Pack(7, __pyx_n_s_g, __pyx_n_s_nd, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_out, __pyx_n_s_graph); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_random, 175, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(7, __pyx_n_s_g, __pyx_n_s_nd, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_out, __pyx_n_s_graph); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_random, 176, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 176, __pyx_L1_error)
+
+  /* "dfs.pyx":201
+ *     free_stack(out)
+ * 
+ * def test_dfs_big():             # <<<<<<<<<<<<<<
+ *     print_func_name(end=" ... ")
+ *     cdef:
+ */
+  __pyx_tuple__12 = PyTuple_Pack(3, __pyx_n_s_g, __pyx_n_s_g_rev, __pyx_n_s_start); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dfs_pyx, __pyx_n_s_test_dfs_big, 201, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3342,10 +3602,18 @@ static int __Pyx_modinit_variable_export_code(void) {
 
 static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
+  if (__Pyx_ExportFunction("dfs_rec", (void (*)(void))__pyx_f_3dfs_dfs_rec, "void (__pyx_t_5graph_graph_c *, size_t, struct __pyx_opt_args_3dfs_dfs_rec *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("dfs_stack", (void (*)(void))__pyx_f_3dfs_dfs_stack, "void (__pyx_t_5graph_graph_c *, size_t, struct __pyx_opt_args_3dfs_dfs_stack *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -3380,6 +3648,12 @@ static int __Pyx_modinit_function_import_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_import_code", 0);
   /*--- Function import code ---*/
+  __pyx_t_1 = PyImport_ImportModule("graph"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (__Pyx_ImportFunction(__pyx_t_1, "dict2graph", (void (**)(void))&__pyx_f_5graph_dict2graph, "__pyx_t_5graph_graph_c *(PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "free_graph", (void (**)(void))&__pyx_f_5graph_free_graph, "void (__pyx_t_5graph_graph_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "rand_dict_graph", (void (**)(void))&__pyx_f_5graph_rand_dict_graph, "PyObject *(size_t, size_t, struct __pyx_opt_args_5graph_rand_dict_graph *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = PyImport_ImportModule("stack"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (__Pyx_ImportFunction(__pyx_t_1, "create_stack", (void (**)(void))&__pyx_f_5stack_create_stack, "__pyx_t_5stack_stack_c *(size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -3391,11 +3665,10 @@ static int __Pyx_modinit_function_import_code(void) {
   if (__Pyx_ImportFunction(__pyx_t_1, "print_stack", (void (**)(void))&__pyx_f_5stack_print_stack, "void (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "free_stack", (void (**)(void))&__pyx_f_5stack_free_stack, "void (__pyx_t_5stack_stack_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("graph"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("readg"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (__Pyx_ImportFunction(__pyx_t_1, "dict2graph", (void (**)(void))&__pyx_f_5graph_dict2graph, "__pyx_t_5graph_graph_c *(PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ImportFunction(__pyx_t_1, "free_graph", (void (**)(void))&__pyx_f_5graph_free_graph, "void (__pyx_t_5graph_graph_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ImportFunction(__pyx_t_1, "rand_dict_graph", (void (**)(void))&__pyx_f_5graph_rand_dict_graph, "PyObject *(size_t, size_t, struct __pyx_opt_args_5graph_rand_dict_graph *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "read_graph", (void (**)(void))&__pyx_f_5readg_read_graph, "__pyx_t_5graph_graph_c *(PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "read_graphs", (void (**)(void))&__pyx_f_5readg_read_graphs, "__pyx_ctuple_540e99____dunderpyx_t_5graph_graph_c__ptr__and___dunderpyx_t_5graph_graph_c__ptr__etc (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
@@ -3596,7 +3869,7 @@ if (!__Pyx_RefNanny) {
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
-  (void)__Pyx_modinit_function_export_code();
+  if (unlikely(__Pyx_modinit_function_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
@@ -3606,96 +3879,129 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "dfs.pyx":6
+  /* "dfs.pyx":3
+ * # cython: language_level=3
+ * 
+ * from time import time             # <<<<<<<<<<<<<<
+ * from stack cimport stack_c, create_stack, push, pop, peek, \
  *     free_stack, size_s, print_stack, is_empty_s
+ */
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_n_s_time);
+  __Pyx_GIVEREF(__pyx_n_s_time);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_time);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_time, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "dfs.pyx":8
+ * from readg cimport read_graph, read_graphs
  * from graph cimport graph_c, node_c, free_graph, dict2graph, rand_dict_graph
  * from utils import print_func_name             # <<<<<<<<<<<<<<
  * from libc.stdlib cimport rand
  * 
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_print_func_name);
   __Pyx_GIVEREF(__pyx_n_s_print_func_name);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_print_func_name);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_utils, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_print_func_name);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_utils, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_func_name, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_print_func_name, __pyx_t_2) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":105
+  /* "dfs.pyx":107
  * 
  * 
  * def test_dfs_1():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_3dfs_1test_dfs_1, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_1, __pyx_t_2) < 0) __PYX_ERR(0, 105, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_1test_dfs_1, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_1, __pyx_t_1) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":117
+  /* "dfs.pyx":119
  *     free_graph(g)
  * 
  * def test_dfs_2():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1, 2],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_3dfs_3test_dfs_2, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_2, __pyx_t_2) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_3test_dfs_2, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_2, __pyx_t_1) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":129
+  /* "dfs.pyx":131
  *     free_graph(g)
  * 
  * def test_dfs_3():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [2, 1, 4],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_3dfs_5test_dfs_3, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 129, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_3, __pyx_t_2) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_5test_dfs_3, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_3, __pyx_t_1) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":151
+  /* "dfs.pyx":153
  *     free_stack(s)
  * 
  * def test_dfs_4():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [1, 2],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_3dfs_7test_dfs_4, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_4, __pyx_t_2) < 0) __PYX_ERR(0, 151, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_7test_dfs_4, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_4, __pyx_t_1) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "dfs.pyx":175
- * 
+  /* "dfs.pyx":176
+ *     free_stack(s)
  * 
  * def test_dfs_random():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     DEF size = 30
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_3dfs_9test_dfs_random, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_random, __pyx_t_2) < 0) __PYX_ERR(0, 175, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_9test_dfs_random, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_random, __pyx_t_1) < 0) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "dfs.pyx":201
+ *     free_stack(out)
+ * 
+ * def test_dfs_big():             # <<<<<<<<<<<<<<
+ *     print_func_name(end=" ... ")
+ *     cdef:
+ */
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_3dfs_11test_dfs_big, NULL, __pyx_n_s_dfs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_dfs_big, __pyx_t_1) < 0) __PYX_ERR(0, 201, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "dfs.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * 
- * from stack cimport stack_c, create_stack, push, pop, peek, \
+ * from time import time
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -4079,6 +4385,42 @@ static CYTHON_INLINE long __Pyx_mod_long(long a, long b) {
     r += ((r != 0) & ((r ^ b) < 0)) * b;
     return r;
 }
+
+/* PyObjectFormat */
+#if CYTHON_USE_UNICODE_WRITER
+static PyObject* __Pyx_PyObject_Format(PyObject* obj, PyObject* format_spec) {
+    int ret;
+    _PyUnicodeWriter writer;
+    if (likely(PyFloat_CheckExact(obj))) {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x03040000
+        _PyUnicodeWriter_Init(&writer, 0);
+#else
+        _PyUnicodeWriter_Init(&writer);
+#endif
+        ret = _PyFloat_FormatAdvancedWriter(
+            &writer,
+            obj,
+            format_spec, 0, PyUnicode_GET_LENGTH(format_spec));
+    } else if (likely(PyLong_CheckExact(obj))) {
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x03040000
+        _PyUnicodeWriter_Init(&writer, 0);
+#else
+        _PyUnicodeWriter_Init(&writer);
+#endif
+        ret = _PyLong_FormatAdvancedWriter(
+            &writer,
+            obj,
+            format_spec, 0, PyUnicode_GET_LENGTH(format_spec));
+    } else {
+        return PyObject_Format(obj, format_spec);
+    }
+    if (unlikely(ret == -1)) {
+        _PyUnicodeWriter_Dealloc(&writer);
+        return NULL;
+    }
+    return _PyUnicodeWriter_Finish(&writer);
+}
+#endif
 
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
@@ -5196,6 +5538,43 @@ static int __Pyx_check_binary_version(void) {
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
+}
+
+/* FunctionExport */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+    PyObject *d = 0;
+    PyObject *cobj = 0;
+    union {
+        void (*fp)(void);
+        void *p;
+    } tmp;
+    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
+    if (!d) {
+        PyErr_Clear();
+        d = PyDict_New();
+        if (!d)
+            goto bad;
+        Py_INCREF(d);
+        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
+            goto bad;
+    }
+    tmp.fp = f;
+#if PY_VERSION_HEX >= 0x02070000
+    cobj = PyCapsule_New(tmp.p, sig, 0);
+#else
+    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+#endif
+    if (!cobj)
+        goto bad;
+    if (PyDict_SetItemString(d, name, cobj) < 0)
+        goto bad;
+    Py_DECREF(cobj);
+    Py_DECREF(d);
+    return 0;
+bad:
+    Py_XDECREF(cobj);
+    Py_XDECREF(d);
+    return -1;
 }
 
 /* FunctionImport */
