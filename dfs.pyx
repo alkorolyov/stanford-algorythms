@@ -3,6 +3,7 @@
 from time import time
 from stack cimport stack_c, create_stack, push, pop, peek, \
     free_stack, size_s, print_stack, is_empty_s
+from array_c cimport array_c, push_back_arr, create_arr
 from readg cimport read_graph, read_graphs
 from graph cimport graph_c, node_c, free_graph, dict2graph, rand_dict_graph
 from utils import print_func_name
@@ -43,17 +44,18 @@ cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):
 
 """ ######### Depth-First Search using Stack data-structure ########### """
 
-cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):
+cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
+                    size_t* ft=NULL, array_c* ft_order=NULL):
     """
     DFS using stack. The difference from classical realization is that during exploration
     we use peek() and vertices stay in the stack. We remove from stack when there is no
     adjacent nodes. Direct analogy to recusrsive procedure and gives us correct finishing
     time values for topological sorting and strongly connected components (SCC).
     :param g: inpur C graph
-    :param s: starting vertice
+    :param s: starting vertex
     :param output: (optional) stack for output
     :param ft: (optional) variable for finishing time counter
-    :return: void
+    :return: array of vertices ordered by finishing time, from max to 0
     """
     cdef:
         size_t i, j, v
@@ -78,6 +80,8 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL)
                 # print("v", v, "ft:", ft[0])
                 nd.fin_time = ft[0]
                 ft[0] += 1
+                if ft_order:
+                    push_back_arr(ft_order, v)
             continue
         else:
             nd.explored = True
@@ -94,9 +98,14 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL)
                 if not g.node[j].explored:
                     push(stack, j)
 
-
-
     free_stack(stack)
+
+cdef void dfs_ordered_loop(graph_c* g, array_c* order):
+    cdef size_t i, j
+    for i in range(g.len):
+        j = order.items[i]
+        if not g.node[j].explored:
+            dfs_stack(g, j, NULL, NULL, NULL)
 
 
 """ ################################################################ """

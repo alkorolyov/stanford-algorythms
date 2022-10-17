@@ -32,6 +32,20 @@ cdef size_t max_arr(array_c * arr):
             max_val = arr.items[i]
     return max_val
 
+cdef inline void swap(array_c* arr, size_t i, size_t j):
+    cdef size_t tmp
+    tmp = arr.items[i]
+    arr.items[i] = arr.items[j]
+    arr.items[j] = tmp
+
+cdef void reverse_arr(array_c * arr):
+    cdef:
+        size_t i
+        size_t n = arr.size - 1
+
+    for i in range(arr.size // 2):
+        swap(arr, i, n - i)
+
 cdef array_c* list2arr(list py_list):
     """
     Read python list of integers and return C array
@@ -114,6 +128,52 @@ def test_resize_arr():
     assert arr.capacity == 20
     arr.items[19] = 1
     free_arr(arr)
+
+def test_swap():
+    print_func_name()
+    cdef array_c * arr = create_arr(3)
+    arr.items[0] = 3
+    arr.items[1] = 2
+    arr.items[2] = 1
+    arr.size = 3
+
+    swap(arr, 0, 2)
+
+    assert arr.items[0] == 1
+    assert arr.items[2] == 3
+    free_arr(arr)
+
+def test_reverse_even():
+    cdef array_c * arr = create_arr(4)
+    arr.items[0] = 3
+    arr.items[1] = 2
+    arr.items[2] = 1
+    arr.items[3] = 0
+    arr.size = 4
+
+    reverse_arr(arr)
+
+    assert arr.items[0] == 0
+    assert arr.items[1] == 1
+    assert arr.items[2] == 2
+    assert arr.items[3] == 3
+    free_arr(arr)
+
+def test_reverse_odd():
+    cdef array_c * arr = create_arr(3)
+    arr.items[0] = 3
+    arr.items[1] = 2
+    arr.items[2] = 1
+    arr.size = 3
+
+    reverse_arr(arr)
+
+    assert arr.items[0] == 1
+    assert arr.items[1] == 2
+    assert arr.items[2] == 3
+    free_arr(arr)
+
+
 
 def test_print():
     print_func_name()

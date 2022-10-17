@@ -975,8 +975,8 @@ struct __pyx_t_5graph_graph_c {
   __pyx_t_5graph_node_c **node;
 };
 
-/* "graph.pxd":19
- *     graph_c* dict2graph(dict graph)
+/* "graph.pxd":20
+ *     graph_c * reverse_graph(graph_c * g)
  *     void free_graph(graph_c *g)
  *     void print_graph(graph_c *g, size_t length=*)             # <<<<<<<<<<<<<<
  *     void print_graph_ext(graph_c *g, size_t length=*)
@@ -987,7 +987,7 @@ struct __pyx_opt_args_5graph_print_graph {
   size_t length;
 };
 
-/* "graph.pxd":20
+/* "graph.pxd":21
  *     void free_graph(graph_c *g)
  *     void print_graph(graph_c *g, size_t length=*)
  *     void print_graph_ext(graph_c *g, size_t length=*)             # <<<<<<<<<<<<<<
@@ -999,7 +999,7 @@ struct __pyx_opt_args_5graph_print_graph_ext {
   size_t length;
 };
 
-/* "graph.pxd":22
+/* "graph.pxd":23
  *     void print_graph_ext(graph_c *g, size_t length=*)
  *     void mem_size(graph_c *g)
  *     dict rand_dict_graph(size_t n, size_t m, bint selfloops=*, bint directed=*)             # <<<<<<<<<<<<<<
@@ -1026,11 +1026,12 @@ struct __pyx_t_5stack_stack_c {
 struct __pyx_opt_args_3dfs_dfs_rec;
 struct __pyx_opt_args_3dfs_dfs_stack;
 
-/* "dfs.pxd":8
+/* "dfs.pxd":9
  * 
  * cdef:
  *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)             # <<<<<<<<<<<<<<
- *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*, array_c* ft_order=*)
+ *     void dfs_ordered_loop(graph_c * g, array_c * order)
  */
 struct __pyx_opt_args_3dfs_dfs_rec {
   int __pyx_n;
@@ -1038,15 +1039,17 @@ struct __pyx_opt_args_3dfs_dfs_rec {
   size_t *ft;
 };
 
-/* "dfs.pxd":9
+/* "dfs.pxd":10
  * cdef:
  *     void dfs_rec(graph_c* g, size_t s, stack_c* output=*, size_t* ft=*)
- *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*)             # <<<<<<<<<<<<<<
+ *     void dfs_stack(graph_c * g, size_t s, stack_c * output=*, size_t * ft=*, array_c* ft_order=*)             # <<<<<<<<<<<<<<
+ *     void dfs_ordered_loop(graph_c * g, array_c * order)
  */
 struct __pyx_opt_args_3dfs_dfs_stack {
   int __pyx_n;
   __pyx_t_5stack_stack_c *output;
   size_t *ft;
+  __pyx_t_7array_c_array_c *ft_order;
 };
 
 /* --- Runtime support code (head) --- */
@@ -1331,6 +1334,9 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
+/* FunctionExport.proto */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+
 /* FunctionImport.proto */
 static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig);
 
@@ -1339,6 +1345,8 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
 /* Module declarations from 'array_c' */
+static __pyx_t_7array_c_array_c *(*__pyx_f_7array_c_create_arr)(size_t); /*proto*/
+static void (*__pyx_f_7array_c_reverse_arr)(__pyx_t_7array_c_array_c *); /*proto*/
 
 /* Module declarations from 'graph' */
 static __pyx_t_5graph_graph_c *(*__pyx_f_5graph_dict2graph)(PyObject *); /*proto*/
@@ -1349,52 +1357,47 @@ static __pyx_t_5graph_graph_c *(*__pyx_f_5graph_dict2graph)(PyObject *); /*proto
 static void (*__pyx_f_3dfs_dfs_stack)(__pyx_t_5graph_graph_c *, size_t, struct __pyx_opt_args_3dfs_dfs_stack *__pyx_optional_args); /*proto*/
 
 /* Module declarations from 'topsort' */
-static void __pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *); /*proto*/
+static __pyx_t_7array_c_array_c *__pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *); /*proto*/
 #define __Pyx_MODULE_NAME "topsort"
 extern int __pyx_module_is_main_topsort;
 int __pyx_module_is_main_topsort = 0;
 
 /* Implementation of 'topsort' */
 static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_print;
 static const char __pyx_k_g[] = "g";
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
-static const char __pyx_k_node[] = "node:";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_graph[] = "graph";
-static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_utils[] = "utils";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_topsort[] = "topsort";
-static const char __pyx_k_fin_time[] = "fin time:";
+static const char __pyx_k_ft_order[] = "ft_order";
 static const char __pyx_k_topsort_pyx[] = "topsort.pyx";
 static const char __pyx_k_test_topsort[] = "test_topsort";
-static const char __pyx_k_test_topsort_1[] = "test_topsort_1";
 static const char __pyx_k_print_func_name[] = "print_func_name";
+static const char __pyx_k_test_topsort_ft[] = "test_topsort_ft";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static PyObject *__pyx_n_s_cline_in_traceback;
-static PyObject *__pyx_kp_u_fin_time;
+static PyObject *__pyx_n_s_ft_order;
 static PyObject *__pyx_n_s_g;
 static PyObject *__pyx_n_s_graph;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_kp_u_node;
-static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_print_func_name;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_test_topsort;
-static PyObject *__pyx_n_s_test_topsort_1;
+static PyObject *__pyx_n_s_test_topsort_ft;
 static PyObject *__pyx_n_s_topsort;
 static PyObject *__pyx_kp_s_topsort_pyx;
 static PyObject *__pyx_n_s_utils;
 static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7topsort_2test_topsort_ft(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
@@ -1404,17 +1407,19 @@ static PyObject *__pyx_codeobj__2;
 static PyObject *__pyx_codeobj__4;
 /* Late includes */
 
-/* "topsort.pyx":11
+/* "topsort.pyx":9
  * 
  * 
- * cdef void topsort(graph_c* g):             # <<<<<<<<<<<<<<
- *     cdef:
- *         size_t i
+ * cdef array_c* topsort(graph_c* g):             # <<<<<<<<<<<<<<
+ *     """
+ *     Topological sort for graph
  */
 
-static void __pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *__pyx_v_g) {
+static __pyx_t_7array_c_array_c *__pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *__pyx_v_g) {
   size_t __pyx_v_i;
   size_t __pyx_v_ft;
+  __pyx_t_7array_c_array_c *__pyx_v_ft_order;
+  __pyx_t_7array_c_array_c *__pyx_r;
   __Pyx_RefNannyDeclarations
   size_t __pyx_t_1;
   size_t __pyx_t_2;
@@ -1423,72 +1428,103 @@ static void __pyx_f_7topsort_topsort(__pyx_t_5graph_graph_c *__pyx_v_g) {
   struct __pyx_opt_args_3dfs_dfs_stack __pyx_t_5;
   __Pyx_RefNannySetupContext("topsort", 0);
 
-  /* "topsort.pyx":14
+  /* "topsort.pyx":17
  *     cdef:
- *         size_t i
+ *         size_t i, j
  *         size_t ft = 0             # <<<<<<<<<<<<<<
+ *         array_c* ft_order = create_arr(g.len)
  *     for i in range(g.len):
- *         if not g.node[i].explored:
  */
   __pyx_v_ft = 0;
 
-  /* "topsort.pyx":15
- *         size_t i
+  /* "topsort.pyx":18
+ *         size_t i, j
  *         size_t ft = 0
+ *         array_c* ft_order = create_arr(g.len)             # <<<<<<<<<<<<<<
+ *     for i in range(g.len):
+ *         if not g.node[i].explored:
+ */
+  __pyx_v_ft_order = __pyx_f_7array_c_create_arr(__pyx_v_g->len);
+
+  /* "topsort.pyx":19
+ *         size_t ft = 0
+ *         array_c* ft_order = create_arr(g.len)
  *     for i in range(g.len):             # <<<<<<<<<<<<<<
  *         if not g.node[i].explored:
- *             dfs_stack(g, i, NULL, &ft)
+ *             dfs_stack(g, i, NULL, &ft, ft_order)
  */
   __pyx_t_1 = __pyx_v_g->len;
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "topsort.pyx":16
- *         size_t ft = 0
+    /* "topsort.pyx":20
+ *         array_c* ft_order = create_arr(g.len)
  *     for i in range(g.len):
  *         if not g.node[i].explored:             # <<<<<<<<<<<<<<
- *             dfs_stack(g, i, NULL, &ft)
+ *             dfs_stack(g, i, NULL, &ft, ft_order)
  * 
  */
     __pyx_t_4 = ((!((__pyx_v_g->node[__pyx_v_i])->explored != 0)) != 0);
     if (__pyx_t_4) {
 
-      /* "topsort.pyx":17
+      /* "topsort.pyx":21
  *     for i in range(g.len):
  *         if not g.node[i].explored:
- *             dfs_stack(g, i, NULL, &ft)             # <<<<<<<<<<<<<<
+ *             dfs_stack(g, i, NULL, &ft, ft_order)             # <<<<<<<<<<<<<<
  * 
- * 
+ *     reverse_arr(ft_order)
  */
-      __pyx_t_5.__pyx_n = 2;
+      __pyx_t_5.__pyx_n = 3;
       __pyx_t_5.output = NULL;
       __pyx_t_5.ft = (&__pyx_v_ft);
+      __pyx_t_5.ft_order = __pyx_v_ft_order;
       __pyx_f_3dfs_dfs_stack(__pyx_v_g, __pyx_v_i, &__pyx_t_5); 
 
-      /* "topsort.pyx":16
- *         size_t ft = 0
+      /* "topsort.pyx":20
+ *         array_c* ft_order = create_arr(g.len)
  *     for i in range(g.len):
  *         if not g.node[i].explored:             # <<<<<<<<<<<<<<
- *             dfs_stack(g, i, NULL, &ft)
+ *             dfs_stack(g, i, NULL, &ft, ft_order)
  * 
  */
     }
   }
 
-  /* "topsort.pyx":11
+  /* "topsort.pyx":23
+ *             dfs_stack(g, i, NULL, &ft, ft_order)
+ * 
+ *     reverse_arr(ft_order)             # <<<<<<<<<<<<<<
+ * 
+ *     return ft_order
+ */
+  __pyx_f_7array_c_reverse_arr(__pyx_v_ft_order);
+
+  /* "topsort.pyx":25
+ *     reverse_arr(ft_order)
+ * 
+ *     return ft_order             # <<<<<<<<<<<<<<
  * 
  * 
- * cdef void topsort(graph_c* g):             # <<<<<<<<<<<<<<
- *     cdef:
- *         size_t i
+ */
+  __pyx_r = __pyx_v_ft_order;
+  goto __pyx_L0;
+
+  /* "topsort.pyx":9
+ * 
+ * 
+ * cdef array_c* topsort(graph_c* g):             # <<<<<<<<<<<<<<
+ *     """
+ *     Topological sort for graph
  */
 
   /* function exit code */
+  __pyx_L0:;
   __Pyx_RefNannyFinishContext();
+  return __pyx_r;
 }
 
-/* "topsort.pyx":24
+/* "topsort.pyx":32
  * """ ################################################################ """
  * 
  * def test_topsort():             # <<<<<<<<<<<<<<
@@ -1523,14 +1559,14 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("test_topsort", 0);
 
-  /* "topsort.pyx":25
+  /* "topsort.pyx":33
  * 
  * def test_topsort():
  *     print_func_name()             # <<<<<<<<<<<<<<
  *     graph = {0: [0, 1],
  *              1: [2],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -1544,21 +1580,21 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "topsort.pyx":26
+  /* "topsort.pyx":34
  * def test_topsort():
  *     print_func_name()
  *     graph = {0: [0, 1],             # <<<<<<<<<<<<<<
  *              1: [2],
  *              2: []}
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -1566,39 +1602,39 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
   PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "topsort.pyx":27
+  /* "topsort.pyx":35
  *     print_func_name()
  *     graph = {0: [0, 1],
  *              1: [2],             # <<<<<<<<<<<<<<
  *              2: []}
  *     cdef:
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "topsort.pyx":28
+  /* "topsort.pyx":36
  *     graph = {0: [0, 1],
  *              1: [2],
  *              2: []}             # <<<<<<<<<<<<<<
  *     cdef:
  *         size_t i
  */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "topsort.pyx":31
+  /* "topsort.pyx":39
  *     cdef:
  *         size_t i
  *         graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
@@ -1607,16 +1643,16 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "topsort.pyx":33
+  /* "topsort.pyx":41
  *         graph_c* g = dict2graph(graph)
  * 
  *     topsort(g)             # <<<<<<<<<<<<<<
  * 
  *     assert g.node[0].fin_time == 2
  */
-  __pyx_f_7topsort_topsort(__pyx_v_g);
+  (void)(__pyx_f_7topsort_topsort(__pyx_v_g));
 
-  /* "topsort.pyx":35
+  /* "topsort.pyx":43
  *     topsort(g)
  * 
  *     assert g.node[0].fin_time == 2             # <<<<<<<<<<<<<<
@@ -1627,12 +1663,12 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_g->node[0])->fin_time == 2) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 35, __pyx_L1_error)
+      __PYX_ERR(0, 43, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "topsort.pyx":36
+  /* "topsort.pyx":44
  * 
  *     assert g.node[0].fin_time == 2
  *     assert g.node[1].fin_time == 1             # <<<<<<<<<<<<<<
@@ -1643,28 +1679,28 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_g->node[1])->fin_time == 1) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 36, __pyx_L1_error)
+      __PYX_ERR(0, 44, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "topsort.pyx":37
+  /* "topsort.pyx":45
  *     assert g.node[0].fin_time == 2
  *     assert g.node[1].fin_time == 1
  *     assert g.node[2].fin_time == 0             # <<<<<<<<<<<<<<
  * 
- * def test_topsort_1():
+ * def test_topsort_ft():
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!(((__pyx_v_g->node[2])->fin_time == 0) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 37, __pyx_L1_error)
+      __PYX_ERR(0, 45, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "topsort.pyx":24
+  /* "topsort.pyx":32
  * """ ################################################################ """
  * 
  * def test_topsort():             # <<<<<<<<<<<<<<
@@ -1688,53 +1724,50 @@ static PyObject *__pyx_pf_7topsort_test_topsort(CYTHON_UNUSED PyObject *__pyx_se
   return __pyx_r;
 }
 
-/* "topsort.pyx":39
+/* "topsort.pyx":47
  *     assert g.node[2].fin_time == 0
  * 
- * def test_topsort_1():             # <<<<<<<<<<<<<<
+ * def test_topsort_ft():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     graph = {0: [1],
+ *     graph = {0: [2, 0],
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7topsort_3test_topsort_1(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_7topsort_3test_topsort_1 = {"test_topsort_1", (PyCFunction)__pyx_pw_7topsort_3test_topsort_1, METH_NOARGS, 0};
-static PyObject *__pyx_pw_7topsort_3test_topsort_1(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_7topsort_3test_topsort_ft(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_7topsort_3test_topsort_ft = {"test_topsort_ft", (PyCFunction)__pyx_pw_7topsort_3test_topsort_ft, METH_NOARGS, 0};
+static PyObject *__pyx_pw_7topsort_3test_topsort_ft(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("test_topsort_1 (wrapper)", 0);
-  __pyx_r = __pyx_pf_7topsort_2test_topsort_1(__pyx_self);
+  __Pyx_RefNannySetupContext("test_topsort_ft (wrapper)", 0);
+  __pyx_r = __pyx_pf_7topsort_2test_topsort_ft(__pyx_self);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_7topsort_2test_topsort_ft(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_v_graph = NULL;
-  size_t __pyx_v_i;
   __pyx_t_5graph_graph_c *__pyx_v_g;
+  __pyx_t_7array_c_array_c *__pyx_v_ft_order;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  size_t __pyx_t_4;
-  size_t __pyx_t_5;
-  size_t __pyx_t_6;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("test_topsort_1", 0);
+  __Pyx_RefNannySetupContext("test_topsort_ft", 0);
 
-  /* "topsort.pyx":40
+  /* "topsort.pyx":48
  * 
- * def test_topsort_1():
+ * def test_topsort_ft():
  *     print_func_name()             # <<<<<<<<<<<<<<
- *     graph = {0: [1],
- *              1: [2],
+ *     graph = {0: [2, 0],
+ *              1: [0],
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_print_func_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -1748,127 +1781,135 @@ static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "topsort.pyx":41
- * def test_topsort_1():
+  /* "topsort.pyx":49
+ * def test_topsort_ft():
  *     print_func_name()
- *     graph = {0: [1],             # <<<<<<<<<<<<<<
- *              1: [2],
- *              2: [0]}
+ *     graph = {0: [2, 0],             # <<<<<<<<<<<<<<
+ *              1: [0],
+ *              2: [1]}
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "topsort.pyx":42
- *     print_func_name()
- *     graph = {0: [1],
- *              1: [2],             # <<<<<<<<<<<<<<
- *              2: [0]}
- *     cdef:
- */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_int_0);
+  __Pyx_GIVEREF(__pyx_int_0);
+  PyList_SET_ITEM(__pyx_t_2, 1, __pyx_int_0);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_0, __pyx_t_2) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "topsort.pyx":43
- *     graph = {0: [1],
- *              1: [2],
- *              2: [0]}             # <<<<<<<<<<<<<<
+  /* "topsort.pyx":50
+ *     print_func_name()
+ *     graph = {0: [2, 0],
+ *              1: [0],             # <<<<<<<<<<<<<<
+ *              2: [1]}
  *     cdef:
- *         size_t i
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_0);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_1, __pyx_t_2) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "topsort.pyx":51
+ *     graph = {0: [2, 0],
+ *              1: [0],
+ *              2: [1]}             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         size_t i
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_int_1);
+  __Pyx_GIVEREF(__pyx_int_1);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_int_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_int_2, __pyx_t_2) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_graph = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "topsort.pyx":46
+  /* "topsort.pyx":54
  *     cdef:
  *         size_t i
  *         graph_c* g = dict2graph(graph)             # <<<<<<<<<<<<<<
+ *         array_c* ft_order = topsort(g)
  * 
- *     topsort(g)
  */
   __pyx_v_g = __pyx_f_5graph_dict2graph(__pyx_v_graph);
 
-  /* "topsort.pyx":48
+  /* "topsort.pyx":55
+ *         size_t i
  *         graph_c* g = dict2graph(graph)
+ *         array_c* ft_order = topsort(g)             # <<<<<<<<<<<<<<
  * 
- *     topsort(g)             # <<<<<<<<<<<<<<
- * 
- *     for i in range(g.len):
+ *     assert ft_order.items[0] == 0
  */
-  __pyx_f_7topsort_topsort(__pyx_v_g);
+  __pyx_v_ft_order = __pyx_f_7topsort_topsort(__pyx_v_g);
 
-  /* "topsort.pyx":50
- *     topsort(g)
+  /* "topsort.pyx":57
+ *         array_c* ft_order = topsort(g)
  * 
- *     for i in range(g.len):             # <<<<<<<<<<<<<<
- *         print("node:", i, "fin time:", g.node[i].fin_time)
- * 
+ *     assert ft_order.items[0] == 0             # <<<<<<<<<<<<<<
+ *     assert ft_order.items[1] == 2
+ *     assert ft_order.items[2] == 1
  */
-  __pyx_t_4 = __pyx_v_g->len;
-  __pyx_t_5 = __pyx_t_4;
-  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
-    __pyx_v_i = __pyx_t_6;
-
-    /* "topsort.pyx":51
- * 
- *     for i in range(g.len):
- *         print("node:", i, "fin time:", g.node[i].fin_time)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    __pyx_t_1 = __Pyx_PyInt_FromSize_t(__pyx_v_i); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_FromSize_t((__pyx_v_g->node[__pyx_v_i])->fin_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_kp_u_node);
-    __Pyx_GIVEREF(__pyx_kp_u_node);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_node);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
-    __Pyx_INCREF(__pyx_kp_u_fin_time);
-    __Pyx_GIVEREF(__pyx_kp_u_fin_time);
-    PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_kp_u_fin_time);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_t_2);
-    __pyx_t_1 = 0;
-    __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_ft_order->items[0]) == 0) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 57, __pyx_L1_error)
+    }
   }
+  #endif
 
-  /* "topsort.pyx":39
+  /* "topsort.pyx":58
+ * 
+ *     assert ft_order.items[0] == 0
+ *     assert ft_order.items[1] == 2             # <<<<<<<<<<<<<<
+ *     assert ft_order.items[2] == 1
+ * 
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_ft_order->items[1]) == 2) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 58, __pyx_L1_error)
+    }
+  }
+  #endif
+
+  /* "topsort.pyx":59
+ *     assert ft_order.items[0] == 0
+ *     assert ft_order.items[1] == 2
+ *     assert ft_order.items[2] == 1             # <<<<<<<<<<<<<<
+ * 
+ *     # for i in range(g.len):
+ */
+  #ifndef CYTHON_WITHOUT_ASSERTIONS
+  if (unlikely(!Py_OptimizeFlag)) {
+    if (unlikely(!(((__pyx_v_ft_order->items[2]) == 1) != 0))) {
+      PyErr_SetNone(PyExc_AssertionError);
+      __PYX_ERR(0, 59, __pyx_L1_error)
+    }
+  }
+  #endif
+
+  /* "topsort.pyx":47
  *     assert g.node[2].fin_time == 0
  * 
- * def test_topsort_1():             # <<<<<<<<<<<<<<
+ * def test_topsort_ft():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     graph = {0: [1],
+ *     graph = {0: [2, 0],
  */
 
   /* function exit code */
@@ -1878,7 +1919,7 @@ static PyObject *__pyx_pf_7topsort_2test_topsort_1(CYTHON_UNUSED PyObject *__pyx
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("topsort.test_topsort_1", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("topsort.test_topsort_ft", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_graph);
@@ -1934,28 +1975,25 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
-  {&__pyx_kp_u_fin_time, __pyx_k_fin_time, sizeof(__pyx_k_fin_time), 0, 1, 0, 0},
+  {&__pyx_n_s_ft_order, __pyx_k_ft_order, sizeof(__pyx_k_ft_order), 0, 0, 1, 1},
   {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
   {&__pyx_n_s_graph, __pyx_k_graph, sizeof(__pyx_k_graph), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_kp_u_node, __pyx_k_node, sizeof(__pyx_k_node), 0, 1, 0, 0},
-  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_print_func_name, __pyx_k_print_func_name, sizeof(__pyx_k_print_func_name), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_test_topsort, __pyx_k_test_topsort, sizeof(__pyx_k_test_topsort), 0, 0, 1, 1},
-  {&__pyx_n_s_test_topsort_1, __pyx_k_test_topsort_1, sizeof(__pyx_k_test_topsort_1), 0, 0, 1, 1},
+  {&__pyx_n_s_test_topsort_ft, __pyx_k_test_topsort_ft, sizeof(__pyx_k_test_topsort_ft), 0, 0, 1, 1},
   {&__pyx_n_s_topsort, __pyx_k_topsort, sizeof(__pyx_k_topsort), 0, 0, 1, 1},
   {&__pyx_kp_s_topsort_pyx, __pyx_k_topsort_pyx, sizeof(__pyx_k_topsort_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_utils, __pyx_k_utils, sizeof(__pyx_k_utils), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 15, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 19, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1965,29 +2003,29 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "topsort.pyx":24
+  /* "topsort.pyx":32
  * """ ################################################################ """
  * 
  * def test_topsort():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1],
  */
-  __pyx_tuple_ = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 32, __pyx_L1_error)
 
-  /* "topsort.pyx":39
+  /* "topsort.pyx":47
  *     assert g.node[2].fin_time == 0
  * 
- * def test_topsort_1():             # <<<<<<<<<<<<<<
+ * def test_topsort_ft():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     graph = {0: [1],
+ *     graph = {0: [2, 0],
  */
-  __pyx_tuple__3 = PyTuple_Pack(3, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(4, __pyx_n_s_graph, __pyx_n_s_i, __pyx_n_s_g, __pyx_n_s_ft_order); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort_1, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(0, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_topsort_pyx, __pyx_n_s_test_topsort_ft, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2031,10 +2069,17 @@ static int __Pyx_modinit_variable_export_code(void) {
 
 static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
+  if (__Pyx_ExportFunction("topsort", (void (*)(void))__pyx_f_7topsort_topsort, "__pyx_t_7array_c_array_c *(__pyx_t_5graph_graph_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -2069,6 +2114,11 @@ static int __Pyx_modinit_function_import_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_import_code", 0);
   /*--- Function import code ---*/
+  __pyx_t_1 = PyImport_ImportModule("array_c"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (__Pyx_ImportFunction(__pyx_t_1, "create_arr", (void (**)(void))&__pyx_f_7array_c_create_arr, "__pyx_t_7array_c_array_c *(size_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "reverse_arr", (void (**)(void))&__pyx_f_7array_c_reverse_arr, "void (__pyx_t_7array_c_array_c *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = PyImport_ImportModule("graph"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (__Pyx_ImportFunction(__pyx_t_1, "dict2graph", (void (**)(void))&__pyx_f_5graph_dict2graph, "__pyx_t_5graph_graph_c *(PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -2276,7 +2326,7 @@ if (!__Pyx_RefNanny) {
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
-  (void)__Pyx_modinit_function_export_code();
+  if (unlikely(__Pyx_modinit_function_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
@@ -2307,34 +2357,34 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "topsort.pyx":24
+  /* "topsort.pyx":32
  * """ ################################################################ """
  * 
  * def test_topsort():             # <<<<<<<<<<<<<<
  *     print_func_name()
  *     graph = {0: [0, 1],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_1test_topsort, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_1test_topsort, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort, __pyx_t_2) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort, __pyx_t_2) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "topsort.pyx":39
+  /* "topsort.pyx":47
  *     assert g.node[2].fin_time == 0
  * 
- * def test_topsort_1():             # <<<<<<<<<<<<<<
+ * def test_topsort_ft():             # <<<<<<<<<<<<<<
  *     print_func_name()
- *     graph = {0: [1],
+ *     graph = {0: [2, 0],
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_3test_topsort_1, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7topsort_3test_topsort_ft, NULL, __pyx_n_s_topsort); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort_1, __pyx_t_2) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test_topsort_ft, __pyx_t_2) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "topsort.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * 
- * 
+ * from array_c cimport array_c, create_arr, reverse_arr
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -3833,6 +3883,43 @@ static int __Pyx_check_binary_version(void) {
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
+}
+
+/* FunctionExport */
+static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+    PyObject *d = 0;
+    PyObject *cobj = 0;
+    union {
+        void (*fp)(void);
+        void *p;
+    } tmp;
+    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
+    if (!d) {
+        PyErr_Clear();
+        d = PyDict_New();
+        if (!d)
+            goto bad;
+        Py_INCREF(d);
+        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
+            goto bad;
+    }
+    tmp.fp = f;
+#if PY_VERSION_HEX >= 0x02070000
+    cobj = PyCapsule_New(tmp.p, sig, 0);
+#else
+    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+#endif
+    if (!cobj)
+        goto bad;
+    if (PyDict_SetItemString(d, name, cobj) < 0)
+        goto bad;
+    Py_DECREF(cobj);
+    Py_DECREF(d);
+    return 0;
+bad:
+    Py_XDECREF(cobj);
+    Py_XDECREF(d);
+    return -1;
 }
 
 /* FunctionImport */

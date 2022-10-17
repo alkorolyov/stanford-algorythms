@@ -95,6 +95,7 @@ import bfs
 import queue_c
 import readg
 import topsort
+import scc
 
 stack.test_push()
 stack.test_print()
@@ -111,6 +112,9 @@ queue_c.test_print()
 array_c.test_list2arr()
 array_c.test_create_arr()
 array_c.test_resize_arr()
+array_c.test_swap()
+array_c.test_reverse_even()
+array_c.test_reverse_odd()
 array_c.test_print()
 array_c.test_print_zero_length()
 
@@ -120,6 +124,7 @@ graph.test_dict2graph()
 graph.test_dict2graph_1()
 graph.test_dict2graph_2()
 graph.test_dict2graph_random()
+graph.test_reverse_graph()
 
 
 readg.test_ascii2int()
@@ -127,7 +132,7 @@ readg.test_read_edge_1()
 readg.test_read_buf_1()
 readg.test_read_array()
 readg.test_read_graph()
-readg.test_read_big()
+# readg.test_read_big()
 # readg.test_read_big_pair()
 
 bfs.test_bfs()
@@ -136,10 +141,19 @@ dfs.test_dfs_1()
 dfs.test_dfs_2()
 dfs.test_dfs_3()
 dfs.test_dfs_4()
-# dfs.test_dfs_random()
+dfs.test_dfs_random()
 # dfs.test_dfs_big()
 
 topsort.test_topsort()
+topsort.test_topsort_ft()
+
+
+scc.test_scc_1()
+scc.test_scc_2()
+scc.test_scc_3()
+scc.test_scc_4()
+scc.test_scc_big()
+
 
 # sorting.test_swap_c()
 # sorting.test_partition_c_1()
@@ -212,33 +226,6 @@ topsort.test_topsort()
 # mincut.test_mincut()
 # mincut.test_mincut_1()
 # mincut.test_mincut_N()
-
-# scc.test_ascii2int()
-# scc.test_read_edge_1()
-# scc.test_read_buf_1()
-# scc.test_create_l_list()
-# scc.test_create_l_list_random()
-# scc.test_insert_l_list()
-# scc.test_print_l_list()
-# scc.test_read_arr()
-# scc.test_create_graph()
-# scc.test_read_graph()
-# scc.test_read_graph_1()
-# scc.test_read_graph_random()
-# scc.test_reverse_graph()
-# scc.test_dfs_1()
-# scc.test_dfs_2()
-# scc.test_dfs_3()
-# scc.test_dfs_4()
-# scc.test_dfs_random()
-# scc.test_dfs_loop_1()
-# scc.test_dfs_loop_2()
-# scc.test_scc_1()
-# scc.test_scc_2()
-# scc.test_scc_3()
-# scc.test_scc_4()
-# scc.test_dfs_big()
-# scc.test_scc_big()
 
 
 print(f"PASSED {time() - start_time:.2f}s")

@@ -15,6 +15,7 @@ cdef:
     graph_c* create_graph_c(size_t n)
     void add_edge(graph_c* g, size_t v1, size_t v2)
     graph_c* dict2graph(dict graph)
+    graph_c * reverse_graph(graph_c * g)
     void free_graph(graph_c *g)
     void print_graph(graph_c *g, size_t length=*)
     void print_graph_ext(graph_c *g, size_t length=*)

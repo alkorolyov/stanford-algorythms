@@ -240,7 +240,7 @@ def test_read_graph():
 
 
 def test_read_big():
-    print_func_name(end="\t")
+    print_func_name(end=" ... ")
 
     start_time = time()
 

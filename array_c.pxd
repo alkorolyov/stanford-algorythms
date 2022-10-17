@@ -11,4 +11,5 @@ cdef:
     void push_back_arr(array_c * arr, size_t val)
     void resize_arr(array_c* arr)
     size_t max_arr(array_c * arr)
+    void reverse_arr(array_c * arr)
     void print_array(array_c* arr)

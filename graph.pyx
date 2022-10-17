@@ -117,6 +117,23 @@ cdef graph_c* dict2graph(dict graph):
     # print_mem(<size_t*>g.node[0], g.len*5)
     return g
 
+cdef graph_c* reverse_graph(graph_c* g):
+    cdef:
+        graph_c* g_rev
+        size_t i, j, v1, v2
+        node_c* nd
+        array_c* orig
+    g_rev = create_graph_c(g.len)
+    for v1 in range(g.len):
+        nd = g.node[v1]
+        if nd.adj:
+            orig = nd.adj
+            for j in range(orig.size):
+                v2 = orig.items[j]
+                add_edge(g_rev, v2, v1)
+    return g_rev
+
+
 cdef void free_graph(graph_c *g):
     cdef size_t i
     cdef node_c* nd
@@ -147,10 +164,15 @@ cdef void print_graph_ext(graph_c *g, size_t length=-1):
         size_t i, n
         node_c* nd
 
-    for i in range(max(g.len, length)):
+    for i in range(min(g.len, length)):
         nd = g.node[i]
         print(i, end=": ")
-        print_array(nd.adj)
+
+        if nd.adj:
+            print_array(nd.adj)
+        else:
+            print("[]")
+
         print("   exp:   ", nd.explored)
         print("   ft:    ", hex(nd.fin_time))
         print("   leader:", nd.leader)
@@ -184,6 +206,8 @@ cdef dict rand_dict_graph(size_t n, size_t m, bint selfloops=False, bint directe
         if not directed:
             graph[v2].append(v1)
     return graph
+
+
 
 
 """ ################################################################ """
@@ -287,3 +311,18 @@ def test_dict2graph_random():
         free_graph(g)
 
 
+def test_reverse_graph():
+    print_func_name()
+    cdef:
+        graph_c* g
+        graph_c* r
+    graph = {0: [1, 2],
+             1: [],
+             2: []}
+    g = dict2graph(graph)
+    r = reverse_graph(g)
+    assert r.node[0].adj == NULL
+    assert r.node[1].adj.items[0] == 0
+    assert r.node[2].adj.items[0] == 0
+    free_graph(g)
+    free_graph(r)
