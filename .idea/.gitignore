@@ -7,3 +7,7 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+# cython compiled libraries and objects
+*.c
+*.html
+*.pyd
