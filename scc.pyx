@@ -12,24 +12,18 @@
 cimport numpy as cnp
 cnp.import_array()
 
+from time import time
+
 import numpy as np
-import pickle
-import sys
-import random
+import os
 
-from stack cimport stack_c, create_stack, push, pop, peek, \
-    free_stack, size_s, print_stack, is_empty_s
-
-
-from readg cimport read_graphs
-from array_c cimport array_c, reverse_arr
+from readg cimport read_graphs, read_graph
+from array_c cimport array_c, free_arr, reverse_arr
 from topsort cimport topsort
 from graph cimport graph_c, node_c, dict2graph, reverse_graph, free_graph, print_graph, print_graph_ext
-from dfs cimport dfs_stack, dfs_ordered_loop
+from dfs cimport dfs_ordered_loop
 
-from libc.stdlib cimport malloc, realloc, free, EXIT_FAILURE, rand, qsort
 from utils import print_func_name
-from tqdm import tqdm, trange
 
 
 
@@ -41,44 +35,11 @@ cdef void print_mem(size_t * mem, size_t size):
         print(f"{addr} : {val}")
 
 
-
-cdef void dfs_loop_1(graph_c* g_rev):
-    cdef size_t i
-    cdef size_t ft = 0
-
-    for i in range(g_rev.len):
-        if not g_rev.node[i].explored:
-            dfs_stack(g_rev, i, NULL, &ft)
-
-cdef void dfs_loop_2(graph_c* g, table* ft_table):
-    cdef size_t i, j
-
-    for i in range(g.len):
-        j = ft_table[i].idx
-        if not g.node[j].explored:
-            dfs_stack(g, j)
-
-
-cdef int cmp_table(const void *a, const void *b) nogil:
-    cdef:
-        table* nd1 = <table*>a
-        table* nd2 = <table*>b
-    if nd1.val > nd2.val:
-        return -1
-    elif nd1.val < nd2.val:
-        return 1
-    else:
-        return 0
-
-ctypedef struct table:
-    size_t idx
-    size_t val
-
-cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False):
+cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False, bint timeit=False):
     cdef:
         size_t i
         node_c* nd
-        array_c* ft_order
+        array_c* order
 
     if debug:
         print_graph(g)
@@ -86,7 +47,15 @@ cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False):
         print_graph(g_rev)
         print("=== DFS g_rev ====")
 
-    ft_order = topsort(g_rev)
+    if timeit:
+        print("Running 'topsort(g_rev)' ... ", end="")
+        start_time = time()
+
+    order = topsort(g_rev)
+    reverse_arr(order)
+
+    if timeit:
+        print(f"{time() - start_time:.2f}s")
 
     if debug:
         print("g_rev.len:", g_rev.len)
@@ -96,19 +65,48 @@ cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False):
     if debug:
         print("===== DFS ordered loop =====")
 
+    if timeit:
+        print("Running 'dfs_ordered_loop(g)' ... ", end="")
+        start_time = time()
 
-    dfs_ordered_loop(g, ft_order)
+    dfs_ordered_loop(g, order)
+    free_arr(order)
+
+    if timeit:
+        print(f"{time() - start_time:.2f}s")
 
     if debug:
         print_graph_ext(g)
 
-    free(ft_order)
+def scc_py(str filename):
+    cdef:
+        size_t i
+        graph_c * g
+        graph_c * g_rev
+
+
+    g = read_graph(filename)
+    g_rev = reverse_graph(g)
+    scc(g, g_rev, debug=False)
+
+    l = np.empty(g.len, dtype=np.uint64)
+    cdef size_t [:] l_view = l
+    for i in range(g.len):
+        l_view[i] = g.node[i].leader
+
+    free_graph(g)
+    free_graph(g_rev)
+
+    val, cnt = np.unique(l, return_counts=True)
+    res = np.flip(np.sort(cnt)[-5:])
+    return res
 
 
 """ ################################################################ """
 """ ######################### UNIT TESTS ########################### """
 """ ################################################################ """
 
+TEST_PATH = "tests//course2_assignment1SCC//"
 
 def test_scc_1():
     print_func_name()
@@ -169,11 +167,6 @@ def test_scc_4():
              2: [3],
              3: [4],
              4: [2]}
-    # graph = {0: [1],
-    #          1: [2],
-    #          2: [3, 0],
-    #          3: [4],
-    #          4: [3]}
     cdef:
         graph_c* g = dict2graph(graph)
         graph_c * g_rev = reverse_graph(g)
@@ -188,28 +181,34 @@ def test_scc_4():
         nd = g.node[i]
         l_view[i] = nd.leader
 
-    print(l)
+    # print(l)
     val, cnt = np.unique(l, return_counts=True)
-    print(np.sort(cnt))
 
-    # print(u)
-    # print(np.sort(u, axis=1))
+    assert np.sort(cnt)[0] == 2
+    assert np.sort(cnt)[1] == 3
+    # print(np.sort(cnt))
 
 def test_scc_big():
     print_func_name()
-    graph, graph_rev = read_graphs("scc.txt")
 
     cdef:
         size_t i
         graph_c * g
         graph_c * g_rev
 
+    print("Running 'read_graphs()' ... ", end="")
+    start = time()
+
     g, g_rev = read_graphs("scc.txt")
 
-    print("Running 'scc()' ... ", end="")
-    scc(g, g_rev)
-    print("done")
+    print(f"{time() - start:.2f}s")
+
+    scc(g, g_rev, debug=False, timeit=True)
+
     # print_g_ext(g, 100)
+
+    print("Running 'np.unique(leaders)' ... ", end="")
+    start = time()
 
     l = np.empty(g.len, dtype=np.uint64)
     cdef size_t [:] l_view = l
@@ -217,8 +216,37 @@ def test_scc_big():
         l_view[i] = g.node[i].leader
 
     val, cnt = np.unique(l, return_counts=True)
-    print(val[np.argsort(cnt)][-10:])
-    print(np.sort(cnt)[-10:])
+
+    print(f"{time() - start:.2f}s")
+
+    print(np.flip(np.sort(cnt)[-5:]))
 
     free_graph(g)
     free_graph(g_rev)
+
+def _test_single_case(fname="input_mostlyCycles_1_8.txt"):
+    cdef size_t i    
+    input_fname = TEST_PATH + fname
+    output_fname = TEST_PATH + "output" + fname.split("input")[1]
+    res = scc_py(input_fname)
+    with open(output_fname, "r") as f:
+        correct = [int(s) for s in f.read().replace("\n", "").split(",")]
+        for i in range(len(res)):
+            assert correct[i] == res[i]
+
+def test_single_case():
+    print_func_name()
+    _test_single_case()
+
+def test_all_casses():
+    print_func_name(end=" ... ")
+
+    i = 0
+    for f in os.listdir(TEST_PATH):
+        if "input" in f:
+            _test_single_case(f)
+            i += 1
+
+    print(f"{i} passed")
+
+

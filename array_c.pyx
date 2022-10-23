@@ -11,6 +11,10 @@
 
 from libc.stdlib cimport malloc, realloc, free
 from utils import print_func_name, set_stdout, restore_stdout
+
+from numpy cimport npy_intp, PyArray_SimpleNew, PyArray_DATA
+cimport numpy as cnp
+cnp.import_array()
 import numpy as np
 
 
@@ -32,7 +36,15 @@ cdef size_t max_arr(array_c * arr):
             max_val = arr.items[i]
     return max_val
 
-cdef inline void swap(array_c* arr, size_t i, size_t j):
+cdef bint isin_arr(array_c* arr, size_t val):
+    cdef size_t i
+    for i in range(arr.size):
+        if arr.items[i] == val:
+            return True
+    return False
+
+
+cdef inline void _swap(array_c* arr, size_t i, size_t j):
     cdef size_t tmp
     tmp = arr.items[i]
     arr.items[i] = arr.items[j]
@@ -44,28 +56,53 @@ cdef void reverse_arr(array_c * arr):
         size_t n = arr.size - 1
 
     for i in range(arr.size // 2):
-        swap(arr, i, n - i)
+        _swap(arr, i, n - i)
 
-cdef array_c* list2arr(list py_list):
+cdef array_c* list2arr(object py_obj):
     """
-    Read python list of integers and return C array
-    :param a: list Python object
+    Convert python object of integers and return C array
+    :param py_obj: indexed Python object, ex: list, tuple, numpy 1D array
     :return: pointer to C array
     """
     cdef:
         i = 0
-        n = len(py_list)
+        n = len(py_obj)
         array_c* arr = create_arr(n)
     arr.size = n
     for i in range(n):
-        arr.items[i] = py_list[i]
+        arr.items[i] = py_obj[i]
     return arr
 
+
+cdef object arr2numpy(array_c* arr):
+    cdef:
+        size_t i
+        npy_intp* dims = <npy_intp*>malloc(sizeof(npy_intp))
+        size_t* data
+
+    dims[0] = arr.size
+    np_arr = PyArray_SimpleNew(1, dims, cnp.NPY_UINT64)
+    data = <size_t*>PyArray_DATA(np_arr)
+    for i in range(arr.size):
+        data[i] = arr.items[i]
+    return np_arr
+
 cdef array_c* create_arr(size_t n):
-    cdef array_c* arr = <array_c*> malloc(sizeof(array_c))
+    cdef:
+        array_c* arr = <array_c*> malloc(sizeof(array_c))
+        size_t i, val
     arr.capacity = n
     arr.size = 0
     arr.items = <size_t*>malloc(sizeof(size_t) * n)
+    return arr
+
+cdef array_c* create_arr_val(size_t n, size_t val):
+    cdef:
+        array_c* arr = create_arr(n)
+        size_t i
+    arr.size = n
+    for i in range(n):
+        arr.items[i] = val
     return arr
 
 cdef void push_back_arr(array_c* arr, size_t val):
@@ -104,14 +141,7 @@ cdef void print_array(array_c* arr):
 """ ######################### UNIT TESTS ########################### """
 """ ################################################################ """
 
-def test_list2arr():
-    print_func_name()
-    l = [1, 2, 3]
-    cdef array_c* arr = list2arr(l)
-    assert l[0] == arr.items[0]
-    assert l[1] == arr.items[1]
-    assert l[2] == arr.items[2]
-    assert arr.size == len(l)
+
 
 def test_create_arr():
     print_func_name()
@@ -129,6 +159,29 @@ def test_resize_arr():
     arr.items[19] = 1
     free_arr(arr)
 
+def test_list2arr():
+    print_func_name()
+    l = [1, 2, 3]
+    cdef array_c* arr = list2arr(l)
+    assert l[0] == arr.items[0]
+    assert l[1] == arr.items[1]
+    assert l[2] == arr.items[2]
+    assert arr.size == len(l)
+
+def test_arr2numpy():
+    print_func_name()
+    cdef array_c* arr = create_arr(3)
+    push_back_arr(arr, 1)
+    push_back_arr(arr, 2)
+    push_back_arr(arr, 3)
+    np_arr = arr2numpy(arr)
+    assert isinstance(np_arr, np.ndarray)
+    assert np_arr.size == 3
+    assert np_arr[0] == 1
+    assert np_arr[1] == 2
+    assert np_arr[2] == 3
+    free_arr(arr)
+
 def test_swap():
     print_func_name()
     cdef array_c * arr = create_arr(3)
@@ -137,11 +190,12 @@ def test_swap():
     arr.items[2] = 1
     arr.size = 3
 
-    swap(arr, 0, 2)
+    _swap(arr, 0, 2)
 
     assert arr.items[0] == 1
     assert arr.items[2] == 3
     free_arr(arr)
+
 
 def test_reverse_even():
     cdef array_c * arr = create_arr(4)

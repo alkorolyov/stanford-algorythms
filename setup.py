@@ -1,76 +1,34 @@
 from setuptools import setup, Extension
 from time import time
 from Cython.Build import cythonize
+from Cython.Compiler.Version import version as cython_version
 import numpy as np
+import os
 
 ext_options = {"annotate": True}
 
-extensions = [Extension('array_c',
-                        sources=['array_c.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('stack',
-                        sources=['stack.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('queue_c',
-                        sources=['queue_c.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('graph',
-                        sources=['graph.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('readg',
-                        sources=['readg.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('dfs',
-                        sources=['dfs.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('bfs',
-                        sources=['bfs.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('topsort',
-                        sources=['topsort.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('closestpair',
-                        sources=['closestpair.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('sorting',
-                        sources=['sorting.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('selection',
-                        sources=['selection.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('mincut',
-                        sources=['mincut.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        ),
-              Extension('scc',
-                        sources=['scc.pyx'],
-                        include_dirs=[np.get_include()],
-                        define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
-                        )
-              ]
+def mk_ext(name, files):
+    return Extension(name, files, 
+                     include_dirs=[np.get_include()],
+                     define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")])
+
+extensions = [mk_ext('array_c', ['array_c.pyx']),
+              mk_ext('stack', ['stack.pyx']),
+              mk_ext('queue_c', ['queue_c.pyx']),
+              mk_ext('heap_c', ['heap_c.pyx']),
+              mk_ext('graph', ['graph.pyx']),
+              mk_ext('readg', ['readg.pyx']),
+              mk_ext('dfs', ['dfs.pyx']),
+              mk_ext('bfs', ['bfs.pyx']),
+              mk_ext('topsort', ['topsort.pyx']),
+              mk_ext('closestpair', ['closestpair.pyx']),
+              mk_ext('sorting', ['sorting.pyx']),
+              mk_ext('selection', ['selection.pyx']),
+              mk_ext('mincut', ['mincut.pyx']),
+              mk_ext('scc', ['scc.pyx']),
+              mk_ext('dijkstra', ['dijkstra.pyx'])]
+
+print(f"Cython version {cython_version}")
 
 setup(
     name='algorithms',
@@ -89,13 +47,15 @@ import closestpair
 import mincut
 import stack
 import array_c
+import queue_c
+import heap_c
 import graph
 import dfs
 import bfs
-import queue_c
 import readg
 import topsort
 import scc
+import dijkstra
 
 stack.test_push()
 stack.test_print()
@@ -109,14 +69,28 @@ queue_c.test_empty()
 queue_c.test_full()
 queue_c.test_print()
 
-array_c.test_list2arr()
 array_c.test_create_arr()
 array_c.test_resize_arr()
+array_c.test_list2arr()
+array_c.test_arr2numpy()
 array_c.test_swap()
 array_c.test_reverse_even()
 array_c.test_reverse_odd()
 array_c.test_print()
 array_c.test_print_zero_length()
+
+heap_c.test_log2()
+heap_c.test_get_level_idx()
+heap_c.test_get_parent()
+heap_c.test_get_children()
+heap_c.test_create_heap()
+heap_c.test_heapify()
+# heap_c.test_heapify_rnd()
+heap_c.test_resize()
+heap_c.test_extract_min()
+heap_c.test_heap_rnd()
+heap_c.test_print_tree()
+
 
 graph.test_create_graph()
 graph.test_add_edge()
@@ -128,12 +102,15 @@ graph.test_reverse_graph()
 
 
 readg.test_ascii2int()
+readg.test_ascii2int_1()
+readg.test_ascii2int_2()
 readg.test_read_edge_1()
 readg.test_read_buf_1()
 readg.test_read_array()
 readg.test_read_graph()
 # readg.test_read_big()
 # readg.test_read_big_pair()
+readg.test_read_graph_l()
 
 bfs.test_bfs()
 
@@ -143,16 +120,25 @@ dfs.test_dfs_3()
 dfs.test_dfs_4()
 dfs.test_dfs_random()
 # dfs.test_dfs_big()
+# dfs.test_dfs_loop_big()
 
 topsort.test_topsort()
-topsort.test_topsort_ft()
-
+topsort.test_graphlib()
+topsort.test_topsort_rnd()
+# topsort.test_big()
 
 scc.test_scc_1()
 scc.test_scc_2()
 scc.test_scc_3()
 scc.test_scc_4()
-scc.test_scc_big()
+scc.test_single_case()
+# scc.test_all_casses()
+# scc.test_scc_big()
+
+dijkstra.test_naive()
+dijkstra.test_naive_1()
+dijkstra.test_single_case_naive()
+dijkstra.test_all_casses_naive()
 
 
 # sorting.test_swap_c()
@@ -249,38 +235,20 @@ print("============================ PROFILING ==================================
 
 print("============================ TIMING =======================================")
 
-from timeit import Timer
 
-def parse_time(time: float) -> str:
-    if time < 1e-6:
-        return f"{time / 1e-9:.2f} ns"
-    elif time < 1e-3:
-        return f"{time / 1e-6:.2f} µs"
-    elif time < 1.0:
-        return f"{time / 1e-3:.2f} ms"
-    else:
-        return f"{time:.2f} s"
+from utils import parse_time, timeit_func
 
-def timeit_func(func, arg_string: str, import_string: str, post_string: str=""):
-    t = Timer(stmt=f"{func}({arg_string}){post_string}",
-                   setup=import_string)
-    NUM_LOOPS = t.autorange()[0] // 5
-    NUM_RUNS = 3
-    result = np.array(t.repeat(repeat=NUM_RUNS, number=NUM_LOOPS))
-    run_time = result.mean() / NUM_LOOPS
-    std = result.std() / NUM_LOOPS
-    print(f"{func:20s} {parse_time(run_time):8s} ± {parse_time(std):8s} (of {NUM_RUNS} runs {NUM_LOOPS:.0f} loops each)")
 
-imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
-          "from selection import r_select, d_select\n" \
-          "from closestpair import min_dist_naive_mv, min_dist_naive, min_dist_mv, min_dist_c, max_points_c, min_dist32\n" \
-          "import mincut\n" \
-          "import mincut_py\n" \
-          "import numpy as np\n" \
-          "from scipy.spatial.distance import pdist\n" \
-          "graph = mincut.read_file()"
-          # "n = 100000\n" \
-          # "arr = np.random.randn(n)\n"
+# imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
+#           "from selection import r_select, d_select\n" \
+#           "from closestpair import min_dist_naive_mv, min_dist_naive, min_dist_mv, min_dist_c, max_points_c, min_dist32\n" \
+#           "import mincut\n" \
+#           "import mincut_py\n" \
+#           "import numpy as np\n" \
+#           "from scipy.spatial.distance import pdist\n" \
+#           "graph = mincut.read_file()\n" \
+#           "n = 100000\n" \
+#           "arr = np.random.randn(n)\n"
 
 
 # timeit_func("r_select", "arr.copy(), n // 2", imports)
@@ -302,15 +270,6 @@ imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
 # timeit_func("mincut_py.mincut_n", "graph, 1", imports)
 
 
-# start_time = time()
-# graph, g_rev = scc.read_file()
-# print(f"{time() - start_time:.2f}s")
-# print(len(graph), len(g_rev))
-# print(graph)
-
-# start_time = time()
-# scc.test_read_graph_1(graph)
-# print(f"{time() - start_time:.2f}s")
-
 # input("Press Enter to continue...")
 
+# heap_c.time_log2()

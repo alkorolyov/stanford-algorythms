@@ -20,19 +20,13 @@ from utils import print_func_name
 ctypedef struct node_c:
     bint        explored
     size_t      leader
-    size_t      fin_time
     array_c*    adj             # array of adjacent vertices
+    array_c*    len             # corresponding array of edge lengths
 
 ctypedef struct graph_c:
     size_t      len
     node_c**    node
 
-
-cdef node_c* create_node_c():
-    """
-    Create empty graph node
-    :return: pointer to node
-    """
 
 cdef void print_mem(size_t * mem, size_t size):
     cdef size_t i
@@ -61,8 +55,8 @@ cdef graph_c* create_graph_c(size_t n):
     for i in range(n):
         nd = g.node[0] + i
         nd.explored = False
-        nd.fin_time = -1
         nd.adj = NULL
+        nd.len = NULL
         g.node[i] = nd
         # print(f"g.node[{i}]: ", hex(<size_t>g.node[i]))
         # print_mem(<size_t *> g.node[i], sizeof(node_c)/sizeof(size_t))
@@ -70,28 +64,26 @@ cdef graph_c* create_graph_c(size_t n):
     # print_mem(<size_t*>g.node, g.len)
     return g
 
-# cdef inline void _add_edge(node_c* nd, size_t v):
-#     cdef:
-#         size_t i
-#         array_c* arr = nd.adj
-#     i = arr.size
-#     arr.items[i] = v
-#     arr.size += 1
 
-cdef void add_edge(graph_c* g, size_t v1, size_t v2):
+cdef void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=0):
     """
     Adds edge [v1, v2] to the directed graph G
     :param g: graph_c G
     :param v1: tail vertex
     :param v2: head vertex
+    :param length: edge length
     :return: void
     """
-    cdef:
-        node_c* nd = g.node[v1]
+    cdef node_c* nd = g.node[v1]
+
     if not nd.adj:
         nd.adj = create_arr(4)
-
     push_back_arr(nd.adj, v2)
+
+    if length:
+        if not nd.len:
+            nd.len = create_arr(4)
+        push_back_arr(nd.len, length)
 
     # if nd.adj == NULL:
     #     nd.adj = create_arr(4)
@@ -101,8 +93,10 @@ cdef void add_edge(graph_c* g, size_t v1, size_t v2):
 
 cdef graph_c* dict2graph(dict graph):
     """
-    Create C graph from python dict.
-    :param graph: graph in standardized form (sorted vertices 0 .. n - 1)
+    Create C graph from python dict. Dict should have
+    iterable adj list per each vertex key. With no missing
+    vertices. 
+    :param graph: python graph dict 
     :return: pointer to C graph
     """
     cdef:
@@ -116,6 +110,8 @@ cdef graph_c* dict2graph(dict graph):
             nd.adj = list2arr(graph[i])
     # print_mem(<size_t*>g.node[0], g.len*5)
     return g
+
+
 
 cdef graph_c* reverse_graph(graph_c* g):
     cdef:
@@ -141,6 +137,9 @@ cdef void free_graph(graph_c *g):
         nd = g.node[i]
         if nd.adj:
             free_arr(nd.adj)
+        if nd.len:
+            free_arr(nd.len)
+
     free(g.node[0])
     free(g.node)
     free(g)
@@ -166,16 +165,20 @@ cdef void print_graph_ext(graph_c *g, size_t length=-1):
 
     for i in range(min(g.len, length)):
         nd = g.node[i]
-        print(i, end=": ")
+        indent = len(str(i)) + 2
 
+        print(i, end=": ")
         if nd.adj:
             print_array(nd.adj)
         else:
             print("[]")
+        if nd.len:
 
-        print("   exp:   ", nd.explored)
-        print("   ft:    ", hex(nd.fin_time))
-        print("   leader:", nd.leader)
+            print(" " * indent, end="")
+            print_array(nd.len)
+
+        print(" " * (indent - 1), "exp:   ", nd.explored)
+        # print("   leader:", nd.leader)
 
 
 cdef void mem_size(graph_c *g):
@@ -189,7 +192,9 @@ cdef void mem_size(graph_c *g):
     print("c size: ", mem_size)
 
 
-cdef dict rand_dict_graph(size_t n, size_t m, bint selfloops=False, bint directed=True):
+cdef dict rand_dict_graph(size_t n, size_t m,
+                          bint selfloops=False,
+                          bint directed=True):
     cdef:
         size_t i, j, v1, v2
 
@@ -205,9 +210,27 @@ cdef dict rand_dict_graph(size_t n, size_t m, bint selfloops=False, bint directe
         graph[v1].append(v2)
         if not directed:
             graph[v2].append(v1)
+
     return graph
 
+cdef graph_c* rand_graph_l(size_t n, size_t m):
+    """
+    Random graph with distances
+    :param n: nodes
+    :param m: edges
+    :return: C graph
+    """
+    cdef:
+        size_t i, j, v1, v2, l
+        graph_c* g = create_graph_c(n)
 
+    for i in range(m):
+        v1 = rand() % n
+        v2 = rand() % n
+        l = rand() % n + 1
+        add_edge(g, v1, v2, l)
+
+    return g
 
 
 """ ################################################################ """

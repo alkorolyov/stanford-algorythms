@@ -61,9 +61,14 @@ cdef inline void _sort(double *a, size_t i, size_t j):
     if a[i] > a[j]:
         _swap(a, i, j)
 
-cdef size_t choose_p(double *arr, size_t n):
-    """ median of 3 approach:
-        median of first, middle and last elements
+cdef inline size_t choose_p(double *arr, size_t n):
+    """ 
+    Choose pivot by median of 3 approach:
+    median of first, middle and last elements
+    :param arr: input array 
+    :param n: array size
+    :return: pivot index
+
     """
     cdef double a[3]
     a[0] = arr[0]
@@ -103,10 +108,10 @@ cdef void qsort_c(double *arr, size_t n):
 
     """ different choose pivot options """
     # cdef p_idx = fastrand() % n
-    # cdef p_idx = rand() % n
+    cdef p_idx = rand() % n
     # cdef p_idx = 0 # first
     # cdef p_idx = n - 1 # last
-    cdef size_t p_idx = choose_p(arr, n) # median of 3
+    # cdef size_t p_idx = choose_p(arr, n) # median of 3
 
     cdef size_t idx = partition_c(arr, n, p_idx)
     cdef double *right = arr + idx + 1
@@ -114,7 +119,7 @@ cdef void qsort_c(double *arr, size_t n):
     qsort_c(right, n - idx - 1)
 
 
-cdef size_t partition_c(double *arr, size_t n, size_t p_idx):
+cdef inline size_t partition_c(double *arr, size_t n, size_t p_idx):
     """
     Partitions array around the pivot inplace:
     |  < p  | p |    > p    |

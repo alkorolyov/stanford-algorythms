@@ -12,7 +12,7 @@ from libc.stdlib cimport rand
 
 """ ################### Depth-First Search using Recursion ############# """
 
-cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):
+cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL):
     """
     Recursive DFS starting from s vertex
     :param g: C graph
@@ -33,19 +33,14 @@ cdef void dfs_rec(graph_c* g, size_t s, stack_c* output=NULL, size_t* ft=NULL):
         for i in range(nd.adj.size):
             j = nd.adj.items[i]
             if not g.node[j].explored:
-                dfs_rec(g, j, output, ft)
-
-    if ft:
-        nd.fin_time = ft[0]
-        ft[0] += 1
+                dfs_rec(g, j, output)
 
     return
 
 
 """ ######### Depth-First Search using Stack data-structure ########### """
 
-cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
-                    size_t* ft=NULL, array_c* ft_order=NULL):
+cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL):
     """
     DFS using stack. The difference from classical realization is that during exploration
     we use peek() and vertices stay in the stack. We remove from stack when there is no
@@ -54,8 +49,6 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
     :param g: inpur C graph
     :param s: starting vertex
     :param output: (optional) stack for output
-    :param ft: (optional) variable for finishing time counter
-    :return: array of vertices ordered by finishing time, from max to 0
     """
     cdef:
         size_t i, j, v
@@ -68,20 +61,10 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
         v = peek(stack)
         nd = g.node[v]
         nd.leader = s
-        # v = pop(stack)
-
-        # print("v:", v, g.node[v].explored)
-        # print_stack(stack)
 
         # pop vertex if already explored
         if nd.explored:
             pop(stack)
-            if ft and nd.fin_time == -1:
-                # print("v", v, "ft:", ft[0])
-                nd.fin_time = ft[0]
-                ft[0] += 1
-                if ft_order:
-                    push_back_arr(ft_order, v)
             continue
         else:
             nd.explored = True
@@ -89,7 +72,6 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
         # action
         if output:
             push(output, v)
-        # print(v)
 
         # push each edge of v
         if nd.adj:
@@ -100,12 +82,13 @@ cdef void dfs_stack(graph_c* g, size_t s, stack_c* output=NULL,
 
     free_stack(stack)
 
+
 cdef void dfs_ordered_loop(graph_c* g, array_c* order):
     cdef size_t i, j
     for i in range(g.len):
         j = order.items[i]
         if not g.node[j].explored:
-            dfs_stack(g, j, NULL, NULL, NULL)
+            dfs_stack(g, j)
 
 
 """ ################################################################ """
@@ -217,4 +200,24 @@ def test_dfs_big():
     g = read_graph("scc.txt")
     dfs_stack(g, 0)
     print(f"{time() - start:.2f}s")
+
+def test_dfs_loop_big():
+    print_func_name(end=" ... ")
+    cdef:
+        size_t i
+        graph_c* g
+        graph_c* g_rev
+
+    g = read_graph("scc.txt")
+
+    cdef:
+        array_c * order = create_arr(g.len)
+    for i in range(g.len):
+        order.items[i] = i
+    order.size = g.len
+
+    start = time()
+    dfs_ordered_loop(g, order)
+    print(f"{time() - start:.2f}s")
+
 

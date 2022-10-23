@@ -2,24 +2,45 @@
 
 from time import time
 from utils import print_func_name, set_stdout, restore_stdout
-from graph cimport graph_c, create_graph_c, add_edge, print_graph, free_graph
+from graph cimport graph_c, create_graph_c, add_edge, print_graph, print_graph_ext, free_graph
 from array_c cimport array_c, create_arr, resize_arr, free_arr, print_array, max_arr
+
+""" 
+    ######################## Directed graphs ######################### 
+    File format:
+    Space separated list of edges (v1, v2) per each line. 
+    [v1] [space] [v2] ([space], [caret ret]) [new line]
+    or
+    [v1] [0x20] [v2] ([0x20], [0x0D]) [0x0A]
+    
+    Possibly missing indices. Need to loop through all possible vertices
+    to find size of the graph.
+"""
 
 cdef inline (size_t, size_t) str2int(char* buf):
     """
-    Converts space-terminated char string to unsigned integer
+    Converts (tab/space/newline) terminated string to unsigned integer
+    Terminating symbols:
+    0x20 - space
+    0x09 - tab 
+    0x0D - carret return \r
+    0x0A - new line \n
+    
     :param buf: pointer to char buffer
-    :return: integer value, bytes read including space
+    :return: integer value, bytes read including terminating symbol
     """
     cdef:
         size_t x = 0
         size_t i = 0
-    while buf[i] != 0x20:
-        x = x * 10 + buf[i] - 48
+        size_t s
+
+    while buf[i] != 0x20 and buf[i] != 0x0D and buf[i] != 0x0A and buf[i] != 0x09:
+        # print(hex(buf[i]))
+        x = x * 10 + buf[i] - 0x30
         i += 1
     return x, i + 1
 
-cdef (size_t, size_t, size_t) read_edge(char* buf):
+cdef inline (size_t, size_t, size_t) read_edge(char* buf):
     """
     Read edge from space separated line. Terminated by \n or \r\n
     :param buf: input char buf
@@ -38,7 +59,9 @@ cdef (size_t, size_t, size_t) read_edge(char* buf):
     if buf[i] == 0x0D:
         i += 1
 
-    i += 1
+    if buf[i] == 0x0A:
+        i += 1
+
     return v1, v2, i
 
 cdef void read_buff(char* buf, size_t n):
@@ -59,12 +82,13 @@ cdef void read_buff(char* buf, size_t n):
         if buf[i] == 0x0D:
             i += 1
 
-        i += 1
-
+        if buf[i] == 0x0A:
+            i += 1
 
 cdef array_c* read_array(str filename):
     """
     Read graph as C array of directed edges.
+    File Format: v1 [space] v2 ([space], [caret return]) [new line] ...
     :param filename: str
     :return: array of edges [v1, v2]
     """
@@ -159,6 +183,41 @@ cdef (graph_c*, graph_c*) read_graphs(str filename):
     free_arr(arr)
     return g, g_rev
 
+""" 
+    ######################## Directed graphs with lengths ######################### 
+    File format:
+    Tab separated adjacency list with edge lengths.     
+    [i] [tab] [v1] [coma] [length] [tab] ... ([caret ret]) [new line]
+    or
+    [i] [0x09] [v1] [0x2C] [length] [0x09] ... [0x0D] [0x0A]
+    
+    No missing vertices [i]. Total nodes - last index [i]
+"""
+
+cdef graph_c* read_graph_l(str filename):
+
+    with open(filename, "r") as f:
+        read_buf = f.readlines()
+
+    last_line = read_buf[-1]
+    graph_size = int(last_line.split("\t")[0])
+
+    cdef graph_c* g = create_graph_c(graph_size)
+
+    for line in read_buf:
+        line = line.replace("\n", "").replace("\r", "")
+        line = line.split("\t")
+        # print(line)
+        v = int(line[0])
+        edges = line[1:]
+        # print("v:", v)
+        # print("edges")
+        for e in edges:
+            e = [int(s) for s in e.split(",")]
+            add_edge(g, v - 1, e[0] - 1, e[1])
+            # print(e)
+
+    return g
 
 
 """ ################################################################ """
@@ -169,18 +228,27 @@ cdef (graph_c*, graph_c*) read_graphs(str filename):
 def test_ascii2int():
     print_func_name()
     cdef:
-        char * buf = "1234 \r\n"
+        char * buf = "1234 \r\n" # 0x20 0x0D 0x0A
 
     assert str2int(buf)[0] == 1234
     assert str2int(buf)[1] == 5
 
-def test_ascii2int():
+def test_ascii2int_1():
     print_func_name()
     cdef:
-        char * buf = "1234 \n"
+        char * buf = "1234 \n" # 0x20 0xA0
 
     assert str2int(buf)[0] == 1234
     assert str2int(buf)[1] == 5
+
+def test_ascii2int_2():
+    print_func_name()
+    cdef:
+        char * buf = "1234\n" # 0xA0
+
+    assert str2int(buf)[0] == 1234
+    assert str2int(buf)[1] == 5
+
 
 def test_read_edge_1():
     print_func_name()
@@ -263,4 +331,16 @@ def test_read_big_pair():
 
     print(f"{time() - start_time:.2f}s")
 
+    free_graph(g)
+
+def test_read_graph_l():
+    print_func_name()
+    path = "tests//course2_assignment2Dijkstra//"
+    filename = "input_random_1_4.txt"
+
+    cdef:
+        graph_c* g = read_graph_l(path + filename)
+
+    # print_graph_ext(g, 5)
+    # print_array(g.node[3].adj)
     free_graph(g)
