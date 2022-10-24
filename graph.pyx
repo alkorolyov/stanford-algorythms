@@ -17,17 +17,6 @@ from utils import print_func_name
 
 """ Graph structure in C """
 
-ctypedef struct node_c:
-    bint        explored
-    size_t      leader
-    array_c*    adj             # array of adjacent vertices
-    array_c*    len             # corresponding array of edge lengths
-
-ctypedef struct graph_c:
-    size_t      len
-    node_c**    node
-
-
 cdef void print_mem(size_t * mem, size_t size):
     cdef size_t i
     for i in range(size):

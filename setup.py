@@ -16,6 +16,7 @@ extensions = [mk_ext('array_c', ['array_c.pyx']),
               mk_ext('stack', ['stack.pyx']),
               mk_ext('queue_c', ['queue_c.pyx']),
               mk_ext('heap_c', ['heap_c.pyx']),
+              mk_ext('heap_ex', ['heap_ex.pyx']),
               mk_ext('graph', ['graph.pyx']),
               mk_ext('readg', ['readg.pyx']),
               mk_ext('dfs', ['dfs.pyx']),
@@ -49,6 +50,7 @@ import stack
 import array_c
 import queue_c
 import heap_c
+import heap_ex
 import graph
 import dfs
 import bfs
@@ -83,13 +85,23 @@ heap_c.test_log2()
 heap_c.test_get_level_idx()
 heap_c.test_get_parent()
 heap_c.test_get_children()
-heap_c.test_create_heap()
+heap_c.test_create()
 heap_c.test_heapify()
 # heap_c.test_heapify_rnd()
 heap_c.test_resize()
 heap_c.test_extract_min()
 heap_c.test_heap_rnd()
 heap_c.test_print_tree()
+
+heap_ex.test_create_ex()
+heap_ex.test_swap_ex()
+heap_ex.test_print_ex()
+heap_ex.test_insert()
+heap_ex.test_resize()
+heap_ex.test_isin()
+heap_ex.test_find()
+heap_ex.test_extract_min()
+heap_ex.test_replace()
 
 
 graph.test_create_graph()
@@ -136,9 +148,15 @@ scc.test_single_case()
 # scc.test_scc_big()
 
 dijkstra.test_naive()
+dijkstra.test_naive_loops()
+dijkstra.test_naive_self_loops()
 dijkstra.test_naive_1()
 dijkstra.test_single_case_naive()
-dijkstra.test_all_casses_naive()
+dijkstra.test_all_cases_naive()
+dijkstra.test_heap()
+dijkstra.test_heap_loops()
+dijkstra.test_single_case_heap()
+dijkstra.test_all_cases_heap()
 
 
 # sorting.test_swap_c()

@@ -11,8 +11,6 @@ ctypedef struct graph_c:
     size_t      len
     node_c**    node
 
-
-
 cdef:
     graph_c* create_graph_c(size_t n)
     void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=*)

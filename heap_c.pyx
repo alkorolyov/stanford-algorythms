@@ -10,15 +10,6 @@ from time import time
 import numpy as np
 
 
-
-cdef extern size_t _lzcnt_u64 (size_t x) nogil
-cdef extern size_t _lzcnt_u32 (size_t x) nogil
-
-cdef inline size_t log2(size_t x) nogil:
-    if x == 0:
-        return 0
-    return 63 - _lzcnt_u64(x)
-
 cdef inline size_t log2_loop(size_t x) nogil:
     cdef:
         size_t i = 0
@@ -30,24 +21,9 @@ cdef inline size_t log2_loop(size_t x) nogil:
         i += 1
     return i - 1
 
-cdef inline void _swap(size_t* a, size_t i, size_t j) nogil:
-    cdef size_t tmp
-    tmp = a[i]
-    a[i] = a[j]
-    a[j] = tmp
-
 """ ################## Heap in C ######################### """
 
-ctypedef struct heap_c:
-    size_t  capacity
-    size_t  size
-    size_t* items
-
-
-cdef inline size_t _get_level(size_t idx) nogil:
-    return log2(idx + 1)
-
-cdef inline (size_t, size_t) _get_level_idx(size_t idx) nogil:
+cdef inline (size_t, size_t) _get_level_idx(size_t idx):
     """
     Calculates level and index relative to this level.
     :param idx: zero indexed
@@ -55,57 +31,6 @@ cdef inline (size_t, size_t) _get_level_idx(size_t idx) nogil:
     """
     cdef size_t n = _get_level(idx)
     return n, idx + 1 - (1ULL << n),
-
-
-cdef inline size_t get_parent_h(size_t i):
-    # cdef:
-    #     size_t p_idx, idx, n
-    # if i == 0:
-    #     return -1
-    # n, idx = _get_level_idx(i)
-    # p_idx = idx // 2
-    # p_idx += 1ULL << (n - 1)
-    # return p_idx - 1
-    if i == 0:
-        return -1
-
-    # idx / 2
-    return ((i + 1) >> 1) - 1
-
-
-
-cdef inline size_t _get_l_child(size_t i):
-    # cdef:
-    #     size_t l_idx, idx, n
-    # n, idx = _get_level_idx(i)
-    # l_idx = idx * 2
-    # l_idx += 1ULL << (n + 1)
-    # return l_idx - 1
-
-    # idx * 2
-    return (i << 1) + 1
-
-
-cdef inline (size_t, size_t) get_children(heap_c* h, size_t i):
-    cdef size_t l_idx = _get_l_child(i)
-    if l_idx > h.size - 1:
-        return -1, -1
-    elif l_idx == h.size - 1:
-        return l_idx, -1
-    else:
-        return l_idx, l_idx + 1
-
-
-cdef size_t get_child_cnt(heap_c* h, size_t i):
-    cdef size_t l, r
-    l, r = get_children(h, i)
-    if l == -1:
-        return 0
-    if r == -1:
-        return 1
-    else:
-        return 2
-
 
 cdef heap_c* create_heap(size_t n):
     cdef:
@@ -120,11 +45,9 @@ cdef inline void resize_heap(heap_c* h):
     h.capacity *= 2
     h.items = <size_t*>realloc(h.items, h.capacity * sizeof(size_t))
 
-
 cdef void free_heap(heap_c* h):
     free(h.items)
     free(h)
-
 
 cdef void print_heap(heap_c* h, size_t i=0, str indent="", bint last=False):
     cdef:
@@ -143,14 +66,13 @@ cdef void print_heap(heap_c* h, size_t i=0, str indent="", bint last=False):
         print(indent + "├╴" + label)
         indent += "│ "
 
-    n = get_child_cnt(h, i)
+    n = get_child_cnt(h.size, i)
     for j in range(n):
-        print_heap(h, get_children(h, i)[j], indent, j == n - 1)
+        print_heap(h, get_children(h.size, i)[j], indent, j == n - 1)
 
 
 cdef bint is_full_h(heap_c* h):
     return h.size == h.capacity
-
 
 cdef bint is_empty_h(heap_c* h):
     return h.size == 0
@@ -199,7 +121,7 @@ cdef inline size_t _bubble_down(heap_c* h, size_t i):
     cdef:
         size_t l, r, min_c
 
-    l, r = get_children(h, i)
+    l, r = get_children(h.size, i)
 
     if l == -1:
         return -1
@@ -351,7 +273,7 @@ def test_get_children():
     #     print("i:", i, "child:",_get_l_child(i))
 
 
-def test_create_heap():
+def test_create():
     print_func_name()
     cdef heap_c* h = create_heap(5)
     insert_h(h, 3)
@@ -363,6 +285,7 @@ def test_create_heap():
     assert h.size == 5
     # print_heap(h)
     free_heap(h)
+
 
 def test_heapify():
     print_func_name()
