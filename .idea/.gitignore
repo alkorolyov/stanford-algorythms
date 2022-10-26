@@ -9,6 +9,7 @@
 /httpRequests/
 # cython compiled libraries and objects
 *.c
+*.lib
 *.html
 *.pyd
 # build
