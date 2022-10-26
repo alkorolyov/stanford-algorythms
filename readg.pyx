@@ -250,20 +250,63 @@ def test_ascii2int_2():
     assert str2int(buf)[1] == 5
 
 
-def test_read_edge_1():
+def test_read_edge_spc_n():
     print_func_name()
     cdef:
-        char * buf = "12 34 \n56 78 \r\n"
+        char * buf = "12 34 \n5"
         size_t v1, v2, i
 
     v1, v2, i = read_edge(buf)
     assert v1 == 12
     assert v2 == 34
     assert i == 7
-    v1, v2, i = read_edge(buf + i)
-    assert v1 == 56
-    assert v2 == 78
+    assert buf[i] == 0x35
+
+def test_read_edge_spc_rn():
+    print_func_name()
+    cdef:
+        char * buf = "12 34 \r\n5"
+        size_t v1, v2, i
+
+    v1, v2, i = read_edge(buf)
+    assert v1 == 12
+    assert v2 == 34
     assert i == 8
+    assert buf[i] == 0x35
+
+    # v1, v2, i = read_edge(buf + i)
+    # assert v1 == 56
+    # assert v2 == 78
+    # assert i == 8
+    # v1, v2, i = read_edge(buf + i)
+    # assert v1 == 1
+    # assert v2 == 2
+
+def test_read_edge_rn():
+    print_func_name()
+    cdef:
+        char * buf = "12 34\r\n5"
+        size_t v1, v2, i
+
+    v1, v2, i = read_edge(buf)
+    assert v1 == 12
+    assert v2 == 34
+    assert i == 7
+    assert buf[i] == 0x35
+
+
+def test_read_edge_n():
+    print_func_name()
+    cdef:
+        char * buf = "12 34\n5"
+        size_t v1, v2, i
+
+    v1, v2, i = read_edge(buf)
+    assert v1 == 12
+    assert v2 == 34
+    assert i == 6
+    assert buf[i] == 0x35
+
 
 
 def test_read_buf_1():

@@ -18,13 +18,7 @@ cnp.import_array()
 import numpy as np
 
 
-
 """ ################## Arrays in C ######################### """
-
-ctypedef struct array_c:
-    size_t capacity
-    size_t size
-    size_t* items
 
 cdef size_t max_arr(array_c * arr):
     cdef:
@@ -43,12 +37,6 @@ cdef bint isin_arr(array_c* arr, size_t val):
             return True
     return False
 
-
-cdef inline void _swap(array_c* arr, size_t i, size_t j):
-    cdef size_t tmp
-    tmp = arr.items[i]
-    arr.items[i] = arr.items[j]
-    arr.items[j] = tmp
 
 cdef void reverse_arr(array_c * arr):
     cdef:
@@ -77,11 +65,9 @@ cdef array_c* list2arr(object py_obj):
 cdef object arr2numpy(array_c* arr):
     cdef:
         size_t i
-        npy_intp* dims = <npy_intp*>malloc(sizeof(npy_intp))
         size_t* data
 
-    dims[0] = arr.size
-    np_arr = PyArray_SimpleNew(1, dims, cnp.NPY_UINT64)
+    np_arr = PyArray_SimpleNew(1, <npy_intp*>&arr.size, cnp.NPY_UINT64)
     data = <size_t*>PyArray_DATA(np_arr)
     for i in range(arr.size):
         data[i] = arr.items[i]

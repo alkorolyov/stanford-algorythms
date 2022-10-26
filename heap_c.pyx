@@ -3,24 +3,12 @@
 from libc.stdlib cimport malloc, realloc, free, EXIT_FAILURE
 from array_c cimport array_c, list2arr
 cimport numpy as cnp
+from numpy cimport PyArray_DIMS, PyArray_DATA, PyArray_Check, npy_intp, ndarray
 cnp.import_array()
 
 from utils import print_func_name
 from time import time
 import numpy as np
-
-
-cdef inline size_t log2_loop(size_t x) nogil:
-    cdef:
-        size_t i = 0
-        size_t c = 1
-    if x == 0:
-        return 0
-    while c <= x:
-        c *= 2
-        i += 1
-    return i - 1
-
 """ ################## Heap in C ######################### """
 
 cdef inline (size_t, size_t) _get_level_idx(size_t idx):
@@ -136,7 +124,7 @@ cdef inline size_t _bubble_down(heap_c* h, size_t i):
         return -1
 
 
-cdef void insert_h(heap_c* h, size_t x):
+cdef void push_heap(heap_c* h, size_t x):
     cdef size_t i = h.size
     if is_full_h(h):
         resize_heap(h)
@@ -147,7 +135,7 @@ cdef void insert_h(heap_c* h, size_t x):
         i = _bubble_up(h, i)
 
 
-cdef size_t extract_min(heap_c* h):
+cdef size_t pop_heap(heap_c* h):
     cdef:
         size_t min_val = h.items[0]
         size_t i = 0
@@ -183,20 +171,20 @@ cdef void heapify(array_c* a):
 """ ######################### TIMING ########################### """
 """ ################################################################ """
 
-cdef (size_t*, cnp.npy_intp*) read_numpy(cnp.ndarray[unsigned long long, ndim=1] arr):
+cdef (size_t*, npy_intp*) read_numpy(ndarray[unsigned long long, ndim=1] arr):
     cdef:
-        cnp.npy_intp    *dims
-        size_t          *data
-    if cnp.PyArray_Check(arr):
-        dims = cnp.PyArray_DIMS(arr)
-        data = <size_t*>cnp.PyArray_DATA(arr)
+        npy_intp    *dims
+        size_t      *data
+    if arr.flags['C_CONTIGUOUS']:
+        dims = PyArray_DIMS(arr)
+        data = <size_t*>PyArray_DATA(arr)
     return data, dims
 
 def time_log2():
     print_func_name()
     cdef:
-        size_t* data
-        cnp.npy_intp* dims
+        size_t*   data
+        npy_intp* dims
         size_t i
         size_t j = 0
 
@@ -276,11 +264,11 @@ def test_get_children():
 def test_create():
     print_func_name()
     cdef heap_c* h = create_heap(5)
-    insert_h(h, 3)
-    insert_h(h, 4)
-    insert_h(h, 2)
-    insert_h(h, 1)
-    insert_h(h, 0)
+    push_heap(h, 3)
+    push_heap(h, 4)
+    push_heap(h, 2)
+    push_heap(h, 1)
+    push_heap(h, 0)
     assert h.items[0] == 0
     assert h.size == 5
     # print_heap(h)
@@ -301,32 +289,32 @@ def test_heapify():
 def test_resize():
     print_func_name()
     cdef heap_c* h = create_heap(1)
-    insert_h(h, 3)
-    insert_h(h, 4)
+    push_heap(h, 3)
+    push_heap(h, 4)
     assert h.capacity == 2
-    insert_h(h, 2)
+    push_heap(h, 2)
     assert h.capacity == 4
-    insert_h(h, 1)
-    insert_h(h, 0)
+    push_heap(h, 1)
+    push_heap(h, 0)
     assert h.capacity == 8
     free_heap(h)
 
 
-def test_extract_min():
+def test_pop_heap():
     print_func_name()
     cdef heap_c* h = create_heap(8)
-    insert_h(h, 1)
-    insert_h(h, 4)
-    insert_h(h, 3)
-    insert_h(h, 5)
-    insert_h(h, 6)
-    insert_h(h, 7)
-    insert_h(h, 2)
+    push_heap(h, 1)
+    push_heap(h, 4)
+    push_heap(h, 3)
+    push_heap(h, 5)
+    push_heap(h, 6)
+    push_heap(h, 7)
+    push_heap(h, 2)
 
     # print_heap(h)
     assert h.items[0] == 1
     assert h.size == 7
-    assert extract_min(h) == 1
+    assert pop_heap(h) == 1
     assert h.items[0] == 2
     assert h.size == 6
 
@@ -346,9 +334,9 @@ def test_heap_rnd():
         arr = np.random.randint(0, 2 * n, n, dtype=np.uint64)
         a = arr
         for i in range(n):
-            insert_h(h, a[i])
+            push_heap(h, a[i])
         assert h.items[0] == np.min(arr)
-        extract_min(h)
+        pop_heap(h)
         assert h.items[0] == np.partition(arr, 1)[1]
         h.size = 0
 
@@ -377,7 +365,7 @@ def test_heapify_rnd():
 
         assert h.items[0] == np.min(arr)
 
-        extract_min(h)
+        pop_heap(h)
 
         if h.items[0] != np.partition(arr, 1)[1]:
             print_heap(h)
@@ -391,15 +379,15 @@ def test_heapify_rnd():
 def test_print_tree():
     print_func_name()
     cdef heap_c* h = create_heap(4)
-    insert_h(h, 21)
-    insert_h(h, 32)
-    insert_h(h, 48)
-    insert_h(h, 14)
-    insert_h(h, 99)
-    insert_h(h, 4)
-    insert_h(h, 5)
-    insert_h(h, 7)
-    insert_h(h, 8)
-    insert_h(h, 9)
+    push_heap(h, 21)
+    push_heap(h, 32)
+    push_heap(h, 48)
+    push_heap(h, 14)
+    push_heap(h, 99)
+    push_heap(h, 4)
+    push_heap(h, 5)
+    push_heap(h, 7)
+    push_heap(h, 8)
+    push_heap(h, 9)
     print_heap(h)
     free_heap(h)

@@ -1,7 +1,7 @@
 # cython: language_level=3
 
 from libc.stdlib cimport calloc, free
-from heap_ex cimport heap_ex, item, create_heap, free_heap, is_empty_h, isin_h, find_h, insert_h, extract_min, replace_h, print_heap
+from heap_ex cimport heap_ex, item, create_heap, free_heap, is_empty_h, isin_h, find_h, push_heap, pop_heap, replace_h, print_heap
 from array_c cimport array_c, create_arr, create_arr_val, push_back_arr, isin_arr, print_array, free_arr, arr2numpy
 from graph cimport graph_c, node_c, create_graph_c, add_edge, dict2graph, free_graph, print_graph, print_graph_ext
 from readg cimport read_graph_l
@@ -84,7 +84,7 @@ cdef array_c* dijkstra(graph_c* g, size_t s, bint debug=False):
         heap_ex* h = create_heap(n)
 
     dist.items[s] = 0
-    insert_h(h, s, 0)
+    push_heap(h, s, 0)
 
     # if debug:
     #     print_graph_ext(g)
@@ -92,7 +92,7 @@ cdef array_c* dijkstra(graph_c* g, size_t s, bint debug=False):
     while not is_empty_h(h):
 
         # Explore vertex with min score(distance) from heap
-        min_h = extract_min(h)
+        min_h = pop_heap(h)
 
         v = min_h.id
         dist.items[v] = min_h.val
@@ -131,7 +131,7 @@ cdef void _explore(heap_ex * h, size_t w, size_t score, bint debug):
 
     # if no insert directly
     if idx == -1:
-        insert_h(h, w, score)
+        push_heap(h, w, score)
         return
 
     # if present:

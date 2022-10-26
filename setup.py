@@ -12,7 +12,8 @@ def mk_ext(name, files):
                      include_dirs=[np.get_include()],
                      define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")])
 
-extensions = [mk_ext('array_c', ['array_c.pyx']),
+extensions = [mk_ext('c_utils', ['c_utils.pyx']),
+              mk_ext('array_c', ['array_c.pyx']),
               mk_ext('stack', ['stack.pyx']),
               mk_ext('queue_c', ['queue_c.pyx']),
               mk_ext('heap_c', ['heap_c.pyx']),
@@ -41,7 +42,7 @@ setup(
 )
 
 print("============================ UNIT TESTS ===================================")
-start_time = time()
+
 import sorting
 import selection
 import closestpair
@@ -58,6 +59,8 @@ import readg
 import topsort
 import scc
 import dijkstra
+
+start_time = time()
 
 stack.test_push()
 stack.test_print()
@@ -89,18 +92,18 @@ heap_c.test_create()
 heap_c.test_heapify()
 # heap_c.test_heapify_rnd()
 heap_c.test_resize()
-heap_c.test_extract_min()
+heap_c.test_pop_heap()
 heap_c.test_heap_rnd()
 heap_c.test_print_tree()
 
 heap_ex.test_create_ex()
 heap_ex.test_swap_ex()
 heap_ex.test_print_ex()
-heap_ex.test_insert()
+heap_ex.test_push_heap()
 heap_ex.test_resize()
 heap_ex.test_isin()
 heap_ex.test_find()
-heap_ex.test_extract_min()
+heap_ex.test_pop_heap()
 heap_ex.test_replace()
 
 
@@ -116,7 +119,10 @@ graph.test_reverse_graph()
 readg.test_ascii2int()
 readg.test_ascii2int_1()
 readg.test_ascii2int_2()
-readg.test_read_edge_1()
+readg.test_read_edge_spc_n()
+readg.test_read_edge_spc_rn()
+readg.test_read_edge_rn()
+readg.test_read_edge_n()
 readg.test_read_buf_1()
 readg.test_read_array()
 readg.test_read_graph()
@@ -159,78 +165,77 @@ dijkstra.test_single_case_heap()
 dijkstra.test_all_cases_heap()
 
 
-# sorting.test_swap_c()
-# sorting.test_partition_c_1()
-# sorting.test_partition3_c_1()
-# sorting.test_qsort_c_1()
-# sorting.test_qsort_c_2()
-#
-# sorting.test_merge_c_1()
-# sorting.test_merge_c_2()
-# sorting.test_merge_c_3()
-# sorting.test_merge_c_4()
-# sorting.test_merge_c_5()
-# sorting.test_merge_c_6()
-# sorting.test_merge_c_7()
-# sorting.test_merge_c_8()
-#
-# sorting.test_msort_c_1()
-# sorting.test_msort_c_2()
-# sorting.test_msort_c_3()
-# print()
-#
-# selection.test_r_select_c_1()
-# selection.test_r_select_c_2()
-# selection.test_r_select_c_3()
-# selection.test_r_select_c_4()
-#
-#
-# selection.test_median5_1()
-# selection.test_median5_2()
-# selection.test_median5_3()
-# selection.test_median5_4()
-#
-# selection.test_median_c_1()
-# selection.test_median_c_2()
-# selection.test_median_c_3()
-# selection.test_median_c_4()
-#
-# selection.test_d_select_1()
-# selection.test_d_select_2()
-# selection.test_d_select_3()
-# selection.test_d_select_4()
-# selection.test_d_select_5()
-# selection.test_d_select_6()
-#
-# closestpair.test_min_dist_naive_c_1()
-#
-# closestpair.test_min_dist_c_1()
-# closestpair.test_min_dist_c_2()
-# closestpair.test_min_dist_c_3()
-#
-# closestpair.test_mindist32_1()
-#
-# mincut.test_create_graph()
-# mincut.test_read_graph_c_1()
-# mincut.test_read_graph_c_2()
-# mincut.test_read_graph_c_3()
-# mincut.test_read_graph_c_4()
-# mincut.test_read_graph_c_random()
-#
-# mincut.test_copy_graph()
-# mincut.test_random_pair()
-# mincut.test_pop_from_graph()
-# mincut.test_pop_from_graph_1()
-# mincut.test_delete_self_loops()
-# mincut.test_transfer_vertices()
-# mincut.test_delete_vertex()
-# mincut.test_delete_vertex_1()
-# mincut.test_replace_references()
-# mincut.test_contract()
-# mincut.test_mincut()
-# mincut.test_mincut_1()
-# mincut.test_mincut_N()
+sorting.test_swap_c()
+sorting.test_partition_c_1()
+sorting.test_partition3_c_1()
+sorting.test_qsort_c_1()
+sorting.test_qsort_c_2()
 
+sorting.test_merge_c_1()
+sorting.test_merge_c_2()
+sorting.test_merge_c_3()
+sorting.test_merge_c_4()
+sorting.test_merge_c_5()
+sorting.test_merge_c_6()
+sorting.test_merge_c_7()
+sorting.test_merge_c_8()
+
+sorting.test_msort_c_1()
+sorting.test_msort_c_2()
+sorting.test_msort_c_3()
+print()
+
+selection.test_r_select_c_1()
+selection.test_r_select_c_2()
+selection.test_r_select_c_3()
+selection.test_r_select_c_4()
+
+
+selection.test_median5_1()
+selection.test_median5_2()
+selection.test_median5_3()
+selection.test_median5_4()
+
+selection.test_median_c_1()
+selection.test_median_c_2()
+selection.test_median_c_3()
+selection.test_median_c_4()
+
+selection.test_d_select_1()
+selection.test_d_select_2()
+selection.test_d_select_3()
+selection.test_d_select_4()
+selection.test_d_select_5()
+selection.test_d_select_6()
+
+closestpair.test_min_dist_naive_c_1()
+
+closestpair.test_min_dist_c_1()
+closestpair.test_min_dist_c_2()
+closestpair.test_min_dist_c_3()
+
+closestpair.test_mindist32_1()
+
+mincut.test_create_graph()
+mincut.test_read_graph_c_1()
+mincut.test_read_graph_c_2()
+mincut.test_read_graph_c_3()
+mincut.test_read_graph_c_4()
+mincut.test_read_graph_c_random()
+
+mincut.test_copy_graph()
+mincut.test_random_pair()
+mincut.test_pop_from_graph()
+mincut.test_pop_from_graph_1()
+mincut.test_delete_self_loops()
+mincut.test_transfer_vertices()
+mincut.test_delete_vertex()
+mincut.test_delete_vertex_1()
+mincut.test_replace_references()
+mincut.test_contract()
+mincut.test_mincut()
+mincut.test_mincut_1()
+mincut.test_mincut_N()
 
 print(f"PASSED {time() - start_time:.2f}s")
 
@@ -291,3 +296,6 @@ from utils import parse_time, timeit_func
 # input("Press Enter to continue...")
 
 # heap_c.time_log2()
+
+# from c_utils import lu_time
+# lu_time()

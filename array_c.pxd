@@ -4,6 +4,12 @@ ctypedef struct array_c:
     size_t size
     size_t* items
 
+cdef inline void _swap(array_c* arr, size_t i, size_t j):
+    cdef size_t tmp
+    tmp = arr.items[i]
+    arr.items[i] = arr.items[j]
+    arr.items[j] = tmp
+
 cdef:
     array_c* list2arr(object py_obj)
     object arr2numpy(array_c * arr)

@@ -86,7 +86,9 @@ def scc_py(str filename):
 
 
     g = read_graph(filename)
+    # g, g_rev = read_graphs(filename)
     g_rev = reverse_graph(g)
+
     scc(g, g_rev, debug=False)
 
     l = np.empty(g.len, dtype=np.uint64)

@@ -25,10 +25,10 @@ cdef bint is_full_h(heap_ex* h):
     return h.size == h.capacity
 
 
-cdef bint is_empty_h(heap_ex* h):
+cdef inline bint is_empty_h(heap_ex* h):
     return h.size == 0
 
-cdef bint isin_h(heap_ex* h, size_t id):
+cdef inline bint isin_h(heap_ex* h, size_t id):
     cdef  size_t i
     for i in range(h.size):
         if h.items[i].id == id:
@@ -61,8 +61,8 @@ cdef inline size_t _bubble_up(heap_ex* h, size_t i):
 
 cdef inline size_t _bubble_down(heap_ex * h, size_t i):
     """
-    Bubbles i-th item up, by swapping item with min
-    out of two children, if it is smaller. Otherwise -1
+    Bubbles i-th item down, by swapping item with min
+    out of two children, whichever smaller. Otherwise -1
 
     :param h: pointer to C heap
     :param i: index 
@@ -114,7 +114,7 @@ cdef void replace_h(heap_ex* h, size_t idx, size_t val):
         i = _bubble_down(h, i)
 
 
-cdef void insert_h(heap_ex* h, size_t id, size_t val):
+cdef void push_heap(heap_ex* h, size_t id, size_t val):
     cdef size_t i = h.size
     if is_full_h(h):
         resize_heap(h)
@@ -126,7 +126,7 @@ cdef void insert_h(heap_ex* h, size_t id, size_t val):
         i = _bubble_up(h, i)
 
 
-cdef item extract_min(heap_ex* h):
+cdef item pop_heap(heap_ex* h):
     if is_empty_h(h):
         print("heap is empty")
         exit(EXIT_FAILURE)
@@ -215,14 +215,14 @@ def test_print_ex():
     print_heap(h)
     free_heap(h)
 
-def test_insert():
+def test_push_heap():
     print_func_name()
     cdef heap_ex * h = create_heap(5)
-    insert_h(h, 3, 32)
-    insert_h(h, 1, 57)
-    insert_h(h, 0, 75)
-    insert_h(h, 0, 12)
-    insert_h(h, 2, 17)
+    push_heap(h, 3, 32)
+    push_heap(h, 1, 57)
+    push_heap(h, 0, 75)
+    push_heap(h, 0, 12)
+    push_heap(h, 2, 17)
     assert h.items[0].id == 0
     assert h.items[0].val == 12
     # print_heap(h)
@@ -231,10 +231,10 @@ def test_insert():
 def test_isin():
     print_func_name()
     cdef heap_ex * h = create_heap(5)
-    insert_h(h, 3, 32)
-    insert_h(h, 1, 57)
-    insert_h(h, 0, 75)
-    insert_h(h, 0, 12)
+    push_heap(h, 3, 32)
+    push_heap(h, 1, 57)
+    push_heap(h, 0, 75)
+    push_heap(h, 0, 12)
     assert isin_h(h, 0)
     assert isin_h(h, 1)
     assert isin_h(h, 3)
@@ -244,10 +244,10 @@ def test_isin():
 def test_find():
     print_func_name()
     cdef heap_ex * h = create_heap(5)
-    insert_h(h, 3, 32)
-    insert_h(h, 1, 57)
-    insert_h(h, 0, 75)
-    insert_h(h, 0, 12)
+    push_heap(h, 3, 32)
+    push_heap(h, 1, 57)
+    push_heap(h, 0, 75)
+    push_heap(h, 0, 12)
 
     # print_heap(h)
     cdef size_t idx
@@ -271,31 +271,31 @@ def test_find():
 def test_resize():
     print_func_name()
     cdef heap_ex* h = create_heap(1)
-    insert_h(h, 1, 3)
-    insert_h(h, 2, 4)
+    push_heap(h, 1, 3)
+    push_heap(h, 2, 4)
     assert h.capacity == 2
-    insert_h(h, 3, 2)
+    push_heap(h, 3, 2)
     assert h.capacity == 4
-    insert_h(h, 4, 1)
-    insert_h(h, 5, 0)
+    push_heap(h, 4, 1)
+    push_heap(h, 5, 0)
     assert h.capacity == 8
     free_heap(h)
 
-def test_extract_min():
+def test_pop_heap():
     print_func_name()
     cdef heap_ex* h = create_heap(8)
-    insert_h(h, 0, 1)
-    insert_h(h, 1, 4)
-    insert_h(h, 2, 3)
-    insert_h(h, 3, 5)
-    insert_h(h, 4, 6)
-    insert_h(h, 5, 7)
-    insert_h(h, 6, 2)
+    push_heap(h, 0, 1)
+    push_heap(h, 1, 4)
+    push_heap(h, 2, 3)
+    push_heap(h, 3, 5)
+    push_heap(h, 4, 6)
+    push_heap(h, 5, 7)
+    push_heap(h, 6, 2)
 
     # print_heap(h)
     assert h.items[0].val == 1
     assert h.size == 7
-    assert extract_min(h).val == 1
+    assert pop_heap(h).val == 1
     assert h.items[0].val == 2
     assert h.size == 6
 
@@ -305,13 +305,13 @@ def test_extract_min():
 def test_replace():
     print_func_name()
     cdef heap_ex* h = create_heap(4)
-    insert_h(h, 0, 1)
-    insert_h(h, 1, 4)
-    insert_h(h, 2, 3)
-    insert_h(h, 3, 5)
-    insert_h(h, 4, 6)
-    insert_h(h, 5, 7)
-    insert_h(h, 6, 2)
+    push_heap(h, 0, 1)
+    push_heap(h, 1, 4)
+    push_heap(h, 2, 3)
+    push_heap(h, 3, 5)
+    push_heap(h, 4, 6)
+    push_heap(h, 5, 7)
+    push_heap(h, 6, 2)
 
     replace_h(h, 3, 0)
     assert h.items[0].val == 0

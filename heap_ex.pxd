@@ -21,8 +21,8 @@ cdef:
     bint is_empty_h(heap_ex * h)
     bint isin_h(heap_ex * h, size_t id)
     size_t find_h(heap_ex * h, size_t id, size_t start=*)
-    void insert_h(heap_ex* h, size_t id, size_t val)
-    item extract_min(heap_ex * h)
+    void push_heap(heap_ex* h, size_t id, size_t val)
+    item pop_heap(heap_ex * h)
     void replace_h(heap_ex * h, size_t idx, size_t val)
     void print_heap(heap_ex * h, size_t i=*, str indent=*, bint last=*)
 
