@@ -8,9 +8,8 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 # cython compiled libraries and objects
-*.c
-*.lib
-*.html
-*.pyd
-# build
-/build/
+**/*.c
+**/*.lib
+**/*.html
+**/*.pyd
+**/*.obj
