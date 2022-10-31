@@ -1,7 +1,7 @@
 import tests.tests
 from closestpair_py import min_dist_naive_py, min_dist_py
 from closestpair import min_dist_naive, min_dist_naive_mv, min_dist_mv, min_dist_c, max_points_c
-from sorting import mergesort_c, quicksort_c, read_numpy
+from sorting import mergesort_c, quicksort_c
 from selection import r_select, d_select
 import numpy as np
 
@@ -37,10 +37,6 @@ def test_max_points_c():
     for i in range(100):
         arr = np.random.randn(100, 2)
         assert np.abs(max_points_c(arr)[1] - min_dist_c(arr)) < 1e-16
-
-def test_read_numpy_c():
-        arr = np.random.randn(100)
-        assert arr[0] == read_numpy(arr)
 
 def test_quicksort_c_float():
     for i in range(100):

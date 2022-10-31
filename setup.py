@@ -3,14 +3,18 @@ from time import time
 from Cython.Build import cythonize
 from Cython.Compiler.Version import version as cython_version
 import numpy as np
+import cProfile
+import pstats
 import os
 
 ext_options = {"annotate": True}
+
 
 def mk_ext(name, files):
     return Extension(name, files, 
                      include_dirs=[np.get_include()],
                      define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")])
+
 
 extensions = [mk_ext('c_utils', ['c_utils.pyx']),
               mk_ext('array_c', ['array_c.pyx']),
@@ -85,7 +89,6 @@ array_c.test_print()
 array_c.test_print_zero_length()
 
 heap_c.test_log2()
-heap_c.test_get_level_idx()
 heap_c.test_get_parent()
 heap_c.test_get_children()
 heap_c.test_create()
@@ -104,8 +107,9 @@ heap_ex.test_resize()
 heap_ex.test_isin()
 heap_ex.test_find()
 heap_ex.test_pop_heap()
+heap_ex.test_pop_heap_single()
 heap_ex.test_replace()
-
+heap_ex.test_push_pop_rnd()
 
 graph.test_create_graph()
 graph.test_add_edge()
@@ -156,86 +160,97 @@ scc.test_single_case()
 dijkstra.test_naive()
 dijkstra.test_naive_loops()
 dijkstra.test_naive_self_loops()
+dijkstra.test_naive_non_conn()
+dijkstra.test_naive_zero_conn()
+dijkstra.test_naive_empty()
+dijkstra.test_naive_rnd()
 dijkstra.test_naive_1()
 dijkstra.test_single_case_naive()
 dijkstra.test_all_cases_naive()
+
 dijkstra.test_heap()
 dijkstra.test_heap_loops()
+dijkstra.test_heap_self_loops()
+dijkstra.test_heap_non_conn()
+dijkstra.test_heap_zero_conn()
+dijkstra.test_heap_empty()
+dijkstra.test_heap_rnd()
+
 dijkstra.test_single_case_heap()
 dijkstra.test_all_cases_heap()
 
 
-sorting.test_swap_c()
-sorting.test_partition_c_1()
-sorting.test_partition3_c_1()
-sorting.test_qsort_c_1()
-sorting.test_qsort_c_2()
-
-sorting.test_merge_c_1()
-sorting.test_merge_c_2()
-sorting.test_merge_c_3()
-sorting.test_merge_c_4()
-sorting.test_merge_c_5()
-sorting.test_merge_c_6()
-sorting.test_merge_c_7()
-sorting.test_merge_c_8()
-
-sorting.test_msort_c_1()
-sorting.test_msort_c_2()
-sorting.test_msort_c_3()
-print()
-
-selection.test_r_select_c_1()
-selection.test_r_select_c_2()
-selection.test_r_select_c_3()
-selection.test_r_select_c_4()
-
-
-selection.test_median5_1()
-selection.test_median5_2()
-selection.test_median5_3()
-selection.test_median5_4()
-
-selection.test_median_c_1()
-selection.test_median_c_2()
-selection.test_median_c_3()
-selection.test_median_c_4()
-
-selection.test_d_select_1()
-selection.test_d_select_2()
-selection.test_d_select_3()
-selection.test_d_select_4()
-selection.test_d_select_5()
-selection.test_d_select_6()
-
-closestpair.test_min_dist_naive_c_1()
-
-closestpair.test_min_dist_c_1()
-closestpair.test_min_dist_c_2()
-closestpair.test_min_dist_c_3()
-
-closestpair.test_mindist32_1()
-
-mincut.test_create_graph()
-mincut.test_read_graph_c_1()
-mincut.test_read_graph_c_2()
-mincut.test_read_graph_c_3()
-mincut.test_read_graph_c_4()
-mincut.test_read_graph_c_random()
-
-mincut.test_copy_graph()
-mincut.test_random_pair()
-mincut.test_pop_from_graph()
-mincut.test_pop_from_graph_1()
-mincut.test_delete_self_loops()
-mincut.test_transfer_vertices()
-mincut.test_delete_vertex()
-mincut.test_delete_vertex_1()
-mincut.test_replace_references()
-mincut.test_contract()
-mincut.test_mincut()
-mincut.test_mincut_1()
-mincut.test_mincut_N()
+# sorting.test_swap_c()
+# sorting.test_partition_c_1()
+# sorting.test_partition3_c_1()
+# sorting.test_qsort_c_1()
+# sorting.test_qsort_c_2()
+#
+# sorting.test_merge_c_1()
+# sorting.test_merge_c_2()
+# sorting.test_merge_c_3()
+# sorting.test_merge_c_4()
+# sorting.test_merge_c_5()
+# sorting.test_merge_c_6()
+# sorting.test_merge_c_7()
+# sorting.test_merge_c_8()
+#
+# sorting.test_msort_c_1()
+# sorting.test_msort_c_2()
+# sorting.test_msort_c_3()
+# print()
+#
+# selection.test_r_select_c_1()
+# selection.test_r_select_c_2()
+# selection.test_r_select_c_3()
+# selection.test_r_select_c_4()
+#
+#
+# selection.test_median5_1()
+# selection.test_median5_2()
+# selection.test_median5_3()
+# selection.test_median5_4()
+#
+# selection.test_median_c_1()
+# selection.test_median_c_2()
+# selection.test_median_c_3()
+# selection.test_median_c_4()
+#
+# selection.test_d_select_1()
+# selection.test_d_select_2()
+# selection.test_d_select_3()
+# selection.test_d_select_4()
+# selection.test_d_select_5()
+# selection.test_d_select_6()
+#
+# closestpair.test_min_dist_naive_c_1()
+#
+# closestpair.test_min_dist_c_1()
+# closestpair.test_min_dist_c_2()
+# closestpair.test_min_dist_c_3()
+#
+# closestpair.test_mindist32_1()
+#
+# mincut.test_create_graph()
+# mincut.test_read_graph_c_1()
+# mincut.test_read_graph_c_2()
+# mincut.test_read_graph_c_3()
+# mincut.test_read_graph_c_4()
+# mincut.test_read_graph_c_random()
+#
+# mincut.test_copy_graph()
+# mincut.test_random_pair()
+# mincut.test_pop_from_graph()
+# mincut.test_pop_from_graph_1()
+# mincut.test_delete_self_loops()
+# mincut.test_transfer_vertices()
+# mincut.test_delete_vertex()
+# mincut.test_delete_vertex_1()
+# mincut.test_replace_references()
+# mincut.test_contract()
+# mincut.test_mincut()
+# mincut.test_mincut_1()
+# mincut.test_mincut_N()
 
 print(f"PASSED {time() - start_time:.2f}s")
 
@@ -252,9 +267,13 @@ print("============================ PROFILING ==================================
 
 # arr = np.random.randn(100000, 2)
 # cProfile.runctx("min_dist_c(arr)", globals(), locals(), "Profile.prof")
-#
-# s = pstats.Stats("Profile.prof")
-# s.strip_dirs().sort_stats("time").print_stats()
+
+from dijkstra import test_naive_rnd, test_heap_rnd
+
+cProfile.runctx("test_heap_rnd()", globals(), locals(), "Profile.prof")
+
+s = pstats.Stats("Profile.prof")
+s.strip_dirs().sort_stats("time").print_stats()
 
 print("============================ TIMING =======================================")
 
@@ -273,6 +292,10 @@ from utils import parse_time, timeit_func
 #           "n = 100000\n" \
 #           "arr = np.random.randn(n)\n"
 
+imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
+          "import numpy as np\n" \
+          "n = 100000\n" \
+          "arr = np.random.randn(n)\n"
 
 # timeit_func("r_select", "arr.copy(), n // 2", imports)
 # timeit_func("d_select", "arr.copy(), n // 2", imports)
@@ -280,7 +303,7 @@ from utils import parse_time, timeit_func
 
 # timeit_func("quicksort_c", "arr.copy()", imports)
 # timeit_func("np.sort", "arr.copy(), kind='mergesort'", imports)
-#
+
 # timeit_func("quicksort_c", "arr.copy()", imports)
 # timeit_func("np.sort", "arr.copy(), kind='quicksort'", imports)
 
@@ -297,5 +320,5 @@ from utils import parse_time, timeit_func
 
 # heap_c.time_log2()
 
-# from c_utils import lu_time
-# lu_time()
+# dijkstra.time_naive()
+dijkstra.time_heap()

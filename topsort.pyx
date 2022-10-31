@@ -1,11 +1,14 @@
 # cython: language_level=3
 
-from libc.stdlib cimport rand
-from array_c cimport array_c, create_arr, create_arr_val, free_arr, push_back_arr, print_array
+
+cdef extern from "Python.h":
+    void* PyMem_Calloc(size_t nelem, size_t elsize)
+
+from cpython.mem cimport PyMem_Free
+from array_c cimport array_c, create_arr, free_arr, push_back_arr
 from stack cimport stack_c, create_stack, push, peek, pop, is_empty_s, free_stack
 from graph cimport graph_c, node_c, dict2graph, free_graph, rand_dict_graph
 from readg cimport read_graph
-from libc.stdlib cimport calloc, free
 
 from utils import print_func_name
 from graphlib import TopologicalSorter, CycleError
@@ -60,14 +63,14 @@ cdef array_c* topsort(graph_c* g):
     cdef:
         size_t i, j
         size_t ft = 0
-        bint * ft_calculated = <bint*>calloc(g.len, sizeof(bint))
+        bint * ft_calculated = <bint*>PyMem_Calloc(g.len, sizeof(bint))
         array_c* top_order = create_arr(g.len)
 
     for i in range(g.len):
         if not g.node[i].explored:
             dfs(g, i, top_order, &ft, ft_calculated)
     
-    free(ft_calculated)
+    PyMem_Free(ft_calculated)
     return top_order
 
 

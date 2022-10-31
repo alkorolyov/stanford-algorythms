@@ -6,6 +6,6 @@ from array_c cimport array_c
 
 
 cdef:
-    void dfs_rec(graph_c* g, size_t s, stack_c* output=*)
-    void dfs_stack(graph_c * g, size_t s, stack_c * output=*)
+    void dfs_rec(graph_c* g, size_t s, array_c* out=*)
+    void dfs_stack(graph_c * g, size_t s, array_c * out=*)
     void dfs_ordered_loop(graph_c * g, array_c * order)

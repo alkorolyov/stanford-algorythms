@@ -17,8 +17,8 @@ import cython
 import numpy as np
 cimport numpy as cnp
 
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
-from libc.stdlib cimport malloc, free, rand
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
+from libc.stdlib cimport rand
 from libc.math cimport sqrt
 from pprint import pprint
 from time import time
@@ -107,11 +107,11 @@ cdef graph_c* create_graph_c():
     cdef graph_c* g
     cdef size_t i, j, n
 
-    g = <graph_c*> malloc(sizeof(graph_c))
+    g = <graph_c*> PyMem_Malloc(sizeof(graph_c))
     g.len = 3
-    g.node = <node_c *> malloc(g.len * sizeof(node_c))
+    g.node = <node_c *> PyMem_Malloc(g.len * sizeof(node_c))
     g.buff_len = g.len * 4
-    g.buff = <size_t *> malloc(g.buff_len * sizeof(size_t))
+    g.buff = <size_t *> PyMem_Malloc(g.buff_len * sizeof(size_t))
 
     for j in range(g.buff_len):
         g.buff[j] = 0
@@ -129,9 +129,9 @@ cdef graph_c* create_graph_c():
 
 cdef void free_graph(graph_c *g):
     if g.mem_mode == C_MALLOC:
-        free(g.buff)
-        free(g.node)
-        free(g)
+        PyMem_Free(g.buff)
+        PyMem_Free(g.node)
+        PyMem_Free(g)
     elif g.mem_mode == PY_MALLOC:
         PyMem_Free(g.buff)
         PyMem_Free(g.node)
@@ -141,9 +141,9 @@ cdef graph_c* alloc_graph(graph_c *g_old):
     cdef graph_c * g_new
 
     if g_old.mem_mode == C_MALLOC:
-        g_new = <graph_c *> malloc(sizeof(graph_c))
-        g_new.node = <node_c *> malloc(g_old.len * sizeof(node_c))
-        g_new.buff = <size_t *> malloc(g_old.buff_len * sizeof(size_t))
+        g_new = <graph_c *> PyMem_Malloc(sizeof(graph_c))
+        g_new.node = <node_c *> PyMem_Malloc(g_old.len * sizeof(node_c))
+        g_new.buff = <size_t *> PyMem_Malloc(g_old.buff_len * sizeof(size_t))
     elif g_old.mem_mode == PY_MALLOC:
         g_new = <graph_c *> PyMem_Malloc(sizeof(graph_c))
         g_new.node = <node_c *> PyMem_Malloc(g_old.len * sizeof(node_c))
@@ -206,9 +206,9 @@ cdef graph_c* read_graph_c(dict graph, size_t mem_mode=C_MALLOC):
     buff_len = max_degree(graph) * g_len * g_len
 
     if mem_mode == C_MALLOC:
-        g = <graph_c*> malloc(sizeof(graph_c))
-        g.node = <node_c *> malloc(g_len * sizeof(node_c))
-        g.buff = <size_t *> malloc(buff_len * sizeof(size_t))
+        g = <graph_c*> PyMem_Malloc(sizeof(graph_c))
+        g.node = <node_c *> PyMem_Malloc(g_len * sizeof(node_c))
+        g.buff = <size_t *> PyMem_Malloc(buff_len * sizeof(size_t))
 
     elif mem_mode == PY_MALLOC:
         g = <graph_c*> PyMem_Malloc(sizeof(graph_c))
@@ -567,8 +567,8 @@ def test_pop_from_graph():
     assert g.node[0].next[0] == 3
     assert g.node[1].next[0] == 3
 
-    free(g.node)
-    free(g.buff)
+    PyMem_Free(g.node)
+    PyMem_Free(g.buff)
 
 def test_pop_from_graph_1():
     print_func_name()

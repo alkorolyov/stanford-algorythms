@@ -9,7 +9,7 @@
 # cython: initializedcheck=True
 # cython: cdivision=True
 
-from libc.stdlib cimport malloc, free, EXIT_FAILURE
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout
 import numpy as np
 
@@ -21,11 +21,19 @@ ctypedef struct stack_c:
     size_t*     items
 
 cdef stack_c* create_stack(size_t capacity):
-    cdef stack_c* s = <stack_c*> malloc(sizeof(stack_c))
+    cdef stack_c* s = <stack_c*> PyMem_Malloc(sizeof(stack_c))
+    if s == NULL: exit(1)
+    s.items = <size_t *> PyMem_Malloc(sizeof(size_t) * capacity)
+    if s.items == NULL: exit(1)
+
     s.capacity = capacity
     s.top = -1
-    s.items = <size_t*>malloc(sizeof(size_t) * capacity)
     return s
+
+cdef void free_stack(stack_c* s):
+    PyMem_Free(s.items)
+    PyMem_Free(s)
+
 
 cdef bint is_empty_s(stack_c* s):
     return s.top == -1
@@ -39,7 +47,7 @@ cdef size_t size_s(stack_c* s):
 cdef void push(stack_c* s, size_t x):
     if is_full_s(s):
         print("stack push error: stack full")
-        exit(EXIT_FAILURE)
+        exit(1)
     else:
         s.top += 1
         s.items[s.top] = x
@@ -48,7 +56,7 @@ cdef size_t pop(stack_c* s):
     cdef size_t temp
     if is_empty_s(s):
         print("stack pop error: stack empty")
-        exit(EXIT_FAILURE)
+        exit(1)
     else:
         temp = s.items[s.top]
         s.top -= 1
@@ -69,9 +77,6 @@ cdef void print_stack(stack_c* s):
         print(s.items[i], end=", ")
     print(s.items[n - 1], end="]\n")
 
-cdef void free_stack(stack_c* s):
-    free(s.items)
-    free(s)
 
 """ ################################################################ """
 """ ######################### UNIT TESTS ########################### """

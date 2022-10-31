@@ -1,9 +1,9 @@
 #cython: language_level=3
 
-from libc.stdlib cimport malloc, realloc, free, EXIT_FAILURE
-from array_c cimport array_c, list2arr
+from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+from array_c cimport array_c, py2arr
 cimport numpy as cnp
-from numpy cimport PyArray_DIMS, PyArray_DATA, PyArray_Check, npy_intp, ndarray
+from numpy cimport PyArray_DIMS, PyArray_DATA, npy_intp, ndarray
 cnp.import_array()
 
 from utils import print_func_name
@@ -11,42 +11,36 @@ from time import time
 import numpy as np
 """ ################## Heap in C ######################### """
 
-cdef inline (size_t, size_t) _get_level_idx(size_t idx):
-    """
-    Calculates level and index relative to this level.
-    :param idx: zero indexed
-    :return: level, relative index
-    """
-    cdef size_t n = _get_level(idx)
-    return n, idx + 1 - (1ULL << n),
-
 cdef heap_c* create_heap(size_t n):
-    cdef:
-        heap_c* h = <heap_c*>malloc(sizeof(heap_c))
+    cdef heap_c* h = <heap_c*>PyMem_Malloc(sizeof(heap_c))
+    if h == NULL: exit(1)
+
+    h.items = <size_t*>PyMem_Malloc(n * sizeof(size_t))
+    if h.items == NULL: exit(1)
+
     h.capacity = n
     h.size = 0
-    h.items = <size_t*>malloc(n * sizeof(size_t))
     return h
 
 
 cdef inline void resize_heap(heap_c* h):
     h.capacity *= 2
-    h.items = <size_t*>realloc(h.items, h.capacity * sizeof(size_t))
+    h.items = <size_t*>PyMem_Realloc(h.items, h.capacity * sizeof(size_t))
+    if h.items == NULL: exit(1)
 
 cdef void free_heap(heap_c* h):
-    free(h.items)
-    free(h)
+    PyMem_Free(h.items)
+    PyMem_Free(h)
 
 cdef void print_heap(heap_c* h, size_t i=0, str indent="", bint last=False):
     cdef:
-        size_t j, n
+        size_t j, n, l, r
 
     label = f"{i}: [{h.items[i]}]"
 
     if i == 0:
         # print("heap size:", h.size)
         print(label)
-
     elif last:
         print(indent + "└╴" + label)
         indent += "  "
@@ -55,32 +49,31 @@ cdef void print_heap(heap_c* h, size_t i=0, str indent="", bint last=False):
         indent += "│ "
 
     n = get_child_cnt(h.size, i)
+
     for j in range(n):
         print_heap(h, get_children(h.size, i)[j], indent, j == n - 1)
-
-
-cdef bint is_full_h(heap_c* h):
-    return h.size == h.capacity
-
-cdef bint is_empty_h(heap_c* h):
-    return h.size == 0
 
 
 cdef inline size_t _bubble_up(heap_c* h, size_t i):
     """
     Bubble i-th item up. Tries to swap with parent if 
-    it is bigger. Otherwise returns 0.
+    item's value is smaller. Otherwise returns -1.
     :param h: 
     :param i: index, zero terminated
-    :return: parent index or 0
+    :return: parent index or -1
     """
     cdef:
         size_t p_idx = get_parent_h(i)
+
+    # no parent - root reached
+    if p_idx == -1:
+        return -1
+
     if h.items[i] < h.items[p_idx]:
         _swap(h.items, p_idx, i)
         return p_idx
-    else:
-        return 0
+
+    return -1
 
 cdef inline size_t _min_child(heap_c* h, size_t l, size_t r):
     """
@@ -107,48 +100,52 @@ cdef inline size_t _bubble_down(heap_c* h, size_t i):
     :return: new index or -1
     """
     cdef:
-        size_t l, r, min_c
+        size_t l, r, min_idx
 
     l, r = get_children(h.size, i)
 
     if l == -1:
         return -1
 
-    min_c = _min_child(h, l, r)
-    # print("min_c:", min_c)
+    min_idx = _min_child(h, l, r)
 
-    if h.items[i] > h.items[min_c]:
-        _swap(h.items, min_c, i)
-        return min_c
+    if h.items[i] > h.items[min_idx]:
+        _swap(h.items, min_idx, i)
+        return min_idx
     else:
         return -1
 
 
 cdef void push_heap(heap_c* h, size_t x):
-    cdef size_t i = h.size
     if is_full_h(h):
         resize_heap(h)
-    h.size += 1
-    h.items[i] = x
 
-    while i != 0:
+    cdef size_t i = h.size
+
+    h.items[i] = x
+    h.size += 1
+
+    while i != -1:
         i = _bubble_up(h, i)
 
 
 cdef size_t pop_heap(heap_c* h):
-    cdef:
-        size_t min_val = h.items[0]
-        size_t i = 0
-
     if is_empty_h(h):
         print("heap is empty")
-        exit(EXIT_FAILURE)
+        exit(1)
+
+    cdef:
+        size_t min_itm = h.items[0]
+        size_t i = 0
 
     h.size -= 1
+    if h.size == 0:
+        return min_itm
+
     _swap(h.items, 0, h.size)
     while i != -1:
         i = _bubble_down(h, i)
-    return min_val
+    return min_itm
 
 cdef void heapify(array_c* a):
     """
@@ -161,7 +158,7 @@ cdef void heapify(array_c* a):
         size_t j
     while i < a.size:
         j = i
-        while j != 0:
+        while j != -1:
             j = _bubble_up(<heap_c*>a, j)
         i -= 1
 
@@ -171,39 +168,42 @@ cdef void heapify(array_c* a):
 """ ######################### TIMING ########################### """
 """ ################################################################ """
 
-cdef (size_t*, npy_intp*) read_numpy(ndarray[unsigned long long, ndim=1] arr):
+cdef (size_t*, size_t) read_numpy(ndarray[unsigned long long, ndim=1] arr):
     cdef:
         npy_intp    *dims
         size_t      *data
     if arr.flags['C_CONTIGUOUS']:
         dims = PyArray_DIMS(arr)
         data = <size_t*>PyArray_DATA(arr)
-    return data, dims
+        return data, <size_t>dims[0]
+    else:
+        print("numpy array is not C-contiguous")
+        exit(1)
 
 def time_log2():
     print_func_name()
     cdef:
         size_t*   data
-        npy_intp* dims
+        size_t    size
         size_t i
         size_t j = 0
 
     n = int(5e7)
     arr = np.random.randint(n // 2, size=n, dtype=np.uint64)
-    data, dims = read_numpy(arr)
+    data, size = read_numpy(arr)
 
     start_time = time()
-    for i in range(dims[0]):
+    for i in range(size):
         j += data[i]
     loop_time = time() - start_time
 
     start_time = time()
-    for i in range(dims[0]):
+    for i in range(size):
         j += log2(data[i])
     print(f"log2_lzcnt(): {(time() - start_time - loop_time):.3f}s")
 
     start_time = time()
-    for i in range(dims[0]):
+    for i in range(size):
         j += log2_loop(data[i])
     print(f"log2_loop(): {(time() - start_time - loop_time):.3f}s")
 
@@ -228,13 +228,6 @@ def test_log2():
     assert log2(9) == 3
     assert log2(0xFFFFFFFFFFFFFFFF) == 63
 
-
-def test_get_level_idx():
-    print_func_name()
-    assert _get_level_idx(0) == (0, 0)
-    assert _get_level_idx(1) == (1, 0)
-    assert _get_level_idx(2) == (1, 1)
-    assert _get_level_idx(3) == (2, 0)
 
 def test_get_parent():
 
@@ -277,9 +270,9 @@ def test_create():
 
 def test_heapify():
     print_func_name()
-    py_l = [4, 2, 3, 1, 0]
-    # py_l = [21, 32, 48, 14, 99, 4, 5, 7, 8, 9]
-    cdef array_c* a = list2arr(py_l)
+    # py_l = [4, 2, 3, 1, 0]
+    py_l = [21, 32, 48, 14, 99, 4, 5, 7, 8, 9]
+    cdef array_c* a = py2arr(py_l)
     # print_heap(<heap_c *> a)
     heapify(a)
     # print_heap(<heap_c *> a)
@@ -322,23 +315,29 @@ def test_pop_heap():
     free_heap(h)
 
 def test_heap_rnd():
-    print_func_name()
     DEF n = 100
 
     cdef:
         size_t [:] a
-        size_t i, j, arr_min
+        long long [:] idx
+        size_t i, j, k
         heap_c* h = create_heap(n // 4)
 
+    np.random.seed(4)
+
     for j in range(100):
-        arr = np.random.randint(0, 2 * n, n, dtype=np.uint64)
+        arr = np.random.randint(0, n, n, dtype=np.uint64)
         a = arr
-        for i in range(n):
+
+        for i in range(a.shape[0]):
             push_heap(h, a[i])
-        assert h.items[0] == np.min(arr)
-        pop_heap(h)
-        assert h.items[0] == np.partition(arr, 1)[1]
-        h.size = 0
+
+        idx = np.argsort(arr)
+        for i in range(h.size):
+            k = idx[i]
+            assert a[k] == pop_heap(h)
+        assert is_empty_h(h)
+
 
 def test_heapify_rnd():
     print_func_name()

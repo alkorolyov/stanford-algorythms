@@ -1,8 +1,8 @@
 # cython: language_level=3
 
-# cython: profile=False
-# cython: linetrace=False
-# cython: binding=False
+# cython: profile=True
+# cython: linetrace=True
+# cython: binding=True
 
 # cython: boundscheck=False
 # cython: wraparound=False
@@ -10,8 +10,9 @@
 # cython: cdivision=True
 
 
-from array_c cimport array_c, print_array, list2arr, create_arr, push_back_arr, resize_arr, free_arr
-from libc.stdlib cimport malloc, free, rand
+from array_c cimport array_c, print_array, py2arr, create_arr, push_back_arr, resize_arr, free_arr
+from libc.stdlib cimport rand, srand
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name
 
 
@@ -25,7 +26,6 @@ cdef void print_mem(size_t * mem, size_t size):
         print(f"{addr} : {val}")
 
 
-
 cdef graph_c* create_graph_c(size_t n):
     """
     Create empty graph of size n
@@ -36,11 +36,16 @@ cdef graph_c* create_graph_c(size_t n):
     cdef node_c* nd
     cdef size_t i
 
-    g = <graph_c*> malloc(sizeof(graph_c))
-    g.len = n
-    g.node = <node_c **> malloc(g.len * sizeof(node_c*))
-    g.node[0] = <node_c *> malloc(g.len * sizeof(node_c))
+    g = <graph_c*> PyMem_Malloc(sizeof(graph_c))
+    if g == NULL: exit(1)
 
+    g.node = <node_c **> PyMem_Malloc(n * sizeof(node_c*))
+    if g.node == NULL: exit(1)
+
+    g.node[0] = <node_c *> PyMem_Malloc(n * sizeof(node_c))
+    if g.node[0] == NULL: exit(1)
+
+    g.len = n
     for i in range(n):
         nd = g.node[0] + i
         nd.explored = False
@@ -52,6 +57,20 @@ cdef graph_c* create_graph_c(size_t n):
 
     # print_mem(<size_t*>g.node, g.len)
     return g
+
+cdef void free_graph(graph_c *g):
+    cdef size_t i
+    cdef node_c* nd
+    for i in range(g.len):
+        nd = g.node[i]
+        if nd.adj:
+            free_arr(nd.adj)
+        if nd.len:
+            free_arr(nd.len)
+
+    PyMem_Free(g.node[0])
+    PyMem_Free(g.node)
+    PyMem_Free(g)
 
 
 cdef void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=0):
@@ -96,7 +115,7 @@ cdef graph_c* dict2graph(dict graph):
     for i in range(g.len):
         nd = g.node[i]
         if graph[i]:
-            nd.adj = list2arr(graph[i])
+            nd.adj = py2arr(graph[i])
     # print_mem(<size_t*>g.node[0], g.len*5)
     return g
 
@@ -119,19 +138,6 @@ cdef graph_c* reverse_graph(graph_c* g):
     return g_rev
 
 
-cdef void free_graph(graph_c *g):
-    cdef size_t i
-    cdef node_c* nd
-    for i in range(g.len):
-        nd = g.node[i]
-        if nd.adj:
-            free_arr(nd.adj)
-        if nd.len:
-            free_arr(nd.len)
-
-    free(g.node[0])
-    free(g.node)
-    free(g)
 
 cdef void print_graph(graph_c *g, size_t length=-1):
     cdef:
@@ -202,24 +208,30 @@ cdef dict rand_dict_graph(size_t n, size_t m,
 
     return graph
 
-cdef graph_c* rand_graph_l(size_t n, size_t m):
+cdef graph_c* rand_graph_l(size_t n, size_t m, size_t seed=0):
     """
-    Random graph with distances
+    Random directed graph with distances
     :param n: nodes
     :param m: edges
+    :param seed: (optional) random seed
+    
     :return: C graph
     """
     cdef:
         size_t i, j, v1, v2, l
         graph_c* g = create_graph_c(n)
 
+    if seed:
+        srand(seed)
+
     for i in range(m):
         v1 = rand() % n
         v2 = rand() % n
-        l = rand() % n + 1
+        l = rand() % n
         add_edge(g, v1, v2, l)
-
     return g
+
+
 
 
 """ ################################################################ """
@@ -251,7 +263,6 @@ def test_add_edge():
         add_edge(g, 0, 1)
 
     free_graph(g)
-
 
 
 def test_dict2graph():

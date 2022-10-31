@@ -11,6 +11,7 @@
 
 # distutils: extra_compile_args = /O2 /Ob3 /arch:AVX2 /openmp
 
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 cimport cython
 
 cdef extern from "math.h":
@@ -18,7 +19,6 @@ cdef extern from "math.h":
     
 from libc.float cimport DBL_EPSILON
 from libc.math cimport sqrt, fabs
-from libc.stdlib cimport malloc, free
 from cython.parallel import prange
 cimport numpy as cnp
 
@@ -202,8 +202,8 @@ cpdef double min_dist_c(cnp.ndarray[cnp.float64_t, ndim=2] P, cnp.NPY_SORTKIND k
 
     cdef double *Px
     cdef double *Py
-    Px = <double *> malloc(Px_mview.shape[0] * 2 * sizeof(double))
-    Py = <double *> malloc(Py_mview.shape[0] * 2 * sizeof(double))
+    Px = <double *> PyMem_Malloc(Px_mview.shape[0] * 2 * sizeof(double))
+    Py = <double *> PyMem_Malloc(Py_mview.shape[0] * 2 * sizeof(double))
 
     # # copy sorted arrays to Px, Py
     for i in range(Px_mview.shape[0]):
@@ -214,8 +214,8 @@ cpdef double min_dist_c(cnp.ndarray[cnp.float64_t, ndim=2] P, cnp.NPY_SORTKIND k
 
     cdef double d = _min_dist_c(Px_mview.shape[0], Px, Py)
 
-    free(Px)
-    free(Py)
+    PyMem_Free(Px)
+    PyMem_Free(Py)
     return sqrt(d)
 
 
@@ -238,8 +238,8 @@ cdef double _min_dist_c(size_t n, double *Px, double *Py):
 
     cdef double *Qy
     cdef double *Ry
-    Qy = <double*> malloc(mid * 2 * sizeof(double))
-    Ry = <double*> malloc((n - mid) * 2 * sizeof(double))
+    Qy = <double*> PyMem_Malloc(mid * 2 * sizeof(double))
+    Ry = <double*> PyMem_Malloc((n - mid) * 2 * sizeof(double))
 
     # sorting Qx, Rx by y, according to Py array
     _sort_y(n, mid_x, Qy, Ry, Py)
@@ -248,15 +248,15 @@ cdef double _min_dist_c(size_t n, double *Px, double *Py):
     cdef double d2 = _min_dist_c(n - mid, Rx, Ry)
     cdef double delta = min_2_db(d1, d2)
 
-    free(Qy)
-    free(Ry)
+    PyMem_Free(Qy)
+    PyMem_Free(Ry)
 
     # get points in Sy
     cdef double *Sy
-    Sy = <double*> malloc(n * 2 * sizeof(double))
+    Sy = <double*> PyMem_Malloc(n * 2 * sizeof(double))
     cdef size_t s_y_size = _get_sy(n, mid_x, delta, Py, Sy)
     delta = _min_dist_split_c(s_y_size, Sy, delta)
-    free(Sy)
+    PyMem_Free(Sy)
     return delta
 
 cdef double _min_dist_split_c(size_t n, double *Sy, double delta):
@@ -334,8 +334,8 @@ cpdef float min_dist32(cnp.ndarray[cnp.float32_t, ndim=2] P, cnp.NPY_SORTKIND ki
 
     cdef float *Px
     cdef float *Py
-    Px = <float *> malloc(Px_mview.shape[0] * 2 * sizeof(float))
-    Py = <float *> malloc(Py_mview.shape[0] * 2 * sizeof(float))
+    Px = <float *> PyMem_Malloc(Px_mview.shape[0] * 2 * sizeof(float))
+    Py = <float *> PyMem_Malloc(Py_mview.shape[0] * 2 * sizeof(float))
 
     # # copy sorted arrays to Px, Py
     for i in range(Px_mview.shape[0]):
@@ -345,8 +345,8 @@ cpdef float min_dist32(cnp.ndarray[cnp.float32_t, ndim=2] P, cnp.NPY_SORTKIND ki
         Py[2*i + 1] = Py_mview[i, 1]
 
     cdef float d = _mindist32(Px_mview.shape[0], Px, Py)
-    free(Px)
-    free(Py)
+    PyMem_Free(Px)
+    PyMem_Free(Py)
     return sqrtf(d)
 
 cdef float _mindist32(size_t n, float *Px, float *Py):
@@ -368,8 +368,8 @@ cdef float _mindist32(size_t n, float *Px, float *Py):
 
     cdef float *Qy
     cdef float *Ry
-    Qy = <float*> malloc(mid * 2 * sizeof(float))
-    Ry = <float*> malloc((n - mid) * 2 * sizeof(float))
+    Qy = <float*> PyMem_Malloc(mid * 2 * sizeof(float))
+    Ry = <float*> PyMem_Malloc((n - mid) * 2 * sizeof(float))
 
     # sorting Qx, Rx by y, according to Py array
     _sort_y32(n, mid_x, Qy, Ry, Py)
@@ -378,15 +378,15 @@ cdef float _mindist32(size_t n, float *Px, float *Py):
     cdef float d2 = _mindist32(n - mid, Rx, Ry)
     cdef float delta = min32(d1, d2)
 
-    free(Qy)
-    free(Ry)
+    PyMem_Free(Qy)
+    PyMem_Free(Ry)
 
     # get points in Sy
     cdef float *Sy
-    Sy = <float*> malloc(n * 2 * sizeof(float))
+    Sy = <float*> PyMem_Malloc(n * 2 * sizeof(float))
     cdef size_t s_y_size = _get_sy32(n, mid_x, delta, Py, Sy)
     delta = _min_dist_split32(s_y_size, Sy, delta)
-    free(Sy)
+    PyMem_Free(Sy)
     return delta
 
 cdef void _sort_y32(size_t n, float mid_x, float *Qy, float *Ry, float *Py):
@@ -455,8 +455,8 @@ cpdef (size_t, double) max_points_c(cnp.ndarray[cnp.float64_t, ndim=2] P, bint s
     cdef double *Px_ptr
     cdef double *Py_ptr
     cdef size_t i
-    Px_ptr = <double *> malloc(Px.shape[0] * 2 * sizeof(double))
-    Py_ptr = <double *> malloc(Py.shape[0] * 2 * sizeof(double))
+    Px_ptr = <double *> PyMem_Malloc(Px.shape[0] * 2 * sizeof(double))
+    Py_ptr = <double *> PyMem_Malloc(Py.shape[0] * 2 * sizeof(double))
 
     for i in range(Px.shape[0]):
         Px_ptr[2*i] = Px[i, 0]
@@ -467,8 +467,8 @@ cpdef (size_t, double) max_points_c(cnp.ndarray[cnp.float64_t, ndim=2] P, bint s
     cdef size_t mp = 0
     cdef double delta
     delta = _max_points(Px.shape[0], Px_ptr, Py_ptr, &mp, strict)
-    free(Px_ptr)
-    free(Py_ptr)
+    PyMem_Free(Px_ptr)
+    PyMem_Free(Py_ptr)
     return mp, delta
 
 cdef double _max_points_split_c(size_t n, double *Sy, double delta, size_t *mp):
@@ -502,8 +502,8 @@ cdef double _max_points(size_t n, double *Px, double *Py, size_t *mp, bint stric
 
     cdef double *Qy
     cdef double *Ry
-    Qy = <double*> malloc(mid * 2 * sizeof(double))
-    Ry = <double*> malloc((n - mid) * 2 * sizeof(double))
+    Qy = <double*> PyMem_Malloc(mid * 2 * sizeof(double))
+    Ry = <double*> PyMem_Malloc((n - mid) * 2 * sizeof(double))
 
     # sorting Qx, Rx by y, according to Py array
     _sort_y(n, mid_x, Qy, Ry, Py)
@@ -519,12 +519,12 @@ cdef double _max_points(size_t n, double *Px, double *Py, size_t *mp, bint stric
 
     mp[0] = max_2_int(mp1, mp2)
 
-    free(Qy)
-    free(Ry)
+    PyMem_Free(Qy)
+    PyMem_Free(Ry)
 
     # get points in Sy
     cdef double *Sy
-    Sy = <double*> malloc(n * 2 * sizeof(double))
+    Sy = <double*> PyMem_Malloc(n * 2 * sizeof(double))
     cdef size_t s_y_size
     if strict:
         s_y_size = _get_sy_strict(n, mid_x, delta, Py, Sy)
@@ -532,7 +532,7 @@ cdef double _max_points(size_t n, double *Px, double *Py, size_t *mp, bint stric
         s_y_size = _get_sy(n, mid_x, delta, Py, Sy)
     if s_y_size != 0:
         delta = _max_points_split_c(s_y_size, Sy, delta, mp)
-    free(Sy)
+    PyMem_Free(Sy)
     return delta
 
 """ #############################################################

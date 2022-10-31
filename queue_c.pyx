@@ -1,31 +1,28 @@
 # cython: language_level=3
 
-from libc.stdlib cimport malloc, free, EXIT_FAILURE
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout
 import numpy as np
 
 """ ################## Queue in C ######################### """
-
-ctypedef struct queue:
-    size_t maxsize
-    size_t front
-    size_t rear
-    size_t* items
-
 cdef queue* create_queue(size_t n):
-    cdef queue* q = <queue*> malloc(sizeof(queue))
+    cdef queue* q = <queue*> PyMem_Malloc(sizeof(queue))
+    if q == NULL: exit(1)
+    q.items = <size_t *> PyMem_Malloc(n * sizeof(size_t))
+    if q.items == NULL: exit(1)
+
     q.front = 0
     q.rear = -1
-    q.maxsize = n
-    q.items = <size_t*> malloc(n * sizeof(size_t))
+    q.capacity = n
+
     return q
 
 cdef void free_queue(queue* q):
-    free(q.items)
-    free(q)
+    PyMem_Free(q.items)
+    PyMem_Free(q)
 
 cdef bint is_full_q(queue* q):
-    return q.rear == q.maxsize - 1
+    return q.rear == q.capacity - 1
 
 cdef bint is_empty_q(queue* q):
     return q.front == q.rear + 1
@@ -36,7 +33,7 @@ cdef void enqueue(queue* q, size_t x):
         q.items[q.rear] = x
     else:
         print("Enqueue error: queue is full")
-        exit(EXIT_FAILURE)
+        exit(1)
 
 cdef size_t dequeue(queue* q):
     cdef size_t x
@@ -46,7 +43,7 @@ cdef size_t dequeue(queue* q):
         return x
     else:
         print("Dequeue error: queue is empty")
-        exit(EXIT_FAILURE)
+        exit(1)
 
 cdef size_t size_q(queue* q):
     return q.rear + 1 - q.front

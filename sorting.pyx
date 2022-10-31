@@ -11,46 +11,56 @@
 
 # distutils: extra_compile_args = /O2 /Ob3 /arch:AVX2
 
-from libc.stdlib cimport rand, malloc, free
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
+from libc.stdlib cimport rand
 cimport numpy as np
 np.import_array()
 
-cdef inline size_t SEED = 1
+DEF SEED = 1
 
 cdef inline size_t fastrand():
   cdef size_t g_seed = (214013 * SEED + 2531011)
   return (g_seed>>16)&0x7FFF
 
-cpdef double read_numpy(np.ndarray[double, ndim=1] arr):
+cdef (double*, size_t) read_numpy(np.ndarray[double, ndim=1] arr):
     cdef:
         np.npy_intp *dims
         double *data
-    if np.PyArray_Check(arr):
+    if arr.flags['C_CONTIGUOUS']:
         dims = np.PyArray_DIMS(arr)
         data = <double*>np.PyArray_DATA(arr)
         # print("numpy array:", dims[0])
         # print("first elem:", data[0])
-    return data[0]
+        return data, <size_t>dims[0]
+    else:
+        print('Array is non C-contiguous')
+        exit(1)
 
 # python wrap
 cpdef void quicksort_c(np.ndarray[double, ndim=1] arr):
     """
-    :param arr: c-contiguous numpy 1D array of doubles   
+    :param arr: C-contiguous numpy 1D array of doubles   
     """
-    cdef np.npy_intp * dims
-    cdef double * data
-    if arr.flags['C_CONTIGUOUS']:
-        dims = np.PyArray_DIMS(arr)
-        data = <double *> np.PyArray_DATA(arr)
-        qsort_c(data, dims[0])
-    else:
-        print('Array is non C-contiguous')
+    cdef:
+        double* data
+        size_t  size
+    data, size = read_numpy(arr)
+    qsort_c(data, size)
+
+    # cdef np.npy_intp * dims
+    # cdef double * data
+    # if arr.flags['C_CONTIGUOUS']:
+    #     dims = np.PyArray_DIMS(arr)
+    #     data = <double *> np.PyArray_DATA(arr)
+    #     qsort_c(data, dims[0])
+    # else:
+    #     print('Array is non C-contiguous')
 
 cpdef void quicksort_mv(np.ndarray[double, ndim=1] arr):
     qsort(arr)
     return
 
-""" ################# Quicksort: C array ################### """
+""" ################# QuickSort: C array ################### """
 
 cdef inline void _swap(double *a, size_t i, size_t j):
     cdef double t = a[i]
@@ -107,16 +117,17 @@ cdef void qsort_c(double *arr, size_t n):
         return
 
     """ different choose pivot options """
-    # cdef p_idx = fastrand() % n
-    cdef p_idx = rand() % n
-    # cdef p_idx = 0 # first
-    # cdef p_idx = n - 1 # last
-    # cdef size_t p_idx = choose_p(arr, n) # median of 3
+    cdef size_t p_idx
+    # p_idx = fastrand() % n
+    p_idx = rand() % n
+    # p_idx = 0 # first
+    # p_idx = n - 1 # last
+    # p_idx = choose_p(arr, n) # median of 3
 
     cdef size_t idx = partition_c(arr, n, p_idx)
-    cdef double *right = arr + idx + 1
+    cdef size_t delta = idx + 1
     qsort_c(arr, idx)
-    qsort_c(right, n - idx - 1)
+    qsort_c(arr + delta, n - delta)
 
 
 cdef inline size_t partition_c(double *arr, size_t n, size_t p_idx):
@@ -197,7 +208,7 @@ cdef size_t partition3_c(double *arr, size_t n, size_t p_idx):
 
 
 
-""" ################# Quicksort: Memory slice ################### """
+""" ################# QuickSort: Memory slice ################### """
 cdef size_t randint(size_t lower, size_t upper):
     return rand() % (upper - lower + 1) + lower
 
@@ -246,18 +257,15 @@ cpdef void mergesort_c(np.ndarray[double, ndim=1] arr):
     """
     :param arr: c-contiguous numpy 1D array of doubles   
     """
-    cdef size_t i
-    cdef np.npy_intp * dims
-    cdef double * data
-    cdef double *buff
-    if arr.flags['C_CONTIGUOUS']:
-        dims = np.PyArray_DIMS(arr)
-        buff = <double *> malloc(dims[0] * sizeof(double))
-        data = <double *> np.PyArray_DATA(arr)
-        msort_c(data, dims[0], buff)
-        free(buff)
-    else:
-        print('Array is non C-contiguous')
+    cdef:
+        size_t  size
+        double* data
+        double* buff
+
+    data, size = read_numpy(arr)
+    buff = <double *> PyMem_Malloc(size * sizeof(double))
+    msort_c(data, size, buff)
+    PyMem_Free(buff)
 
 cdef void msort_c(double *arr, size_t n, double *buff):
     # base case
@@ -319,6 +327,9 @@ cdef void merge_c(double *a, double *b, size_t n, size_t idx, double *c):
         a[i] = c[i]
 
 
+""" ############### HeapSort C ##################### """
+
+
 """ #############################################################
     ###################### UNIT TESTS ###########################
     ############################################################# 
@@ -375,9 +386,9 @@ def test_qsort_c_2():
 def test_merge_c_1():
     cdef double *a = [0.1, 0.3]
     cdef double *b = [0.2, 0.4]
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 4, 2, c)
-    free(c)
+    PyMem_Free(c)
     assert a[0] == 0.1
     assert a[1] == 0.2
     assert a[2] == 0.3
@@ -387,9 +398,9 @@ def test_merge_c_2():
     cdef double *a = [0.2, 0.4]
     cdef double *b = [0.1, 0.3]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 4, 2, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.2
@@ -400,9 +411,9 @@ def test_merge_c_3():
     cdef double *a = [0.2, 0.3]
     cdef double *b = [0.1]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 3, 2, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.2
@@ -412,9 +423,9 @@ def test_merge_c_4():
     cdef double *a = [0.1]
     cdef double *b = [0.2, 0.3]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 3, 1, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.2
@@ -424,9 +435,9 @@ def test_merge_c_5():
     cdef double *a = [0.1, 0.1]
     cdef double *b = [0.2, 0.3]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 4, 2, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.1
@@ -437,9 +448,9 @@ def test_merge_c_6():
     cdef double *a = [0.1, 0.1]
     cdef double *b = [0.2]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 3, 2, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.1
@@ -449,9 +460,9 @@ def test_merge_c_7():
     cdef double *a = [0.2]
     cdef double *b = [0.1, 0.1]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 3, 1, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.1
@@ -461,11 +472,11 @@ def test_merge_c_8():
     cdef double *a = [0.1]
     cdef double *b = [0.1]
 
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     merge_c(a, b, 2, 1, c)
     # for i in range(2):
     #     print(f"a[{i}]", a[i])
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.1
@@ -473,9 +484,9 @@ def test_merge_c_8():
 
 def test_msort_c_1():
     cdef double *a = [0.3, 0.2, 0.1]
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.1
     assert a[1] == 0.2
@@ -483,9 +494,9 @@ def test_msort_c_1():
 
 def test_msort_c_2():
     cdef double *a = [0.3, 0.2, 0.2]
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.2
     assert a[1] == 0.2
@@ -493,9 +504,9 @@ def test_msort_c_2():
 
 def test_msort_c_3():
     cdef double *a = [0.2, 0.3, 0.2]
-    cdef double *c = <double *> malloc(10 * sizeof(double))
+    cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)
-    free(c)
+    PyMem_Free(c)
 
     assert a[0] == 0.2
     assert a[1] == 0.2

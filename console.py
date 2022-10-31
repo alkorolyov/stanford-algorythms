@@ -61,5 +61,35 @@ for i in range(n):
     # print(U)
 # print(res)
 print(res.mean(axis=0))
+#%%
+# Online Python - IDE, Editor, Compiler, Interpreter
+import numpy as np
 
+n = 5
+np.random.seed(3)
+arr = np.random.randint(0, 2 * n, (n, 2), dtype=np.uint64)
+print(arr)
+
+idx_min = np.argmin(arr, axis=0)
+# print(np.partition(arr, 1, axis=0)[1][1])
+
+idx_sort = np.argsort(arr, axis=0)
+print(idx_sort)
+print(idx_sort[:, 0])
+print(idx_sort[:, 1])
+# print(np.partition(arr, 1, axis=0)[1][1])
+
+
+#%%
+np.random.seed(3)
+n = 10
+arr = np.random.randint(0, n // 2, (n, 2), dtype=np.uint64)
+print(arr)
+print(np.unique(arr[:, 1], return_index=True, return_counts=True))
+#%%
+np.random.seed(3)
+n = 10
+arr = np.random.randint(0, n * 2, (n, 2), dtype=np.uint64)
+print(arr)
+print(np.sort(arr, axis=0))
 

@@ -11,7 +11,8 @@
 
 # distutils: extra_compile_args = /O2 /Ob3 /arch:AVX2
 
-from libc.stdlib cimport rand, srand, malloc, free
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
+from libc.stdlib cimport rand, srand
 from libc.time cimport time
 from sorting cimport partition_c, partition3_c, qsort_c, msort_c, choose_p
 from utils import print_func_name
@@ -111,9 +112,9 @@ cpdef double d_select(np.ndarray[double, ndim=1] arr, size_t k):
     if arr.flags['C_CONTIGUOUS']:
         dims = np.PyArray_DIMS(arr)
         data = <double *> np.PyArray_DATA(arr)
-        buff = <double *> malloc(dims[0] // 3 * sizeof(double)) # 1/5 + 1/25 + 1/125 + ... = 1/4
+        buff = <double *> PyMem_Malloc(dims[0] // 3 * sizeof(double)) # 1/5 + 1/25 + 1/125 + ... = 1/4
         res = d_select_c(data, dims[0], k, buff)
-        free(buff)
+        PyMem_Free(buff)
         return res
     else:
         print('Array is non C-contiguous')
@@ -128,7 +129,7 @@ cdef double d_select_c(double *arr, size_t n, size_t k, double *buff, bint pivot
     :param pivot_call: bool if recursive call for pivot or main loop
     :return: value of k-th order statistics
     """
-    # cdef double *m_arr = <double*>malloc(n * sizeof(double))
+    # cdef double *m_arr = <double*>PyMem_Malloc(n * sizeof(double))
     cdef double *m_arr = buff
     cdef size_t m_len, i
 
@@ -176,7 +177,7 @@ cdef double d_select_c(double *arr, size_t n, size_t k, double *buff, bint pivot
     # if not pivot_call:
     #     print(" ==== pivot found ==== ")
 
-    # free(m_arr)
+    # PyMem_Free(m_arr)
 
 
     # print("p", p)

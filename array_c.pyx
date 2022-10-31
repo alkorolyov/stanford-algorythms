@@ -9,16 +9,44 @@
 # cython: initializedcheck=True
 # cython: cdivision=True
 
-from libc.stdlib cimport malloc, realloc, free
-from utils import print_func_name, set_stdout, restore_stdout
+from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+from utils import print_func_name, set_stdout, restore_stdout, iterable
 
-from numpy cimport npy_intp, PyArray_SimpleNew, PyArray_DATA
+from numpy cimport npy_intp, PyArray_SimpleNew, PyArray_DATA, NPY_UINT64
 cimport numpy as cnp
 cnp.import_array()
 import numpy as np
 
 
 """ ################## Arrays in C ######################### """
+
+cdef array_c* create_arr(size_t n):
+    cdef size_t i
+
+    cdef array_c* arr = <array_c*> PyMem_Malloc(sizeof(array_c))
+    if arr == NULL: exit(1)
+
+    arr.items = <size_t *> PyMem_Malloc(sizeof(size_t) * n)
+    if arr.items == NULL: exit(1)
+
+    arr.capacity = n
+    arr.size = 0
+    return arr
+
+cdef void free_arr(array_c* arr):
+    PyMem_Free(arr.items)
+    PyMem_Free(arr)
+
+
+cdef array_c* create_arr_val(size_t n, size_t val):
+    cdef:
+        array_c* arr = create_arr(n)
+        size_t i
+    arr.size = n
+    for i in range(n):
+        arr.items[i] = val
+    return arr
+
 
 cdef size_t max_arr(array_c * arr):
     cdef:
@@ -46,12 +74,14 @@ cdef void reverse_arr(array_c * arr):
     for i in range(arr.size // 2):
         _swap(arr, i, n - i)
 
-cdef array_c* list2arr(object py_obj):
+cdef array_c* py2arr(object py_obj):
     """
-    Convert python object of integers and return C array
-    :param py_obj: indexed Python object, ex: list, tuple, numpy 1D array
+    Convert iterable Python object to C array
+    :param py_obj: iterable Python object of int, ex: list, tuple, numpy 1D array
     :return: pointer to C array
     """
+    assert iterable(py_obj)
+
     cdef:
         i = 0
         n = len(py_obj)
@@ -67,29 +97,11 @@ cdef object arr2numpy(array_c* arr):
         size_t i
         size_t* data
 
-    np_arr = PyArray_SimpleNew(1, <npy_intp*>&arr.size, cnp.NPY_UINT64)
+    np_arr = PyArray_SimpleNew(1, <npy_intp*>&arr.size, NPY_UINT64)
     data = <size_t*>PyArray_DATA(np_arr)
     for i in range(arr.size):
         data[i] = arr.items[i]
     return np_arr
-
-cdef array_c* create_arr(size_t n):
-    cdef:
-        array_c* arr = <array_c*> malloc(sizeof(array_c))
-        size_t i, val
-    arr.capacity = n
-    arr.size = 0
-    arr.items = <size_t*>malloc(sizeof(size_t) * n)
-    return arr
-
-cdef array_c* create_arr_val(size_t n, size_t val):
-    cdef:
-        array_c* arr = create_arr(n)
-        size_t i
-    arr.size = n
-    for i in range(n):
-        arr.items[i] = val
-    return arr
 
 cdef void push_back_arr(array_c* arr, size_t val):
     cdef:
@@ -104,11 +116,9 @@ cdef void push_back_arr(array_c* arr, size_t val):
 
 cdef inline void resize_arr(array_c* arr):
     arr.capacity = 2 * arr.capacity
-    arr.items = <size_t*>realloc(arr.items, arr.capacity * sizeof(size_t))
+    arr.items = <size_t*>PyMem_Realloc(arr.items, arr.capacity * sizeof(size_t))
+    if arr.items == NULL: exit(1)
 
-cdef void free_arr(array_c* arr):
-    free(arr.items)
-    free(arr)
 
 cdef void print_array(array_c* arr):
     cdef size_t i
@@ -148,7 +158,7 @@ def test_resize_arr():
 def test_list2arr():
     print_func_name()
     l = [1, 2, 3]
-    cdef array_c* arr = list2arr(l)
+    cdef array_c* arr = py2arr(l)
     assert l[0] == arr.items[0]
     assert l[1] == arr.items[1]
     assert l[2] == arr.items[2]

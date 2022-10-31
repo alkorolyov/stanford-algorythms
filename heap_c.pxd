@@ -31,8 +31,9 @@ cdef inline size_t log2(size_t x):
     return 63 - _lzcnt_u64(x)
 
 
-cdef inline size_t _get_level(size_t idx):
-    return log2(idx + 1)
+cdef inline size_t _get_level(size_t i):
+    return log2(i + 1)
+
 
 cdef inline size_t get_parent_h(size_t i):
     if i == 0:
@@ -40,11 +41,34 @@ cdef inline size_t get_parent_h(size_t i):
     # idx // 2
     return ((i + 1) >> 1) - 1
 
+
 cdef inline size_t _get_l_child(size_t i):
     # idx * 2
     return (i << 1) + 1
 
+
+cdef inline bint is_full_h(heap_c* h):
+    return h.size == h.capacity
+
+
+cdef inline bint is_empty_h(heap_c* h):
+    return h.size == 0
+
+
+cdef inline size_t _min3(size_t a1, size_t a2, size_t a3):
+    if a1 < a2 and a1 < a3:
+        return a1
+    elif a2 < a3:
+        return a2
+    return a3
+
 cdef inline (size_t, size_t) get_children(size_t h_size, size_t i):
+    """
+    Return left and right child index. In case doesn't exist - return -1.
+    :param h_size: heap size
+    :param i: item index
+    :return: left, right children indexes. 
+    """
     cdef size_t l_idx = _get_l_child(i)
     if l_idx > h_size - 1:
         return -1, -1

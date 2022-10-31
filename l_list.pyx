@@ -1,6 +1,5 @@
 # cython: language_level=3
 
-from libc.stdlib cimport malloc, free, rand
 from utils import print_func_name
 
 """ ################## Linked lists in C ###################### """
@@ -11,13 +10,13 @@ ctypedef struct l_list:
 
 
 cdef l_list* create_l(size_t val):
-    cdef l_list * l = <l_list *> malloc(sizeof(l_list))
+    cdef l_list * l = <l_list *> PyMem_Malloc(sizeof(l_list))
     l.id = val
     l.next = NULL
     return l
 
 cdef void insert_l(l_list* l, size_t val):
-    cdef l_list* new_l = <l_list*> malloc(sizeof(l_list))
+    cdef l_list* new_l = <l_list*> PyMem_Malloc(sizeof(l_list))
 
     # go to the end of l-list
     while l.next:
@@ -45,7 +44,7 @@ cdef void print_l(l_list* l):
 
 cdef l_list* arr2list(size_t* arr, size_t n):
     cdef size_t i
-    cdef l_list* l = <l_list*> malloc(sizeof(l_list) * n)
+    cdef l_list* l = <l_list*> PyMem_Malloc(sizeof(l_list) * n)
 
     for i in range(n - 1):
         l[i].id = arr[i]
@@ -79,7 +78,7 @@ def test_create_l_list():
     for i in range(3):
         assert l.id == arr[i]
         l = l.next
-    free(l)
+    PyMem_Free(l)
 
 
 def test_insert_l_list():
@@ -91,7 +90,7 @@ def test_insert_l_list():
     for i in range(4):
         assert l.id == i + 1
         l = l.next
-    free(l)
+    PyMem_Free(l)
 
 def test_create_l_list_random():
     DEF size = 1000
@@ -108,4 +107,4 @@ def test_create_l_list_random():
         for i in range(size):
             assert l.id == a[i]
             l = l.next
-        free(l)
+        PyMem_Free(l)
