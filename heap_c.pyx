@@ -63,11 +63,13 @@ cdef inline size_t _bubble_up(heap_c* h, size_t i):
     :return: parent index or -1
     """
     cdef:
-        size_t p_idx = get_parent_h(i)
+        size_t p_idx
 
-    # no parent - root reached
-    if p_idx == -1:
+    # root reached
+    if i == 0:
         return -1
+
+    p_idx = get_parent_h(i)
 
     if h.items[i] < h.items[p_idx]:
         _swap(h.items, p_idx, i)
@@ -231,7 +233,7 @@ def test_log2():
 
 def test_get_parent():
 
-    assert get_parent_h(0) == -1
+    # assert get_parent_h(0) == -1
     assert get_parent_h(1) == 0
     assert get_parent_h(2) == 0
     assert get_parent_h(3) == 1

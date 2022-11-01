@@ -92,4 +92,7 @@ n = 10
 arr = np.random.randint(0, n * 2, (n, 2), dtype=np.uint64)
 print(arr)
 print(np.sort(arr, axis=0))
+#%%
+import platform
+print(platform.uname())
 

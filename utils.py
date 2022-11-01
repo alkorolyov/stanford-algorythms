@@ -6,6 +6,22 @@ import numpy as np
 
 saved_stdout = None
 
+def f8(x):
+    # pstats.f8 = f8
+    ret = "%8.3f" % x
+    if ret != '   0.000':
+        return ret
+    ret = "%6dµs" % (x * 1000000)
+    if x > 1e-5:
+    # if ret != '     0µs':
+        return ret
+    ret = "%6.2fµs" % (x * 1000000)
+    return ret
+
+    # ret = "%6dns" % (x * 10000000000)
+    # return ret
+
+
 def parse_time(time: float) -> str:
     if time < 1e-6:
         return f"{time / 1e-9:.2f} ns"
@@ -42,7 +58,7 @@ def restore_stdout():
 
 def print_func_name(end="\n"):
     try:
-        print(inspect.stack()[1].code_context[0].strip('\n'), end=end)
+        print(inspect.stack()[1].code_context[0].strip('\n').strip(' '), end=end)
     except TypeError:
         print("'None' in function call stack")
 

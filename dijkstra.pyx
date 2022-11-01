@@ -1,8 +1,4 @@
-# cython: language_level=3
 
-# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
 
 cdef extern from "Python.h":
     void* PyMem_Calloc(size_t nelem, size_t elsize)
@@ -11,7 +7,7 @@ from cpython.mem cimport PyMem_Free
 from libc.stdlib cimport rand, srand
 from heap_ex cimport heap_ex, item, create_heap, free_heap, is_empty_h, isin_h, find_h, push_heap, pop_heap, replace_h, print_heap
 from array_c cimport array_c, create_arr, create_arr_val, push_back_arr, isin_arr, print_array, free_arr, arr2numpy
-from graph cimport graph_c, node_c, create_graph_c, add_edge, dict2graph, free_graph, rand_graph_l, print_graph, print_graph_ext
+from graph cimport graph_c, node_c, create_graph_c, add_edge, dict2graph, free_graph, rand_graph_l, print_graph, print_graph_ext, unexplore_graph
 from readg cimport read_graph_l
 from dfs cimport dfs_stack
 
@@ -88,7 +84,7 @@ cdef array_c* dijkstra(graph_c* g, size_t s,  bint debug=False):
     :return: array of distances
     """
     cdef:
-        size_t i, j, score
+        size_t i, score
         size_t v, w
         item min_h
         node_c* nd
@@ -99,15 +95,13 @@ cdef array_c* dijkstra(graph_c* g, size_t s,  bint debug=False):
     dist.size = n
     push_heap(h, s, 0)
 
-    # if debug:
-    #     print_graph_ext(g)
     while not is_empty_h(h):
         # Explore vertex with min score(distance) from heap
         min_h = pop_heap(h)
         v = min_h.id
-        nd = g.node[v]
-
         dist.items[v] = min_h.val
+
+        nd = g.node[v]
         nd.explored = True
 
         if debug:
@@ -119,9 +113,7 @@ cdef array_c* dijkstra(graph_c* g, size_t s,  bint debug=False):
                 w = nd.adj.items[i]
                 if not g.node[w].explored:
                     score = dist.items[v] + nd.len.items[i]
-                    _insert(h, w, score, debug)
-                    if debug:
-                        print(f"push ({v}, {w}): score {score}")
+                    _insert(h, w, score)
             if debug:
                 print_heap(h)
 
@@ -129,7 +121,7 @@ cdef array_c* dijkstra(graph_c* g, size_t s,  bint debug=False):
     return dist
 
 
-cdef inline void _insert(heap_ex * h, size_t w, size_t score, bint debug):
+cdef inline void _insert(heap_ex * h, size_t w, size_t score):
     """
     Insert unexplored vertex to the frontier heap. 
     Check if "w" already added and leave the one with the minimum score (val).
@@ -176,16 +168,19 @@ def time_naive():
 
 def time_heap():
     print_func_name(end=" ... ")
-    DEF n = 2000
+    DEF n = 5000
     cdef:
         graph_c* g
         array_c* d
+        size_t i
 
     srand(2)
     g = rand_graph_l(n, n * n)
 
     start = time()
-    d = dijkstra(g, 0)
+    for i in range(10):
+        d = dijkstra(g, 0)
+        unexplore_graph(g)
     print(f"{time() - start:.3f}s")
 
     free_arr(d)

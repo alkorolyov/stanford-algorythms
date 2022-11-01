@@ -1,46 +1,43 @@
-# cython: language_level=3
 
-# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
 
+from c_utils cimport err_exit
 from cpython.mem cimport PyMem_Malloc, PyMem_Free, PyMem_Realloc
 from heap_c cimport get_child_cnt, get_children, get_parent_h, _get_l_child
 from utils import print_func_name, set_stdout, restore_stdout
 
 import numpy as np
 
-
 cdef heap_ex* create_heap(size_t n):
+    cdef char* err_msg = "Heap create error"
+
     cdef heap_ex* h = <heap_ex*>PyMem_Malloc(sizeof(heap_ex))
-    if h == NULL: exit (1)
+    if h == NULL: err_exit(err_msg)
 
     h.items = <item*>PyMem_Malloc(n * sizeof(item))
-    if h.items == NULL: exit (1)
+    if h.items == NULL: err_exit(err_msg)
 
     h.idx = <size_t*>PyMem_Malloc(n * sizeof(size_t))
-    if h.idx == NULL: exit(1)
+    if h.idx == NULL: err_exit(err_msg)
 
-    h.capacity = n
-    h.size = 0
     cdef size_t i
     for i in range(n):
         h.idx[i] = -1
+
+    h.capacity = n
+    h.size = 0
     return h
 
 
 cdef inline void resize_heap(heap_ex* h):
+    cdef char* err_msg = "Heap resize error"
+
     h.capacity *= 2
 
     h.items = <item*>PyMem_Realloc(h.items, h.capacity * sizeof(item))
-    if h.items == NULL:
-        print("Heap resize error")
-        exit(1)
+    if h.items == NULL: err_exit(err_msg)
 
     h.idx = <size_t *> PyMem_Realloc(h.idx, h.capacity * sizeof(size_t))
-    if h.idx == NULL:
-        print("Heap resize error")
-        exit(1)
+    if h.idx == NULL: err_exit(err_msg)
 
 
 cdef void free_heap(heap_ex* h):
@@ -49,12 +46,12 @@ cdef void free_heap(heap_ex* h):
     PyMem_Free(h)
 
 
-cdef inline bint is_full_h(heap_ex* h):
-    return h.size == h.capacity
-
-
-cdef inline bint is_empty_h(heap_ex* h):
-    return h.size == 0
+# cdef inline bint is_full_h(heap_ex* h):
+#     return h.size == h.capacity
+#
+#
+# cdef inline bint is_empty_h(heap_ex* h):
+#     return h.size == 0
 
 
 cdef inline bint isin_h(heap_ex* h, size_t id):
@@ -63,14 +60,6 @@ cdef inline bint isin_h(heap_ex* h, size_t id):
         if h.items[i].id == id:
             return True
     return False
-
-# Moved to heap_ex.pxd
-# cdef inline size_t find_h(heap_ex* h, size_t id, size_t start=0):
-#     cdef size_t i
-#     for i in range(start, h.size):
-#         if h.items[i].id == id:
-#             return i
-#     return -1
 
 
 cdef inline size_t _bubble_up(heap_ex* h, size_t i):
@@ -83,13 +72,32 @@ cdef inline size_t _bubble_up(heap_ex* h, size_t i):
     :return: new item index or -1
     """
     cdef:
-        size_t p_idx = get_parent_h(i)
+        size_t p_idx
 
-    if p_idx == -1:
+        item tmp
+        item * a = h.items
+        size_t id1
+        size_t id2
+
+    # root reached
+    if i == 0:
         return -1
 
+    # p_idx = get_parent_h(i)
+    p_idx = ((i + 1) >> 1) - 1
+
     if h.items[i].val < h.items[p_idx].val:
-        _swap_el(h, p_idx, i)
+        # _swap_el(h, p_idx, i)
+        id1 = a[i].id
+        id2 = a[p_idx].id
+
+        h.idx[id1] = p_idx
+        h.idx[id2] = i
+
+        tmp = a[i]
+        a[i] = a[p_idx]
+        a[p_idx] = tmp
+
         return p_idx
 
     return -1
@@ -107,6 +115,29 @@ cdef inline size_t _bubble_down(heap_ex * h, size_t i):
     """
     cdef:
         size_t l, r, min_idx
+        size_t n = h.size - 1
+
+        item tmp
+        item * a = h.items
+        size_t id1
+        size_t id2
+
+
+    # l = (i << 1) + 1 # left child of i
+    # r = l + 1
+    #
+    # if l > n:
+    #     # no children
+    #     return -1
+    # elif l == n:
+    #     # only left child
+    #     min_idx = l
+    # else:
+    #     # compare left and right
+    #     if h.items[l].val < h.items[r].val:
+    #         min_idx = l
+    #     else:
+    #         min_idx = r
 
     l, r = get_children(h.size, i)
 
@@ -117,6 +148,15 @@ cdef inline size_t _bubble_down(heap_ex * h, size_t i):
 
     if h.items[i].val > h.items[min_idx].val:
         _swap_el(h, min_idx, i)
+        # id1 = a[i].id
+        # id2 = a[min_idx].id
+        #
+        # h.idx[id1] = min_idx
+        # h.idx[id2] = i
+        #
+        # tmp = a[i]
+        # a[i] = a[min_idx]
+        # a[min_idx] = tmp
         return min_idx
 
     return -1
@@ -144,7 +184,6 @@ cdef void replace_h(heap_ex* h, size_t idx, size_t val):
     h.items[idx].val = val
     # try bubble up
     while i != -1:
-
         i = _bubble_up(h, i)
     # try bubble down
     i = idx
@@ -156,12 +195,16 @@ cdef void push_heap(heap_ex* h, size_t id, size_t val):
     cdef size_t i = h.size
     if is_full_h(h):
         resize_heap(h)
+
     h.size += 1
     h.items[i].id = id
     h.items[i].val = val
 
-    if id < h.capacity:
-        h.idx[id] = i
+    if id >= h.capacity:
+        print("heap_ex id not mapped: out of bounds")
+        exit(1)
+
+    h.idx[id] = i
 
     while i != -1:
         i = _bubble_up(h, i)
@@ -176,8 +219,7 @@ cdef item pop_heap(heap_ex* h):
         item min = h.items[0]
         size_t i = 0
 
-    if min.id < h.capacity:
-        h.idx[min.id] = -1
+    h.idx[min.id] = -1
 
     h.size -= 1
     if h.size == 0:
@@ -232,7 +274,7 @@ def test_create_ex():
 def test_swap_ex():
     print_func_name()
     cdef heap_ex* h = create_heap(2)
-    h.items[0].id = 7
+    h.items[0].id = 1
     h.items[0].val = 42
     h.items[1].id = 0
     h.items[1].val = 13
@@ -241,7 +283,7 @@ def test_swap_ex():
 
     assert h.items[0].id == 0
     assert h.items[0].val == 13
-    assert h.items[1].id == 7
+    assert h.items[1].id == 1
     assert h.items[1].val == 42
 
     free_heap(h)
@@ -326,13 +368,13 @@ def test_find():
 def test_resize():
     print_func_name()
     cdef heap_ex* h = create_heap(1)
-    push_heap(h, 1, 3)
-    push_heap(h, 2, 4)
+    push_heap(h, 0, 3)
+    push_heap(h, 1, 4)
     assert h.capacity == 2
-    push_heap(h, 3, 2)
+    push_heap(h, 2, 2)
     assert h.capacity == 4
-    push_heap(h, 4, 1)
-    push_heap(h, 5, 0)
+    push_heap(h, 3, 1)
+    push_heap(h, 4, 0)
     assert h.capacity == 8
     free_heap(h)
 
@@ -360,8 +402,8 @@ def test_pop_heap():
 def test_pop_heap_single():
     print_func_name()
     cdef heap_ex* h = create_heap(1)
-    push_heap(h, 10, 98)
-    push_heap(h, 11, 99)
+    push_heap(h, 0, 98)
+    push_heap(h, 1, 99)
     assert pop_heap(h).val == 98
     assert pop_heap(h).val == 99
     assert h.size == 0
@@ -399,19 +441,19 @@ def test_replace():
 
 def test_push_pop_rnd():
     print_func_name()
-    DEF n = 100
+    DEF SIZE = 100
 
     cdef:
         size_t [:, :] a
         long long [:, :] idx
         size_t i, j, k
         item itm
-        heap_ex* h = create_heap(n // 4)
+        heap_ex* h = create_heap(SIZE)
 
     np.random.seed(4)
 
     for j in range(100):
-        arr = np.random.randint(0, n, (n, 2), dtype=np.uint64)
+        arr = np.random.randint(0, SIZE, (SIZE, 2), dtype=np.uint64)
         a = arr
         for i in range(arr.shape[0]):
             push_heap(h, arr[i, 0], arr[i, 1])

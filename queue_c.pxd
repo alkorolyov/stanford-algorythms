@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 ctypedef struct queue:
     size_t capacity

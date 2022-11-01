@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 from time import time
 from stack cimport stack_c, create_stack, push, pop, peek, \

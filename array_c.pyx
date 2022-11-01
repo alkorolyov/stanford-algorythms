@@ -1,13 +1,4 @@
-# cython: language_level=3
 
-# cython: profile=False
-# cython: linetrace=False
-# cython: binding=False
-
-# cython: boundscheck=True
-# cython: wraparound=True
-# cython: initializedcheck=True
-# cython: cdivision=True
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout, iterable
@@ -66,6 +57,17 @@ cdef bint isin_arr(array_c* arr, size_t val):
     return False
 
 
+cdef inline void push_back_arr(array_c* arr, size_t val):
+    cdef:
+        size_t i = arr.size
+
+    if arr.size == arr.capacity:
+        resize_arr(arr)
+
+    arr.items[i] = val
+    arr.size += 1
+
+
 cdef void reverse_arr(array_c * arr):
     cdef:
         size_t i
@@ -102,16 +104,6 @@ cdef object arr2numpy(array_c* arr):
     for i in range(arr.size):
         data[i] = arr.items[i]
     return np_arr
-
-cdef void push_back_arr(array_c* arr, size_t val):
-    cdef:
-        size_t i = arr.size
-
-    if arr.size == arr.capacity:
-        resize_arr(arr)
-
-    arr.items[i] = val
-    arr.size += 1
 
 
 cdef inline void resize_arr(array_c* arr):

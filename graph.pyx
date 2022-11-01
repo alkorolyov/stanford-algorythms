@@ -1,13 +1,3 @@
-# cython: language_level=3
-
-# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
-
-# cython: boundscheck=False
-# cython: wraparound=False
-# cython: initializedcheck=False
-# cython: cdivision=True
 
 
 from array_c cimport array_c, print_array, py2arr, create_arr, push_back_arr, resize_arr, free_arr
@@ -93,12 +83,6 @@ cdef void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=0):
             nd.len = create_arr(4)
         push_back_arr(nd.len, length)
 
-    # if nd.adj == NULL:
-    #     nd.adj = create_arr(4)
-    # elif nd.adj.size == nd.adj.capacity:
-    #     resize_arr(nd.adj)
-    # _add_edge(nd, v2)
-
 cdef graph_c* dict2graph(dict graph):
     """
     Create C graph from python dict. Dict should have
@@ -119,8 +103,6 @@ cdef graph_c* dict2graph(dict graph):
     # print_mem(<size_t*>g.node[0], g.len*5)
     return g
 
-
-
 cdef graph_c* reverse_graph(graph_c* g):
     cdef:
         graph_c* g_rev
@@ -137,6 +119,14 @@ cdef graph_c* reverse_graph(graph_c* g):
                 add_edge(g_rev, v2, v1)
     return g_rev
 
+cdef void unexplore_graph(graph_c* g):
+    cdef:
+        size_t i
+        node_c* nd
+
+    for i in range(g.len):
+        nd = g.node[i]
+        nd.explored = False
 
 
 cdef void print_graph(graph_c *g, size_t length=-1):

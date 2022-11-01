@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 
 ctypedef struct heap_c:
@@ -36,8 +36,6 @@ cdef inline size_t _get_level(size_t i):
 
 
 cdef inline size_t get_parent_h(size_t i):
-    if i == 0:
-        return -1
     # idx // 2
     return ((i + 1) >> 1) - 1
 

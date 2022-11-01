@@ -1,16 +1,6 @@
-# cython: language_level=3
-# cython: language_level=3
 
-# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
 
-# cython: boundscheck=False
-# cython: wraparound=False
-# cython: initializedcheck=False
-# cython: cdivision=True
-
-# distutils: extra_compile_args = /O2 /Ob3 /arch:AVX2 /openmp
+ 
 import random
 
 import cython

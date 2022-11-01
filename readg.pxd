@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 from array_c cimport array_c
 from graph cimport graph_c
 

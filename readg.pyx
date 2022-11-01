@@ -1,6 +1,7 @@
-# cython: language_level=3
-
 from time import time
+
+import cython
+
 from utils import print_func_name, set_stdout, restore_stdout
 from graph cimport graph_c, create_graph_c, add_edge, print_graph, print_graph_ext, free_graph
 from array_c cimport array_c, create_arr, resize_arr, free_arr, print_array, max_arr
@@ -194,6 +195,7 @@ cdef (graph_c*, graph_c*) read_graphs(str filename):
     No missing vertices [i]. Total nodes - last index [i]
 """
 
+@cython.wraparound
 cdef graph_c* read_graph_l(str filename):
 
     with open(filename, "r") as f:

@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 from graph cimport graph_c
 from stack cimport stack_c

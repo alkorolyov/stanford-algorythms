@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout

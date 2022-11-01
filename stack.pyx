@@ -1,13 +1,4 @@
-# cython: language_level=3
 
-# cython: profile=False
-# cython: linetrace=False
-# cython: binding=False
-
-# cython: boundscheck=True
-# cython: wraparound=True
-# cython: initializedcheck=True
-# cython: cdivision=True
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout

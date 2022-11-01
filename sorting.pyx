@@ -1,15 +1,4 @@
-# cython: language_level=3
-# cython: profile=False
-# cython: linetrace=False
-# cython: binding=False
 
-
-# cython: boundscheck=False
-# cython: wraparound=False
-# cython: initializedcheck=False
-# cython: cdivision=True
-
-# distutils: extra_compile_args = /O2 /Ob3 /arch:AVX2
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand

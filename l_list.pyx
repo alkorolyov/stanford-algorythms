@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 from utils import print_func_name
 

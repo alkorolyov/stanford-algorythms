@@ -1,15 +1,8 @@
-# cython: language_level=3
 
-# cython: profile=False
-# cython: linetrace=False
-# cython: binding=False
-
-# cython: boundscheck=True
-# cython: wraparound=True
-# cython: initializedcheck=True
-# cython: cdivision=True
 
 cimport numpy as cnp
+import cython
+
 cnp.import_array()
 
 from time import time
@@ -78,6 +71,7 @@ cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False, bint timeit=False):
     if debug:
         print_graph_ext(g)
 
+@cython.wraparound
 def scc_py(str filename):
     cdef:
         size_t i
@@ -190,6 +184,7 @@ def test_scc_4():
     assert np.sort(cnt)[1] == 3
     # print(np.sort(cnt))
 
+@cython.wraparound
 def test_scc_big():
     print_func_name()
 

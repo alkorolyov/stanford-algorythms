@@ -1,4 +1,3 @@
-# cython: language_level=3
 from array_c cimport array_c
 
 ctypedef struct node_c:
@@ -16,6 +15,7 @@ cdef:
     void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=*)
     graph_c* dict2graph(dict graph)
     graph_c * reverse_graph(graph_c * g)
+    void unexplore_graph(graph_c * g)
     void free_graph(graph_c *g)
     void print_graph(graph_c *g, size_t length=*)
     void print_graph_ext(graph_c *g, size_t length=*)

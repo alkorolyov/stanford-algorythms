@@ -1,4 +1,4 @@
-# cython: language_level=3
+
 
 from graph cimport graph_c, node_c, free_graph, dict2graph, rand_dict_graph
 from queue_c cimport queue, create_queue, enqueue, dequeue, is_empty_q
