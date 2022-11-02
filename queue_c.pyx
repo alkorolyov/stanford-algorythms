@@ -2,9 +2,10 @@
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from utils import print_func_name, set_stdout, restore_stdout
-import numpy as np
+
 
 """ ################## Queue in C ######################### """
+
 cdef queue* create_queue(size_t n):
     cdef queue* q = <queue*> PyMem_Malloc(sizeof(queue))
     if q == NULL: exit(1)
@@ -21,10 +22,10 @@ cdef void free_queue(queue* q):
     PyMem_Free(q.items)
     PyMem_Free(q)
 
-cdef bint is_full_q(queue* q):
+cdef inline bint is_full_q(queue* q):
     return q.rear == q.capacity - 1
 
-cdef bint is_empty_q(queue* q):
+cdef inline bint is_empty_q(queue* q):
     return q.front == q.rear + 1
 
 cdef void enqueue(queue* q, size_t x):
@@ -45,7 +46,7 @@ cdef size_t dequeue(queue* q):
         print("Dequeue error: queue is empty")
         exit(1)
 
-cdef size_t size_q(queue* q):
+cdef inline size_t size_q(queue* q):
     return q.rear + 1 - q.front
 
 cdef void print_queue(queue* q):

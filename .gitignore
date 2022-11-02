@@ -15,4 +15,5 @@
 *.pyd
 *.obj
 *.prof
+*.pstat
 /build/

@@ -1,20 +1,17 @@
-# cython: language_level  = 3
-
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
-cimport cython
 
 cdef extern from "math.h":
     float sqrtf(float)
-    
-from libc.float cimport DBL_EPSILON
+
 from libc.math cimport sqrt, fabs
-from cython.parallel import prange
+from c_utils cimport read_numpy
 cimport numpy as cnp
+cnp.import_array()
 
 import numpy as np
 from scipy.spatial.distance import pdist
 
-cnp.import_array()
+
 
 cdef struct arr_1d:
     double value
@@ -36,26 +33,26 @@ cdef double distance(double x1, double y1, double x2, double y2):
 cdef inline double dist_sqr(double x1, double y1, double x2, double y2):
     return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
 
-cdef double min_3_db(double a, double b, double c):
+cdef inline double min_3_db(double a, double b, double c):
     if a < b and a < c:
         return a
     if b < a and b < c:
         return b
     return c
 
-cdef double min_2_db(double a, double b):
+cdef inline double min_2_db(double a, double b):
     if a < b:
         return a
     else:
         return b
 
-cdef size_t max_2_int(size_t a, size_t b):
+cdef inline size_t max_2_int(size_t a, size_t b):
     if a > b:
         return a
     else:
         return b
 
-cdef size_t min_2_int(size_t a, size_t b):
+cdef inline size_t min_2_int(size_t a, size_t b):
     if a < b:
         return a
     else:
@@ -80,15 +77,11 @@ cpdef double min_dist_naive_mv(double[:, :] arr):
 
 """ ########### Using direct memory access ########## """
 cpdef double min_dist_naive(cnp.ndarray[double, ndim=2] arr):
-    cdef cnp.npy_intp * dims
-    cdef double * data
-    if arr.flags['C_CONTIGUOUS']:
-        dims = cnp.PyArray_DIMS(arr)
-        data = <double *> cnp.PyArray_DATA(arr)
-        return min_dist_naive_c(dims[0], data)
-    else:
-        print('Array is non C-contiguous')
-        return -1
+    cdef:
+        size_t size
+        double* data
+    data, size = read_numpy(arr)
+    return min_dist_naive_c(size, data)
 
 
 cdef double min_dist_naive_c(size_t n, double *arr):

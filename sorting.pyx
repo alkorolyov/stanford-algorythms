@@ -2,28 +2,9 @@
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand
+from c_utils cimport read_numpy, fastrand
 cimport numpy as np
 np.import_array()
-
-DEF SEED = 1
-
-cdef inline size_t fastrand():
-  cdef size_t g_seed = (214013 * SEED + 2531011)
-  return (g_seed>>16)&0x7FFF
-
-cdef (double*, size_t) read_numpy(np.ndarray[double, ndim=1] arr):
-    cdef:
-        np.npy_intp *dims
-        double *data
-    if arr.flags['C_CONTIGUOUS']:
-        dims = np.PyArray_DIMS(arr)
-        data = <double*>np.PyArray_DATA(arr)
-        # print("numpy array:", dims[0])
-        # print("first elem:", data[0])
-        return data, <size_t>dims[0]
-    else:
-        print('Array is non C-contiguous')
-        exit(1)
 
 # python wrap
 cpdef void quicksort_c(np.ndarray[double, ndim=1] arr):
@@ -35,15 +16,6 @@ cpdef void quicksort_c(np.ndarray[double, ndim=1] arr):
         size_t  size
     data, size = read_numpy(arr)
     qsort_c(data, size)
-
-    # cdef np.npy_intp * dims
-    # cdef double * data
-    # if arr.flags['C_CONTIGUOUS']:
-    #     dims = np.PyArray_DIMS(arr)
-    #     data = <double *> np.PyArray_DATA(arr)
-    #     qsort_c(data, dims[0])
-    # else:
-    #     print('Array is non C-contiguous')
 
 cpdef void quicksort_mv(np.ndarray[double, ndim=1] arr):
     qsort(arr)
@@ -107,8 +79,8 @@ cdef void qsort_c(double *arr, size_t n):
 
     """ different choose pivot options """
     cdef size_t p_idx
-    # p_idx = fastrand() % n
-    p_idx = rand() % n
+    p_idx = fastrand() % n
+    # p_idx = rand() % n
     # p_idx = 0 # first
     # p_idx = n - 1 # last
     # p_idx = choose_p(arr, n) # median of 3

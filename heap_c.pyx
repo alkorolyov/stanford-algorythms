@@ -2,9 +2,8 @@
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 from array_c cimport array_c, py2arr
-cimport numpy as cnp
 from numpy cimport PyArray_DIMS, PyArray_DATA, npy_intp, ndarray
-cnp.import_array()
+
 
 from utils import print_func_name
 from time import time

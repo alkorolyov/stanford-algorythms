@@ -3,6 +3,8 @@
 from array_c cimport array_c, print_array, py2arr, create_arr, push_back_arr, resize_arr, free_arr
 from libc.stdlib cimport rand, srand
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
+from c_utils cimport err_exit, fastrand
+
 from utils import print_func_name
 
 
@@ -25,15 +27,16 @@ cdef graph_c* create_graph_c(size_t n):
     cdef graph_c* g
     cdef node_c* nd
     cdef size_t i
+    cdef char* err_msg = "Graph malloc error"
 
     g = <graph_c*> PyMem_Malloc(sizeof(graph_c))
-    if g == NULL: exit(1)
+    if g == NULL: err_exit(err_msg)
 
     g.node = <node_c **> PyMem_Malloc(n * sizeof(node_c*))
-    if g.node == NULL: exit(1)
+    if g.node == NULL: err_exit(err_msg)
 
     g.node[0] = <node_c *> PyMem_Malloc(n * sizeof(node_c))
-    if g.node[0] == NULL: exit(1)
+    if g.node[0] == NULL: err_exit(err_msg)
 
     g.len = n
     for i in range(n):
@@ -63,7 +66,7 @@ cdef void free_graph(graph_c *g):
     PyMem_Free(g)
 
 
-cdef void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=0):
+cdef inline void add_edge(graph_c* g, size_t v1, size_t v2, size_t length=0):
     """
     Adds edge [v1, v2] to the directed graph G
     :param g: graph_c G
@@ -208,21 +211,25 @@ cdef graph_c* rand_graph_l(size_t n, size_t m, size_t seed=0):
     :return: C graph
     """
     cdef:
-        size_t i, j, v1, v2, l
+        size_t i, v1, v2, l
         graph_c* g = create_graph_c(n)
 
     if seed:
         srand(seed)
 
     for i in range(m):
-        v1 = rand() % n
-        v2 = rand() % n
-        l = rand() % n
+        # v1 = rand() % n
+        # v2 = rand() % n
+        # l = rand() % n
+        v1 = fastrand(seed) % n
+        v2 = fastrand(seed) % n
+        l = fastrand(seed) % n
         add_edge(g, v1, v2, l)
     return g
 
 
-
+def rand_graph_l_py(n: int, m: int, seed=0):
+    rand_graph_l(n, m, seed)
 
 """ ################################################################ """
 """ ######################### UNIT TESTS ########################### """

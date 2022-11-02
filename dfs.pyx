@@ -169,15 +169,15 @@ def test_dfs_4():
 
 def test_dfs_random():
     print_func_name()
-    DEF size = 30
+    DEF SIZE = 30
     cdef:
         graph_c* g
         node_c * nd
         size_t i, j, k
-        array_c * out = create_arr(size)
+        array_c * out = create_arr(SIZE)
 
     for i in range(1000):
-        graph = rand_dict_graph(size, rand() % (size), selfloops=True)
+        graph = rand_dict_graph(SIZE, rand() % (SIZE), selfloops=True)
         g = dict2graph(graph)
         dfs_stack(g, 0, out)
 

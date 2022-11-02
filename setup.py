@@ -8,7 +8,7 @@ import numpy as np
 # import os
 
 # Cython Compiler options
-Options.cimport_from_pyx = False
+Options.cimport_from_pyx = True
 
 fast_directives = {
     "language_level": "3",
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     dijkstra.test_naive_rnd()
     dijkstra.test_naive_1()
     dijkstra.test_single_case_naive()
-    dijkstra.test_all_cases_naive()
+    # dijkstra.test_all_cases_naive()
 
     dijkstra.test_heap()
     dijkstra.test_heap_loops()
@@ -205,8 +205,7 @@ if __name__ == '__main__':
     dijkstra.test_heap_rnd()
 
     dijkstra.test_single_case_heap()
-    dijkstra.test_all_cases_heap()
-
+    # dijkstra.test_all_cases_heap()
 
     sorting.test_swap_c()
     sorting.test_partition_c_1()
@@ -324,6 +323,7 @@ if __name__ == '__main__':
     #           "arr = np.random.randn(n)\n"
 
     imports = "from sorting import quicksort_c, quicksort_mv, mergesort_c\n" \
+              "from graph import rand_graph_l_py\n" \
               "import numpy as np\n" \
               "n = 100000\n" \
               "arr = np.random.randn(n)\n"
@@ -346,10 +346,11 @@ if __name__ == '__main__':
     # timeit_func("mincut.mincut_n", "graph, 1, mem_mode=1", imports)
     # timeit_func("mincut_py.mincut_n", "graph, 1", imports)
 
+    timeit_func("rand_graph_l_py", "100, 10000", imports)
 
     # input("Press Enter to continue...")
 
     # heap_c.time_log2()
 
     # dijkstra.time_naive()
-    dijkstra.time_heap()
+    # dijkstra.time_heap()

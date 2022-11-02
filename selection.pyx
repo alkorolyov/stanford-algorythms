@@ -4,7 +4,10 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand, srand
 from libc.time cimport time
 from sorting cimport partition_c, partition3_c, qsort_c, msort_c, choose_p
+from c_utils cimport read_numpy
+
 from utils import print_func_name
+
 cimport numpy as np
 np.import_array()
 
@@ -61,14 +64,11 @@ cdef inline double median5(double *a):
             return _min(a[1], a[3])
 
 cpdef double r_select(np.ndarray[double, ndim=1] arr, size_t k):
-    cdef np.npy_intp * dims
-    cdef double * data
-    if arr.flags['C_CONTIGUOUS']:
-        dims = np.PyArray_DIMS(arr)
-        data = <double *> np.PyArray_DATA(arr)
-        return r_select_c(data, dims[0], k)
-    else:
-        print('Array is non C-contiguous')
+    cdef:
+        size_t   size
+        double * data
+    data, size = read_numpy(arr)
+    return r_select_c(data, size, k)
 
 cdef double r_select_c(double *arr, size_t n, size_t k):
 
@@ -94,19 +94,16 @@ cdef double r_select_c(double *arr, size_t n, size_t k):
         return r_select_c(arr + idx, n - idx, k - idx)
 
 cpdef double d_select(np.ndarray[double, ndim=1] arr, size_t k):
-    cdef np.npy_intp *dims
-    cdef double *data
-    cdef double *buff
-    cdef double res
-    if arr.flags['C_CONTIGUOUS']:
-        dims = np.PyArray_DIMS(arr)
-        data = <double *> np.PyArray_DATA(arr)
-        buff = <double *> PyMem_Malloc(dims[0] // 3 * sizeof(double)) # 1/5 + 1/25 + 1/125 + ... = 1/4
-        res = d_select_c(data, dims[0], k, buff)
-        PyMem_Free(buff)
-        return res
-    else:
-        print('Array is non C-contiguous')
+    cdef:
+        size_t size
+        double *data
+        double *buff
+        double res
+    data, size = read_numpy(arr)
+    buff = <double *> PyMem_Malloc(size // 3 * sizeof(double)) # 1/5 + 1/25 + 1/125 + ... = 1/4
+    res = d_select_c(data, size, k, buff)
+    PyMem_Free(buff)
+    return res
 
 cdef double d_select_c(double *arr, size_t n, size_t k, double *buff, bint pivot_call = False):
     """

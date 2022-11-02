@@ -9,6 +9,7 @@ from heap_ex cimport heap_ex, item, create_heap, free_heap, is_empty_h, isin_h, 
 from array_c cimport array_c, create_arr, create_arr_val, push_back_arr, isin_arr, print_array, free_arr, arr2numpy
 from graph cimport graph_c, node_c, create_graph_c, add_edge, dict2graph, free_graph, rand_graph_l, print_graph, print_graph_ext, unexplore_graph
 from readg cimport read_graph_l
+
 from dfs cimport dfs_stack
 
 import os
@@ -178,7 +179,7 @@ def time_heap():
     g = rand_graph_l(n, n * n)
 
     start = time()
-    for i in range(10):
+    for i in range(1):
         d = dijkstra(g, 0)
         unexplore_graph(g)
     print(f"{time() - start:.3f}s")

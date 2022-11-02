@@ -9,8 +9,8 @@ cimport numpy as cnp
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand
-from libc.math cimport sqrt
-from pprint import pprint
+from c_utils cimport fastrand
+
 from time import time
 
 cdef size_t C_MALLOC = 0
@@ -275,7 +275,7 @@ cdef (size_t, size_t) random_pair(graph_c *g):
     n = g.len
     for i in range(n):
         num_pairs += g.node[i].len
-    p = rand() % num_pairs
+    p = fastrand() % num_pairs
 
     # debug
     # print_graph(g)

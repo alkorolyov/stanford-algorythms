@@ -1,6 +1,3 @@
-
-
-
 ctypedef struct heap_c:
     size_t  capacity
     size_t  size
@@ -8,11 +5,13 @@ ctypedef struct heap_c:
 
 cdef extern size_t _lzcnt_u64 (size_t x)
 
+
 cdef inline void _swap(size_t* a, size_t i, size_t j):
     cdef size_t tmp
     tmp = a[i]
     a[i] = a[j]
     a[j] = tmp
+
 
 cdef inline size_t log2_loop(size_t x):
     cdef:
@@ -24,6 +23,7 @@ cdef inline size_t log2_loop(size_t x):
         c *= 2
         i += 1
     return i - 1
+
 
 cdef inline size_t log2(size_t x):
     if x == 0:
@@ -60,6 +60,7 @@ cdef inline size_t _min3(size_t a1, size_t a2, size_t a3):
         return a2
     return a3
 
+
 cdef inline (size_t, size_t) get_children(size_t h_size, size_t i):
     """
     Return left and right child index. In case doesn't exist - return -1.
@@ -75,6 +76,7 @@ cdef inline (size_t, size_t) get_children(size_t h_size, size_t i):
     else:
         return l_idx, l_idx + 1
 
+
 cdef inline size_t get_child_cnt(size_t h_size, size_t i):
     cdef size_t l, r
     l, r = get_children(h_size, i)
@@ -84,6 +86,7 @@ cdef inline size_t get_child_cnt(size_t h_size, size_t i):
         return 1
     else:
         return 2
+
 
 cdef:
     heap_c* create_heap(size_t n)

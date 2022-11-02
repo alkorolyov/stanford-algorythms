@@ -18,10 +18,6 @@ def f8(x):
     ret = "%6.2fµs" % (x * 1000000)
     return ret
 
-    # ret = "%6dns" % (x * 10000000000)
-    # return ret
-
-
 def parse_time(time: float) -> str:
     if time < 1e-6:
         return f"{time / 1e-9:.2f} ns"
