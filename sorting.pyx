@@ -1,13 +1,17 @@
 
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
-from libc.stdlib cimport rand
-from c_utils cimport read_numpy, fastrand
-cimport numpy as np
-np.import_array()
+from libc.stdlib cimport rand, RAND_MAX
+from c_utils cimport read_numpy, frand, frand32
+import numpy as np
+from numpy cimport ndarray
+cimport numpy as cnp
+cnp.import_array()
+
+from utils import print_func_name
 
 # python wrap
-cpdef void quicksort_c(np.ndarray[double, ndim=1] arr):
+cpdef void quicksort_c(ndarray[double, ndim=1] arr):
     """
     :param arr: C-contiguous numpy 1D array of doubles   
     """
@@ -17,7 +21,7 @@ cpdef void quicksort_c(np.ndarray[double, ndim=1] arr):
     data, size = read_numpy(arr)
     qsort_c(data, size)
 
-cpdef void quicksort_mv(np.ndarray[double, ndim=1] arr):
+cpdef void quicksort_mv(ndarray[double, ndim=1] arr):
     qsort(arr)
     return
 
@@ -79,7 +83,13 @@ cdef void qsort_c(double *arr, size_t n):
 
     """ different choose pivot options """
     cdef size_t p_idx
-    p_idx = fastrand() % n
+    # if n > RAND_MAX:
+    #     p_idx = frand32() % n
+    # else:
+    #     p_idx = frand() % n
+
+    p_idx = frand32() % n
+    # p_idx = frand() % n
     # p_idx = rand() % n
     # p_idx = 0 # first
     # p_idx = n - 1 # last
@@ -97,6 +107,8 @@ cdef inline size_t partition_c(double *arr, size_t n, size_t p_idx):
     |  < p  | p |    > p    |
               |
             pivot
+    
+    Works when no duplicates.
 
     :param arr: input array
     :param n: array length
@@ -121,7 +133,7 @@ cdef size_t partition3_c(double *arr, size_t n, size_t p_idx):
                          |
                        pivot
     
-    Used in "median of medians"
+    Used in "median of medians" and with duplicates.
          
     :param arr: input array
     :param n: array length
@@ -214,7 +226,7 @@ cdef size_t partition(double [:] arr):
     return j - 1
 
 """ ############### MergeSort C ##################### """
-cpdef void mergesort_c(np.ndarray[double, ndim=1] arr):
+cpdef void mergesort_c(ndarray[double, ndim=1] arr):
     """
     :param arr: c-contiguous numpy 1D array of doubles   
     """
@@ -297,6 +309,7 @@ cdef void merge_c(double *a, double *b, size_t n, size_t idx, double *c):
 """
 
 def test_swap_c():
+    print_func_name()
     cdef double *arr = [0.1, -0.1]
     cdef size_t i = 0
     cdef size_t j = 1
@@ -306,7 +319,22 @@ def test_swap_c():
     assert arr[0] == -0.1
     assert arr[1] == 0.1
 
+def test_choose_p_rnd():
+    print_func_name()
+    cdef:
+        size_t i, j, p
+        double arr[20]
+        size_t n = sizeof(arr)
+    for i in range(1000):
+        for j in range(n):
+            arr[j] = rand()
+        p = choose_p(arr, n)
+        assert p >= 0
+        assert p < n
+
+
 def test_partition_c_1():
+    print_func_name()
     cdef double *arr = [0.4, 0.3, 0.2, 0.1]
     cdef size_t p_idx = 1
     cdef size_t n = 4
@@ -316,7 +344,21 @@ def test_partition_c_1():
     assert arr[2] == 0.3
     assert arr[3] == 0.4
 
+def test_partition_c_dups():
+    print_func_name()
+    cdef double *arr = [0.3, 0.2, 0.1, 0.2]
+    # print(partition_c(arr, 4, 1))
+    # assert partition_c(arr, 4, 1) == 2
+    # print(arr[0], arr[1], arr[2], arr[3])
+    # assert arr[0] == 0.1
+    # assert arr[1] == 0.2
+    # assert arr[2] == 0.3
+    # assert arr[3] == 0.4
+
+
+
 def test_partition3_c_1():
+    print_func_name()
     cdef double *arr = [0.2, 0.3, 0.2, 0.1, 0.2]
     cdef size_t p_idx = 2
     cdef size_t n = 5
@@ -329,6 +371,7 @@ def test_partition3_c_1():
 
 
 def test_qsort_c_1():
+    print_func_name()
     cdef double *arr = [0.3, 0.2, 0.1]
     cdef size_t n = 3
     qsort_c(arr, n)
@@ -336,7 +379,8 @@ def test_qsort_c_1():
     assert arr[1] == 0.2
     assert arr[2] == 0.3
 
-def test_qsort_c_2():
+def test_qsort_c_dups():
+    print_func_name()
     cdef double *arr = [0.2, 0.2, 0.1]
     cdef size_t n = 3
     qsort_c(arr, n)
@@ -344,7 +388,28 @@ def test_qsort_c_2():
     assert arr[1] == 0.2
     assert arr[2] == 0.2
 
+def test_qsort_c_rnd():
+    print_func_name()
+    DEF n = 100
+    cdef:
+        double a[n]
+        size_t i, size
+        size_t* data
+    np.random.seed(1)
+    for i in range(1000):
+        arr = np.random.randint(0, n // 2, n, np.uint64)
+        data = <size_t*>cnp.PyArray_DATA(arr)
+        for j in range(n):
+            a[j] = <double>data[j]
+        qsort_c(a, n)
+        arr.sort()
+        for j in range(n):
+            assert a[j] == <double>data[j]
+
+
+
 def test_merge_c_1():
+    print_func_name()
     cdef double *a = [0.1, 0.3]
     cdef double *b = [0.2, 0.4]
     cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
@@ -356,6 +421,7 @@ def test_merge_c_1():
     assert a[3] == 0.4
 
 def test_merge_c_2():
+    print_func_name()
     cdef double *a = [0.2, 0.4]
     cdef double *b = [0.1, 0.3]
 
@@ -369,6 +435,7 @@ def test_merge_c_2():
     assert a[3] == 0.4
 
 def test_merge_c_3():
+    print_func_name()
     cdef double *a = [0.2, 0.3]
     cdef double *b = [0.1]
 
@@ -381,6 +448,7 @@ def test_merge_c_3():
     assert a[2] == 0.3
 
 def test_merge_c_4():
+    print_func_name()
     cdef double *a = [0.1]
     cdef double *b = [0.2, 0.3]
 
@@ -393,6 +461,7 @@ def test_merge_c_4():
     assert a[2] == 0.3
 
 def test_merge_c_5():
+    print_func_name()
     cdef double *a = [0.1, 0.1]
     cdef double *b = [0.2, 0.3]
 
@@ -406,6 +475,7 @@ def test_merge_c_5():
     assert a[3] == 0.3
 
 def test_merge_c_6():
+    print_func_name()
     cdef double *a = [0.1, 0.1]
     cdef double *b = [0.2]
 
@@ -418,6 +488,7 @@ def test_merge_c_6():
     assert a[2] == 0.2
 
 def test_merge_c_7():
+    print_func_name()
     cdef double *a = [0.2]
     cdef double *b = [0.1, 0.1]
 
@@ -430,6 +501,7 @@ def test_merge_c_7():
     assert a[2] == 0.2
 
 def test_merge_c_8():
+    print_func_name()
     cdef double *a = [0.1]
     cdef double *b = [0.1]
 
@@ -444,6 +516,7 @@ def test_merge_c_8():
 
 
 def test_msort_c_1():
+    print_func_name()
     cdef double *a = [0.3, 0.2, 0.1]
     cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)
@@ -454,6 +527,7 @@ def test_msort_c_1():
     assert a[2] == 0.3
 
 def test_msort_c_2():
+    print_func_name()
     cdef double *a = [0.3, 0.2, 0.2]
     cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)
@@ -464,6 +538,7 @@ def test_msort_c_2():
     assert a[2] == 0.3
 
 def test_msort_c_3():
+    print_func_name()
     cdef double *a = [0.2, 0.3, 0.2]
     cdef double *c = <double *> PyMem_Malloc(10 * sizeof(double))
     msort_c(a, 3, c)

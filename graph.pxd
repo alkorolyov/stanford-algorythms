@@ -20,5 +20,5 @@ cdef:
     void print_graph(graph_c *g, size_t length=*)
     void print_graph_ext(graph_c *g, size_t length=*)
     void mem_size(graph_c *g)
-    graph_c * rand_graph_l(size_t n, size_t m, size_t seed=*)
+    graph_c * rand_graph_l(size_t n, size_t m)
     dict rand_dict_graph(size_t n, size_t m, bint selfloops=*, bint directed=*)

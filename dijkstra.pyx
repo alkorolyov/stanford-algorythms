@@ -4,11 +4,13 @@ cdef extern from "Python.h":
     void* PyMem_Calloc(size_t nelem, size_t elsize)
 
 from cpython.mem cimport PyMem_Free
-from libc.stdlib cimport rand, srand
+from libc.stdlib cimport srand, rand
+from c_utils cimport frand
 from heap_ex cimport heap_ex, item, create_heap, free_heap, is_empty_h, isin_h, find_h, push_heap, pop_heap, replace_h, print_heap
 from array_c cimport array_c, create_arr, create_arr_val, push_back_arr, isin_arr, print_array, free_arr, arr2numpy
 from graph cimport graph_c, node_c, create_graph_c, add_edge, dict2graph, free_graph, rand_graph_l, print_graph, print_graph_ext, unexplore_graph
 from readg cimport read_graph_l
+
 
 from dfs cimport dfs_stack
 
@@ -133,6 +135,7 @@ cdef inline void _insert(heap_ex * h, size_t w, size_t score):
     """
     # check if w already in heap
     # cdef size_t idx = find_h(h, w)
+
     cdef size_t idx = h.idx[w]
 
     # if no insert directly
@@ -367,17 +370,14 @@ def test_naive_empty():
 def test_naive_rnd():
     # print_func_name()
     DEF n = 100
-    DEF seed = 1
     cdef:
         graph_c* g
         array_c* d
 
-    srand(seed)
+    srand(1)
 
     for i in range(100):
-        g = rand_graph_l(n, rand() % (n * n), seed)
-        # g = rand_graph_l(n, n, seed=1)
-        # dijkstra(g, 0)
+        g = rand_graph_l(n, rand() % (n * n))
         d = dijkstra_naive(g, 0)
         free_arr(d)
         free_graph(g)
@@ -601,16 +601,14 @@ def test_heap_empty():
 
 def test_heap_rnd():
     # print_func_name()
-    DEF n = 150
+    DEF n = 200
     cdef:
         graph_c* g
         array_c* d
 
-    srand(2)
-
     for i in range(100):
-        g = rand_graph_l(n, rand() % (n * n))
-        d = dijkstra(g, 0)
+        g = rand_graph_l(n, frand() % (n * n))
+        d = dijkstra(g, 0, False)
         free_arr(d)
         free_graph(g)
 

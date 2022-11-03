@@ -4,7 +4,7 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand, srand
 from libc.time cimport time
 from sorting cimport partition_c, partition3_c, qsort_c, msort_c, choose_p
-from c_utils cimport read_numpy
+from c_utils cimport read_numpy, frand
 
 from utils import print_func_name
 
@@ -71,17 +71,28 @@ cpdef double r_select(np.ndarray[double, ndim=1] arr, size_t k):
     return r_select_c(data, size, k)
 
 cdef double r_select_c(double *arr, size_t n, size_t k):
-
+    """
+    k-th order statistics using randomized selection.
+    k = 1 for minimum
+    k = n for maximum
+    :param arr: input array
+    :param n: size
+    :param k: order
+    :return: k-th order value
+    """
     # print(f" ======== n: {n}, k: {k} =======", )
     # for i in range(n):
     #     print(f"a[{i}]", arr[i])
 
     if n == 1:
         return arr[0]
+    cdef size_t p_idx
+    # p_idx = choose_p(arr, n)
+    p_idx = rand() % n
+    # p_idx = frand() % n
+    cdef size_t idx = partition3_c(arr, n, p_idx)
+    # cdef size_t idx = partition_c(arr, n, p_idx)
 
-    cdef size_t p_idx = choose_p(arr, n)
-    # cdef size_t p_idx = rand() % n
-    cdef size_t idx = partition_c(arr, n, p_idx)
     # print("pivot:", arr[idx], "idx:", idx)
     # for i in range(n):
     #     print(f"a[{i}]", arr[i])
@@ -197,46 +208,50 @@ cdef double d_select_c(double *arr, size_t n, size_t k, double *buff, bint pivot
     ############################################################# 
 """
 
+
+
+
 def test_r_select_c_1():
     print_func_name()
     cdef double *arr = [0.3, 0.2, 0.1]
-    cdef size_t n = 3
-    cdef size_t k = 1
     cdef size_t i
     for i in range(100):
-        srand(time(NULL))
-        assert r_select_c(arr, n, k) == 0.1
+        assert r_select_c(arr, 3, 1) == 0.1
 
 def test_r_select_c_2():
     print_func_name()
     cdef double *arr = [0.3, 0.2, 0.1]
-    cdef size_t n = 3
-    cdef size_t k = 2
     cdef size_t i
     for i in range(100):
-        srand(time(NULL))
-        assert r_select_c(arr, n, k) == 0.2
+        assert r_select_c(arr, 3, 2) == 0.2
 
 def test_r_select_c_3():
     print_func_name()
     cdef double *arr = [0.3, 0.2, 0.1]
-    cdef size_t n = 3
-    cdef size_t k = 3
     cdef size_t i
     for i in range(100):
-        srand(time(NULL))
-        assert r_select_c(arr, n, k) == 0.3
+        assert r_select_c(arr, 3, 3) == 0.3
 
-def test_r_select_c_4():
+def test_r_select_c_dups():
+    print_func_name()
+    cdef double *arr = [0.2, 0.1, 0.2, 0.3]
+    cdef size_t n = 4
+    assert r_select_c(arr, 4, 2) == 0.2
+    assert r_select_c(arr, 4, 3) == 0.2
+
+
+def test_r_select_c_rnd():
     print_func_name()
     cdef:
         double arr[20]
         size_t n = 20
         double q, r
         size_t i, j, k
+    srand(10)
     for i in range(1000):
-        srand(time(NULL))
         k = rand() % (n - 1) + 1
+        assert k > 0
+        assert k < n
         for j in range(n):
             arr[j] = rand()
         r = r_select_c(arr, n, k)
@@ -267,7 +282,6 @@ def test_median5_4():
         double q, r
         size_t i, j
 
-    srand(time(NULL))
     for i in range(1000):
         for j in range(n):
             arr[j] = rand()
@@ -348,7 +362,6 @@ def test_d_select_5():
         double buff[3]
         size_t n = 4
         size_t k = 1
-    srand(time(NULL))
     assert d_select_c(arr, n, k, buff) == 0.1
 
 
@@ -361,7 +374,6 @@ def test_d_select_6():
         double q, r
         size_t i, j, k
 
-    srand(time(NULL))
     for i in range(1000):
         k = rand() % (n - 1) + 1
         # k = n - 1

@@ -6,8 +6,10 @@ from stack cimport stack_c, create_stack, push, pop, peek, \
 from array_c cimport array_c, push_back_arr, create_arr, free_arr
 from readg cimport read_graph, read_graphs
 from graph cimport graph_c, node_c, free_graph, dict2graph, rand_dict_graph
-from utils import print_func_name
+from c_utils cimport frand
 from libc.stdlib cimport rand
+
+from utils import print_func_name
 
 
 """ ################### Depth-First Search using Recursion ############# """

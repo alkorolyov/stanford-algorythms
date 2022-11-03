@@ -8,16 +8,16 @@ from utils import print_func_name, set_stdout, restore_stdout
 import numpy as np
 
 cdef heap_ex* create_heap(size_t n):
-    cdef char* err_msg = "Heap create error"
+    cdef char* msg = "Heap create error"
 
     cdef heap_ex* h = <heap_ex*>PyMem_Malloc(sizeof(heap_ex))
-    if h == NULL: err_exit(err_msg)
+    if h == NULL: err_exit(msg)
 
     h.items = <item*>PyMem_Malloc(n * sizeof(item))
-    if h.items == NULL: err_exit(err_msg)
+    if h.items == NULL: err_exit(msg)
 
     h.idx = <size_t*>PyMem_Malloc(n * sizeof(size_t))
-    if h.idx == NULL: err_exit(err_msg)
+    if h.idx == NULL: err_exit(msg)
 
     cdef size_t i
     for i in range(n):
@@ -29,15 +29,15 @@ cdef heap_ex* create_heap(size_t n):
 
 
 cdef inline void resize_heap(heap_ex* h):
-    cdef char* err_msg = "Heap resize error"
+    cdef char* msg = "Heap resize error"
 
     h.capacity *= 2
 
     h.items = <item*>PyMem_Realloc(h.items, h.capacity * sizeof(item))
-    if h.items == NULL: err_exit(err_msg)
+    if h.items == NULL: err_exit(msg)
 
     h.idx = <size_t *> PyMem_Realloc(h.idx, h.capacity * sizeof(size_t))
-    if h.idx == NULL: err_exit(err_msg)
+    if h.idx == NULL: err_exit(msg)
 
 
 cdef void free_heap(heap_ex* h):

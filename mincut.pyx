@@ -9,7 +9,7 @@ cimport numpy as cnp
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand
-from c_utils cimport fastrand
+from c_utils cimport frand
 
 from time import time
 
@@ -275,7 +275,7 @@ cdef (size_t, size_t) random_pair(graph_c *g):
     n = g.len
     for i in range(n):
         num_pairs += g.node[i].len
-    p = fastrand() % num_pairs
+    p = rand() % num_pairs
 
     # debug
     # print_graph(g)
@@ -437,22 +437,20 @@ cdef void assert_buff(graph_c *g):
             assert g.buff[i * (g.buff_len // g.len) + j] == g.node[i].next[j]
 
 def gen_random_graph(n, m, selfloops: bool = False):
+    cdef:
+        size_t seed = rand()
+
     graph = {}
     for i in range(1, n + 1):
         graph[i] = []
 
     for j in range(m):
-        v1 = random.randrange(1, n + 1)
-        v2 = random.randrange(1, n + 1)
+        v1 = frand() % n + 1
+        v2 = frand() % n + 1
         if not selfloops and v1 == v2:
             continue
         graph[v1].append(v2)
         graph[v2].append(v1)
-
-    # for i in range(n):
-    #     graph[i] = [random.randrange(n)]
-    #     for j in range(random.randrange(m //2, m)):
-    #         graph[i].append(random.randrange(n))
     return graph
 
 def test_create_graph():
