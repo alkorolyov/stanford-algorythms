@@ -2,10 +2,8 @@
 
 from array_c cimport array_c, print_array, py2arr, create_arr, push_back_arr, resize_arr, free_arr
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
-from c_utils cimport err_exit, frand, \
-    pcg32_t, srand32, frand32_loc, _rdrand64_step
+from c_utils cimport err_exit, frand, frand32
 from libc.stdlib cimport rand
-
 
 from utils import print_func_name
 
@@ -126,6 +124,7 @@ cdef graph_c* reverse_graph(graph_c* g):
                 add_edge(g_rev, v2, v1)
     return g_rev
 
+
 cdef void unexplore_graph(graph_c* g):
     cdef:
         size_t i
@@ -189,7 +188,6 @@ cdef dict rand_dict_graph(size_t n, size_t m,
                           bint directed=True):
     cdef:
         size_t i, j, v1, v2
-        size_t seed = rand()
 
     graph = {}
     for i in range(n):
@@ -218,10 +216,6 @@ cdef graph_c* rand_graph_l(size_t n, size_t m):
     cdef:
         size_t i, v1, v2, l
         graph_c* g = create_graph_c(n)
-        # size_t rnd
-        # pcg32_t rng
-
-    # srand32(&rng)
     for i in range(m):
         # v1 = rand() % n
         # v2 = rand() % n
@@ -229,9 +223,9 @@ cdef graph_c* rand_graph_l(size_t n, size_t m):
         v1 = frand() % n
         v2 = frand() % n
         l = frand() % n
-        # v1 = frand32_loc(&rng) % n
-        # v2 = frand32_loc(&rng) % n
-        # l = frand32_loc(&rng) % n
+        # v1 = frand32() % n
+        # v2 = frand32() % n
+        # l = frand32() % n
         add_edge(g, v1, v2, l)
     return g
 

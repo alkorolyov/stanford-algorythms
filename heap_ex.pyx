@@ -46,14 +46,6 @@ cdef void free_heap(heap_ex* h):
     PyMem_Free(h)
 
 
-# cdef inline bint is_full_h(heap_ex* h):
-#     return h.size == h.capacity
-#
-#
-# cdef inline bint is_empty_h(heap_ex* h):
-#     return h.size == 0
-
-
 cdef inline bint isin_h(heap_ex* h, size_t id):
     cdef  size_t i
     for i in range(h.size):
@@ -71,33 +63,14 @@ cdef inline size_t _bubble_up(heap_ex* h, size_t i):
     :param i: index (zero indexing)
     :return: new item index or -1
     """
-    cdef:
-        size_t p_idx
-
-        item tmp
-        item * a = h.items
-        size_t id1
-        size_t id2
-
+    cdef size_t p_idx
     # root reached
     if i == 0:
         return -1
 
-    # p_idx = get_parent_h(i)
-    p_idx = ((i + 1) >> 1) - 1
-
+    p_idx = get_parent_h(i)
     if h.items[i].val < h.items[p_idx].val:
-        # _swap_el(h, p_idx, i)
-        id1 = a[i].id
-        id2 = a[p_idx].id
-
-        h.idx[id1] = p_idx
-        h.idx[id2] = i
-
-        tmp = a[i]
-        a[i] = a[p_idx]
-        a[p_idx] = tmp
-
+        _swap_el(h, p_idx, i)
         return p_idx
 
     return -1
@@ -117,28 +90,6 @@ cdef inline size_t _bubble_down(heap_ex * h, size_t i):
         size_t l, r, min_idx
         size_t n = h.size - 1
 
-        item tmp
-        item * a = h.items
-        size_t id1
-        size_t id2
-
-
-    # l = (i << 1) + 1 # left child of i
-    # r = l + 1
-    #
-    # if l > n:
-    #     # no children
-    #     return -1
-    # elif l == n:
-    #     # only left child
-    #     min_idx = l
-    # else:
-    #     # compare left and right
-    #     if h.items[l].val < h.items[r].val:
-    #         min_idx = l
-    #     else:
-    #         min_idx = r
-
     l, r = get_children(h.size, i)
 
     if l == -1:
@@ -148,15 +99,6 @@ cdef inline size_t _bubble_down(heap_ex * h, size_t i):
 
     if h.items[i].val > h.items[min_idx].val:
         _swap_el(h, min_idx, i)
-        # id1 = a[i].id
-        # id2 = a[min_idx].id
-        #
-        # h.idx[id1] = min_idx
-        # h.idx[id2] = i
-        #
-        # tmp = a[i]
-        # a[i] = a[min_idx]
-        # a[min_idx] = tmp
         return min_idx
 
     return -1

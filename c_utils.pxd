@@ -18,7 +18,6 @@ cdef inline void sfrand(size_t s):
     global seed
     seed = s
 
-
 cdef inline size_t frand():
     """
     Compute a pseudorandom integer.
@@ -33,10 +32,9 @@ cdef:
     size_t rng_state
     size_t rng_inc
 
-
 cdef inline uint32_t frand32():
     """ 
-        Compute a pseudorandom integer.
+        PSG32 pseudorandom generator.
         Output value in range [0, 2^32 - 1]
     """
     global rng_state
@@ -78,9 +76,21 @@ cdef inline uint32_t frand32_loc(pcg32_t* rng):
         uint32_t rot = oldstate >> 59u;
     return (xorshifted >> rot) | (xorshifted << ((-rot) & 31))
 
+cdef extern size_t _lzcnt_u64 (size_t x)
 
+cdef inline size_t log2(size_t x):
+    if x == 0:
+        return 0
+    return 63 - _lzcnt_u64(x)
+
+
+cdef inline void swap(double* a, double* b):
+    cdef double tmp = a[0]
+    a[0] = b[0]
+    b[0] = tmp
 
 
 cdef:
     void err_exit(char* err_msg)
     (double *, size_t) read_numpy(np.ndarray[double] arr)
+    void print_arr(double * arr, size_t n)

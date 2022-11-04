@@ -27,11 +27,6 @@ cpdef void quicksort_mv(ndarray[double, ndim=1] arr):
 
 """ ################# QuickSort: C array ################### """
 
-cdef inline void _swap(double *a, size_t i, size_t j):
-    cdef double t = a[i]
-    a[i] = a[j]
-    a[j] = t
-
 cdef inline void _sort(double *a, size_t i, size_t j):
     if a[i] > a[j]:
         _swap(a, i, j)
@@ -88,8 +83,8 @@ cdef void qsort_c(double *arr, size_t n):
     # else:
     #     p_idx = frand() % n
 
-    p_idx = frand32() % n
-    # p_idx = frand() % n
+    # p_idx = frand32() % n
+    p_idx = frand() % n
     # p_idx = rand() % n
     # p_idx = 0 # first
     # p_idx = n - 1 # last

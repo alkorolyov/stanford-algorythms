@@ -1,3 +1,9 @@
+cdef inline void _swap(double *a, size_t i, size_t j):
+    cdef double t = a[i]
+    a[i] = a[j]
+    a[j] = t
+
+
 
 cdef:
     size_t choose_p(double *arr, size_t n)

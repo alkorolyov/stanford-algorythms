@@ -6,10 +6,6 @@ import numpy as np
 
 """ ###################### Stack in C ########################## """
 
-ctypedef struct stack_c:
-    size_t      capacity
-    size_t      top
-    size_t*     items
 
 cdef stack_c* create_stack(size_t capacity):
     cdef stack_c* s = <stack_c*> PyMem_Malloc(sizeof(stack_c))
@@ -26,35 +22,24 @@ cdef void free_stack(stack_c* s):
     PyMem_Free(s)
 
 
-cdef bint is_empty_s(stack_c* s):
-    return s.top == -1
+# cdef void push(stack_c* s, size_t x):
+#     if is_full_s(s):
+#         print("stack push error: stack full")
+#         exit(1)
+#     else:
+#         s.top += 1
+#         s.items[s.top] = x
+#
+# cdef size_t pop(stack_c* s):
+#     cdef size_t temp
+#     if is_empty_s(s):
+#         print("stack pop error: stack empty")
+#         exit(1)
+#     else:
+#         temp = s.items[s.top]
+#         s.top -= 1
+#         return temp
 
-cdef bint is_full_s(stack_c* s):
-    return s.top == (s.capacity - 1)
-
-cdef size_t size_s(stack_c* s):
-    return s.top + 1
-
-cdef void push(stack_c* s, size_t x):
-    if is_full_s(s):
-        print("stack push error: stack full")
-        exit(1)
-    else:
-        s.top += 1
-        s.items[s.top] = x
-
-cdef size_t pop(stack_c* s):
-    cdef size_t temp
-    if is_empty_s(s):
-        print("stack pop error: stack empty")
-        exit(1)
-    else:
-        temp = s.items[s.top]
-        s.top -= 1
-        return temp
-
-cdef size_t peek(stack_c* s):
-    return s.items[s.top]
 
 cdef void print_stack(stack_c* s):
     cdef size_t n = size_s(s)

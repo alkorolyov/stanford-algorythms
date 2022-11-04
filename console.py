@@ -1,105 +1,87 @@
-
-
-def read_graph_l(filename):
-    with open(filename, "r") as f:
-        read_buf = f.readlines()
-    # print(read_buf)
-    return read_buf
-
-
-#%%
-path = "tests//course2_assignment2Dijkstra//"
-filename = "input_random_1_4.txt"
-
-for line in read_graph_l(path + filename)[:10]:
-    line = line.replace("\n", "").replace("\r", "")
-    line = line.split("\t")
-    print(line)
-    v = int(line[0])
-    edges = line[1:]
-    print("v:", v)
-    print("edges")
-    for e in edges:
-        e = [int(s) for s in e.split(",")]
-        # addedge(v, e[0], e[1])
-        print(e)
-
-#%%
 import numpy as np
 
-A = np.array([[0.8, 0.3], [0.2, 0.7]])
+''' Python implementation of QuickSort using Hoare's
+partition scheme. '''
 
-u0 = [0, 1]
-v0 = [1, 0]
+''' This function takes first element as pivot, and places
+      all the elements smaller than the pivot on the left side
+      and all the elements greater than the pivot on
+      the right side. It returns the index of the last element
+      on the smaller side '''
 
-u = [np.array(u0)]
-v = [np.array(v0)]
 
-print(A)
-print()
-for i in range(7):
-    u.append(np.matmul(A, u[i]))
-    print(u[i + 1])
-    print(f"{np.sum(u[i + 1]):.4f}")
-print("=========")
-for i in range(7):
-    v.append(np.matmul(A, v[i]))
-    print(v[i + 1])
-    print(f"{np.sum(v[i + 1]):.4f}")
+def partition(arr, low, high):
+    pivot = arr[low]
+    i = low - 1
+    j = high + 1
 
-#%%
-from scipy.linalg import lu
-n = 1000000
-res = np.empty((n, 3))
-A = np.random.rand(3, 3, n)
-for i in range(n):
-    # A = np.random.rand(3, 3)
-    P, L, U = lu(A[:, :, i])
-    res[i, :] = [U[0, 0], U[1, 1], U[2, 2]]
-    # print(res[i, 0])
-    # print(A)
-    # print(U)
-# print(res)
-print(res.mean(axis=0))
-#%%
-# Online Python - IDE, Editor, Compiler, Interpreter
-import numpy as np
+    while (True):
+
+        # Find leftmost element greater than
+        # or equal to pivot
+        i += 1
+        while arr[i] < pivot:
+            i += 1
+
+        # Find rightmost element smaller than
+        # or equal to pivot
+        j -= 1
+        while arr[j] > pivot:
+            j -= 1
+
+        # If two pointers met.
+        if i >= j:
+            return j
+
+        arr[i], arr[j] = arr[j], arr[i]
+
+
+''' The main function that implements QuickSort
+arr --> Array to be sorted,
+low --> Starting index,
+high --> Ending index '''
+
+
+def quickSort(arr, low, high):
+    ''' pi is partitioning index, arr[p] is now
+    at right place '''
+    if (low < high):
+        print("input arr: ", arr)
+        print(f"old_p: {low}   ", "   " * low, "↑")
+        pi = partition(arr, low, high)
+        print("output arr:", arr)
+        print(f"new_p: {pi}   ", "   " * pi, "↑")
+        print("==================================")
+
+        # Separately sort elements before
+        # partition and after partition
+        quickSort(arr, low, pi)
+        quickSort(arr, pi + 1, high)
+
+
+''' Function to print an array '''
+
+
+# This code is contributed by shubhamsingh10
 
 n = 5
 np.random.seed(3)
-arr = np.random.randint(0, 2 * n, (n, 2), dtype=np.uint64)
-print(arr)
-
-idx_min = np.argmin(arr, axis=0)
-# print(np.partition(arr, 1, axis=0)[1][1])
-
-idx_sort = np.argsort(arr, axis=0)
-print(idx_sort)
-print(idx_sort[:, 0])
-print(idx_sort[:, 1])
-# print(np.partition(arr, 1, axis=0)[1][1])
-
-
-#%%
-np.random.seed(3)
-n = 10
-arr = np.random.randint(0, n // 2, (n, 2), dtype=np.uint64)
-print(arr)
-print(np.unique(arr[:, 1], return_index=True, return_counts=True))
-#%%
-np.random.seed(3)
-n = 10
-arr = np.random.randint(0, n * 2, (n, 2), dtype=np.uint64)
-print(arr)
-print(np.sort(arr, axis=0))
-#%%
-import platform
-print(platform.uname())
-
-#%%
-import numpy as np
-arr = [12330.0, 3024.0, 21454.0, 8369.0, 27238.0, 24411.0, 8369.0, 30906.0, 26226.0, 7681.0, 3741.0, 27293.0, 12815.0, 23186.0, 28912.0, 6354.0, 20522.0, 3416.0, 7071.0, 4361.0]
-# print(np.sort(arr)[8])
-print(1 << 0)
-print(1 << 32 - 1)
+for i in range(10):
+    arr = np.random.randint(0, 2*n, n).astype(np.float64)
+    # arr = np.array([5., 7., 6., 0., 4.])
+    # p_idx = n // 2
+    # p_idx = 0
+    # pivot = arr[p_idx]
+    # print("input arr: ", arr)
+    # print("old_p:     ", "   " * p_idx, "↑")
+    # new_pi = partition(arr, 0, n - 1)
+    # print("output arr:", arr)
+    # print("new_p:     ", "   " * new_pi, "↑")
+    # print("==================================")
+    quickSort(arr, 0, n - 1)
+    # print("sorted arr:", arr)
+    # assert arr[new_pidx] == pivot
+    print("==================================")
+    print("============ FINISHED ============")
+    print("==================================")
 

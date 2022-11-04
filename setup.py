@@ -6,7 +6,7 @@ from Cython.Compiler import Options
 import numpy as np
 
 # Cython Compiler options
-Options.cimport_from_pyx = True
+Options.cimport_from_pyx = False
 
 fast_directives = {
     "language_level": "3",
@@ -56,6 +56,10 @@ if __name__ == '__main__':
                   mk_ext('topsort', ['topsort.pyx']),
                   mk_ext('closestpair', ['closestpair.pyx']),
                   mk_ext('sorting', ['sorting.pyx']),
+                  mk_ext('quicksort', ['quicksort.pyx']),
+                  mk_ext('heapsort', ['heapsort.pyx']),
+                  mk_ext('introsort', ['introsort.pyx']),
+                  mk_ext('insertsort', ['insertsort.pyx']),
                   mk_ext('selection', ['selection.pyx']),
                   mk_ext('mincut', ['mincut.pyx']),
                   mk_ext('scc', ['scc.pyx']),
@@ -75,6 +79,10 @@ if __name__ == '__main__':
     print("============================ UNIT TESTS ===================================")
 
     import sorting
+    import heapsort
+    import introsort
+    import insertsort
+    import quicksort
     import selection
     import closestpair
     import mincut
@@ -94,10 +102,10 @@ if __name__ == '__main__':
 
     start_time = time()
 
-    c_utils.test_frand()
-    c_utils.test_srand()
-    c_utils.test_frand32()
-
+    # c_utils.test_frand()
+    # c_utils.test_srand()
+    # c_utils.test_frand32()
+    #
     # stack.test_push()
     # stack.test_print()
     # stack.test_empty()
@@ -231,8 +239,21 @@ if __name__ == '__main__':
     # sorting.test_msort_c_1()
     # sorting.test_msort_c_2()
     # sorting.test_msort_c_3()
-    # print()
-    #
+
+    heapsort.test_heapify()
+    heapsort.test_heap()
+    heapsort.test_hsort()
+
+    introsort.test_introsort()
+
+    insertsort.test_insert()
+    insertsort.test_insertsort()
+
+    quicksort.test_qsort()
+    quicksort.test_qsort_stack()
+    quicksort.test_partition_hoare()
+
+
     # selection.test_r_select_c_1()
     # selection.test_r_select_c_2()
     # selection.test_r_select_c_3()
@@ -334,6 +355,22 @@ if __name__ == '__main__':
               "n = 100000\n" \
               "arr = np.random.randn(n)\n"
 
+    imports = "from sorting import quicksort_c, mergesort_c\n" \
+              "from quicksort import qsort_py, qsort_stack\n" \
+              "from heapsort import hsort_py\n" \
+              "from introsort import introsort_py\n" \
+              "from insertsort import insertsort_py\n" \
+              "import numpy as np\n" \
+              "n = 100000\n" \
+              "arr = np.random.randn(n)\n" \
+              "ar = np.random.randn(1024)\n"
+
+        # "arr.sort()\n" \
+        # "arr = np.flip(arr)\n" \
+
+        # "arr.sort()\n" \
+        # "np.random.seed(0)\n" \
+
     # timeit_func("r_select", "arr.copy(), n // 2", imports)
     # timeit_func("d_select", "arr.copy(), n // 2", imports)
     # timeit_func("np.median", "arr.copy()", imports)
@@ -342,7 +379,15 @@ if __name__ == '__main__':
     # timeit_func("np.sort", "arr.copy(), kind='mergesort'", imports)
 
     # timeit_func("quicksort_c", "arr.copy()", imports)
-    # timeit_func("np.sort", "arr.copy(), kind='quicksort'", imports)
+    timeit_func("qsort_py", "arr.copy()", imports)
+    # timeit_func("qsort_stack", "arr.copy()", imports)
+    # timeit_func("introsort_py", "arr.copy()", imports)
+    # timeit_func("insertsort_py", "ar.copy()", imports)
+    timeit_func("np.sort", "arr.copy(), kind='quicksort'", imports)
+
+    # timeit_func("hsort_py", "arr.copy()", imports)
+    # timeit_func("np.sort", "arr.copy(), kind='heapsort'", imports)
+
 
     # timeit_func("min_dist_c", "arr.copy()", imports)
     # timeit_func("min_dist_naive", "arr.copy()", imports)
@@ -352,9 +397,14 @@ if __name__ == '__main__':
     # timeit_func("mincut.mincut_n", "graph, 1, mem_mode=1", imports)
     # timeit_func("mincut_py.mincut_n", "graph, 1", imports)
 
-    timeit_func("rand_graph_l_py", "100, 10000", imports)
+    # imports = "from graph import rand_graph_l_py"
+    # timeit_func("rand_graph_l_py", "100, 10000", imports)
+    #
+    # imports = "from c_utils import rand_py, frand_py, frand32_py"
+    # timeit_func("rand_py", "", imports)
+    # timeit_func("frand_py", "", imports)
+    # timeit_func("frand32_py", "", imports)
 
-    c_utils.time_rand()
 
     # heap_c.time_log2()
 
