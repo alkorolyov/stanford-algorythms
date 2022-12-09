@@ -1,6 +1,6 @@
 closestpair.c
 setup.py
-sort.c
+qsort.c
 test_sort.c
 algorithms.egg-info/PKG-INFO
 algorithms.egg-info/SOURCES.txt

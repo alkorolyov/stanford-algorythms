@@ -151,7 +151,7 @@ def hsort_py(arr):
 
 
 def test_heapify():
-    print_func_name()
+    
     cdef:
         size_t n = 100
         double* a
@@ -164,7 +164,7 @@ def test_heapify():
         assert a[0] == np.max(arr)
 
 def test_heap():
-    print_func_name()
+    
     cdef:
         size_t n = 100
         double* a
@@ -179,7 +179,7 @@ def test_heap():
         assert_heap(a, n)
 
 def test_hsort():
-    print_func_name()
+    
     cdef:
         size_t n = 100
         double* a
@@ -196,7 +196,7 @@ def test_hsort():
             # if a[j] != a_mv[j]:
             #     print_heap(a, n)
             #     print(arr)
-            #     print(np.sort(arr))
+            #     print(np.qsort(arr))
 
             assert a[j] == a_mv[j]
         # print(arr)

@@ -3,7 +3,7 @@
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport rand, srand
 from libc.time cimport time
-from sorting cimport partition_c, partition3_c, qsort_c, msort_c, choose_p
+from sorting cimport partition_c, partition3_c, qsort_c, msort_c, median3
 from c_utils cimport read_numpy, frand
 
 from utils import print_func_name
@@ -87,7 +87,7 @@ cdef double r_select_c(double *arr, size_t n, size_t k):
     if n == 1:
         return arr[0]
     cdef size_t p_idx
-    # p_idx = choose_p(arr, n)
+    # p_idx = median3(arr, n)
     p_idx = rand() % n
     # p_idx = frand() % n
     cdef size_t idx = partition3_c(arr, n, p_idx)
@@ -212,28 +212,28 @@ cdef double d_select_c(double *arr, size_t n, size_t k, double *buff, bint pivot
 
 
 def test_r_select_c_1():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.2, 0.1]
     cdef size_t i
     for i in range(100):
         assert r_select_c(arr, 3, 1) == 0.1
 
 def test_r_select_c_2():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.2, 0.1]
     cdef size_t i
     for i in range(100):
         assert r_select_c(arr, 3, 2) == 0.2
 
 def test_r_select_c_3():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.2, 0.1]
     cdef size_t i
     for i in range(100):
         assert r_select_c(arr, 3, 3) == 0.3
 
 def test_r_select_c_dups():
-    print_func_name()
+    
     cdef double *arr = [0.2, 0.1, 0.2, 0.3]
     cdef size_t n = 4
     assert r_select_c(arr, 4, 2) == 0.2
@@ -241,7 +241,7 @@ def test_r_select_c_dups():
 
 
 def test_r_select_c_rnd():
-    print_func_name()
+    
     cdef:
         double arr[20]
         size_t n = 20
@@ -260,22 +260,22 @@ def test_r_select_c_rnd():
         assert q == r
 
 def test_median5_1():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.2, 0.1, 0, -0.1]
     assert median5(arr) == 0.1
 
 def test_median5_2():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.3, 0.2, 0.1, 0.1]
     assert median5(arr) == 0.2
 
 def test_median5_3():
-    print_func_name()
+    
     cdef double *arr = [0.3, 0.3, 0.2, 0.2, 0.1]
     assert median5(arr) == 0.2
 
 def test_median5_4():
-    print_func_name()
+    
     cdef:
         double arr[5]
         size_t n = 5
@@ -292,35 +292,35 @@ def test_median5_4():
 
 
 def test_median_c_1():
-    print_func_name()
+    
     cdef:
         double *arr = [0.3, 0.2, 0.1, 0, -0.1]
         size_t n = 5
     assert median_c(arr, n) == 0.1
 
 def test_median_c_2():
-    print_func_name()
+    
     cdef:
         double *arr = [0.3, 0.2, 0.1, 0]
         size_t n = 4
     assert median_c(arr, n) == 0.2
 
 def test_median_c_3():
-    print_func_name()
+    
     cdef:
         double *arr = [0.3, 0.2]
         size_t n = 2
     assert median_c(arr, n) == 0.3
 
 def test_median_c_4():
-    print_func_name()
+    
     cdef:
         double *arr = [0.3]
         size_t n = 1
     assert median_c(arr, n) == 0.3
 
 def test_d_select_1():
-    print_func_name()
+    
     cdef:
         double *arr = [0.1 , 0.2]
         double buff[2]
@@ -329,7 +329,7 @@ def test_d_select_1():
     assert d_select_c(arr, n, k, buff) == 0.2
 
 def test_d_select_2():
-    print_func_name()
+    
     cdef:
         double *arr = [0.1 , 0.2]
         double buff[2]
@@ -338,7 +338,7 @@ def test_d_select_2():
     assert d_select_c(arr, n, k, buff) == 0.1
 
 def test_d_select_3():
-    print_func_name()
+    
     cdef:
         double *arr = [1.1, 1.0 , 0.9 , 0.8 , 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
         double buff[11]
@@ -347,7 +347,7 @@ def test_d_select_3():
     assert d_select_c(arr, n, k, buff) == 0.4
 
 def test_d_select_4():
-    print_func_name()
+    
     cdef:
         double *arr = [0.1, 0.1 , 0.2]
         double buff[3]
@@ -356,7 +356,7 @@ def test_d_select_4():
     assert d_select_c(arr, n, k, buff) == 0.1
 
 def test_d_select_5():
-    print_func_name()
+    
     cdef:
         double *arr = [0.4, 0.3, 0.1, 0.1]
         double buff[3]
@@ -366,7 +366,7 @@ def test_d_select_5():
 
 
 def test_d_select_6():
-    print_func_name()
+    
     cdef:
         double arr[100]
         double buff[100]

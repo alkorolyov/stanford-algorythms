@@ -199,7 +199,7 @@ TEST_PATH = "tests//course2_assignment2Dijkstra//"
 
 
 def test_naive():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -227,7 +227,7 @@ def test_naive():
     free_graph(g)
 
 def test_naive_loops():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -259,8 +259,8 @@ def test_naive_loops():
 
 
 def test_naive_self_loops():
-    print_func_name()
-    print_func_name()
+    
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -285,7 +285,7 @@ def test_naive_self_loops():
     free_graph(g)
 
 def test_naive_non_conn():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(5)
@@ -316,7 +316,7 @@ def test_naive_non_conn():
     free_graph(g)
 
 def test_naive_zero_conn():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(3)
@@ -342,7 +342,7 @@ def test_naive_zero_conn():
     free_graph(g)
 
 def test_naive_empty():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(3)
@@ -368,7 +368,7 @@ def test_naive_empty():
     free_graph(g)
 
 def test_naive_rnd():
-    # print_func_name()
+    
     DEF n = 100
     cdef:
         graph_c* g
@@ -383,7 +383,7 @@ def test_naive_rnd():
         free_graph(g)
 
 def test_naive_1():
-    print_func_name()
+    
     filename = "input_random_1_4.txt"
 
     cdef:
@@ -422,20 +422,16 @@ def _test_single_case_naive(fname="input_random_1_4.txt"):
     free_graph(g)
 
 def test_single_case_naive():
-    print_func_name()
+    
     _test_single_case_naive()
 
-def test_all_cases_naive():
-    print_func_name(end=" ... ")
-    start = time()
-    for f in os.listdir(TEST_PATH):
-        if "input" in f:
-            _test_single_case_naive(f)
-
-    print(f"{time() - start:.2f}s")
+# def test_all_cases_naive():
+#     for f in os.listdir(TEST_PATH):
+#         if "input" in f:
+#             _test_single_case_naive(f)
 
 def test_heap():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -460,7 +456,7 @@ def test_heap():
     free_graph(g)
 
 def test_heap_loops():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -491,7 +487,7 @@ def test_heap_loops():
     free_graph(g)
 
 def test_heap_self_loops():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(4)
@@ -516,7 +512,7 @@ def test_heap_self_loops():
     free_graph(g)
 
 def test_heap_non_conn():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(5)
@@ -547,7 +543,7 @@ def test_heap_non_conn():
     free_graph(g)
 
 def test_heap_zero_conn():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(3)
@@ -573,7 +569,7 @@ def test_heap_zero_conn():
     free_graph(g)
 
 def test_heap_empty():
-    print_func_name()
+    
     cdef:
         size_t i, j, k
         graph_c* g = create_graph_c(3)
@@ -600,7 +596,7 @@ def test_heap_empty():
 
 
 def test_heap_rnd():
-    # print_func_name()
+    
     DEF n = 200
     cdef:
         graph_c* g
@@ -635,16 +631,12 @@ def _test_single_case_heap(fname="input_random_1_4.txt"):
     free_graph(g)
 
 def test_single_case_heap():
-    print_func_name()
+    
     _test_single_case_heap()
 
-def test_all_cases_heap():
-    print_func_name(end=" ... ")
-    start = time()
-    for f in os.listdir(TEST_PATH):
-        if "input" in f:
-            _test_single_case_heap(f)
-
-    print(f"{time() - start:.2f}s")
+# def test_all_cases_heap():
+#     for f in os.listdir(TEST_PATH):
+#         if "input" in f:
+#             _test_single_case_heap(f)
 
 

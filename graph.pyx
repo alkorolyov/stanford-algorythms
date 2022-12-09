@@ -239,7 +239,7 @@ def rand_graph_l_py(n: int, m: int):
 
 
 def test_create_graph():
-    print_func_name()
+    
     cdef graph_c * g = create_graph_c(3)
     add_edge(g, 0, 1)
     add_edge(g, 0, 2)
@@ -254,7 +254,7 @@ def test_create_graph():
     free_graph(g)
 
 def test_add_edge():
-    print_func_name()
+    
     DEF n = 150
     cdef graph_c * g = create_graph_c(n)
 
@@ -266,7 +266,7 @@ def test_add_edge():
 
 
 def test_dict2graph():
-    print_func_name()
+    
     graph = {0: [1, 2],
              1: [],
              2: [1]}
@@ -287,7 +287,7 @@ def test_dict2graph():
 
 
 def test_dict2graph_1():
-    print_func_name()
+    
     graph = {0: [1, 2, 3]}
     cdef graph_c* g = dict2graph(graph)
     cdef node_c* nd = g.node[0]
@@ -299,7 +299,7 @@ def test_dict2graph_1():
 
 
 def test_dict2graph_2():
-    print_func_name()
+    
     graph = {0: [1, 2],
              1: [],
              2: [0]}
@@ -319,7 +319,7 @@ def test_dict2graph_2():
 
 
 def test_dict2graph_random():
-    print_func_name()
+    
     cdef:
         graph_c* g
         array_c * arr
@@ -335,7 +335,7 @@ def test_dict2graph_random():
 
 
 def test_reverse_graph():
-    print_func_name()
+    
     cdef:
         graph_c* g
         graph_c* r

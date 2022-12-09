@@ -41,14 +41,14 @@ cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False, bint timeit=False):
         print("=== DFS g_rev ====")
 
     if timeit:
-        print("Running 'topsort(g_rev)' ... ", end="")
+        print(f"{'Running topsort(g_rev)':58s}", end="")
         start_time = time()
 
     order = topsort(g_rev)
     reverse_arr(order)
 
     if timeit:
-        print(f"{time() - start_time:.2f}s")
+        print(f"{time() - start_time:.2f}s ")
 
     if debug:
         print("g_rev.len:", g_rev.len)
@@ -59,14 +59,14 @@ cdef void scc(graph_c* g, graph_c* g_rev, bint debug=False, bint timeit=False):
         print("===== DFS ordered loop =====")
 
     if timeit:
-        print("Running 'dfs_ordered_loop(g)' ... ", end="")
+        print(f"{'Running dfs_ordered_loop(g)':58s}", end="")
         start_time = time()
 
     dfs_ordered_loop(g, order)
     free_arr(order)
 
     if timeit:
-        print(f"{time() - start_time:.2f}s")
+        print(f"{time() - start_time:.2f}s ")
 
     if debug:
         print_graph_ext(g)
@@ -105,7 +105,7 @@ def scc_py(str filename):
 TEST_PATH = "tests//course2_assignment1SCC//"
 
 def test_scc_1():
-    print_func_name()
+    
     graph = {0: [],
              1: [],
              2: [0, 1]}
@@ -122,7 +122,7 @@ def test_scc_1():
 
 
 def test_scc_2():
-    print_func_name()
+    
     graph = {0: [1, 3],
              1: [0],
              2: [3],
@@ -139,7 +139,7 @@ def test_scc_2():
     assert g.node[3].leader == 2
 
 def test_scc_3():
-    print_func_name()
+    
     graph = {0: [1, 3],
              1: [0],
              2: [3],
@@ -157,7 +157,7 @@ def test_scc_3():
 
 
 def test_scc_4():
-    print_func_name()
+    
     graph = {0: [1],
              1: [0, 2],
              2: [3],
@@ -182,44 +182,42 @@ def test_scc_4():
 
     assert np.sort(cnt)[0] == 2
     assert np.sort(cnt)[1] == 3
-    # print(np.sort(cnt))
+    # print(np.qsort(cnt))
 
-@cython.wraparound
-def test_scc_big():
-    print_func_name()
-
-    cdef:
-        size_t i
-        graph_c * g
-        graph_c * g_rev
-
-    print("Running 'read_graphs()' ... ", end="")
-    start = time()
-
-    g, g_rev = read_graphs("scc.txt")
-
-    print(f"{time() - start:.2f}s")
-
-    scc(g, g_rev, debug=False, timeit=True)
-
-    # print_g_ext(g, 100)
-
-    print("Running 'np.unique(leaders)' ... ", end="")
-    start = time()
-
-    l = np.empty(g.len, dtype=np.uint64)
-    cdef size_t [:] l_view = l
-    for i in range(g.len):
-        l_view[i] = g.node[i].leader
-
-    val, cnt = np.unique(l, return_counts=True)
-
-    print(f"{time() - start:.2f}s")
-
-    print(np.flip(np.sort(cnt)[-5:]))
-
-    free_graph(g)
-    free_graph(g_rev)
+# @cython.wraparound
+# def test_scc_big():
+#     cdef:
+#         size_t i
+#         graph_c * g
+#         graph_c * g_rev
+#
+#     print(f"\n{'Running read_graphs()':58s}", end="")
+#     start = time()
+#
+#     g, g_rev = read_graphs("scc.txt")
+#
+#     print(f"{time() - start:.2f}s ")
+#
+#     scc(g, g_rev, debug=False, timeit=True)
+#
+#     # print_g_ext(g, 100)
+#
+#     print(f"{'Running np.unique(leaders)':58s}", end="")
+#     start = time()
+#
+#     l = np.empty(g.len, dtype=np.uint64)
+#     cdef size_t [:] l_view = l
+#     for i in range(g.len):
+#         l_view[i] = g.node[i].leader
+#
+#     val, cnt = np.unique(l, return_counts=True)
+#
+#     print(f"{time() - start:.2f}s ")
+#
+#     # print(np.flip(np.sort(cnt)[-5:]))
+#
+#     free_graph(g)
+#     free_graph(g_rev)
 
 def _test_single_case(fname="input_mostlyCycles_1_8.txt"):
     cdef size_t i    
@@ -232,18 +230,11 @@ def _test_single_case(fname="input_mostlyCycles_1_8.txt"):
             assert correct[i] == res[i]
 
 def test_single_case():
-    print_func_name()
     _test_single_case()
 
-def test_all_casses():
-    print_func_name(end=" ... ")
-
-    i = 0
-    for f in os.listdir(TEST_PATH):
-        if "input" in f:
-            _test_single_case(f)
-            i += 1
-
-    print(f"{i} passed")
+# def test_all_casses():
+#     for f in os.listdir(TEST_PATH):
+#         if "input" in f:
+#             _test_single_case(f)
 
 

@@ -1,6 +1,3 @@
-
-
-
 ctypedef struct array_c:
     size_t capacity
     size_t size
@@ -13,7 +10,6 @@ cdef inline void _swap(array_c* arr, size_t i, size_t j):
     arr.items[i] = arr.items[j]
     arr.items[j] = tmp
 
-
 cdef:
     array_c* py2arr(object py_obj)
     object arr2numpy(array_c * arr)
@@ -23,6 +19,7 @@ cdef:
     void push_back_arr(array_c * arr, size_t val)
     void resize_arr(array_c* arr)
     size_t max_arr(array_c * arr)
-    bint isin_arr(array_c * arr, size_t val)
+    bint isin_arr(array_c * arr, size_t val) nogil
+    size_t count_arr(array_c* arr, size_t x)
     void reverse_arr(array_c * arr)
     void print_array(array_c* arr)

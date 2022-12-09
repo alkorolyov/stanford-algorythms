@@ -403,7 +403,6 @@ cpdef size_t mincut_n(dict graph, size_t N, mem_mode=C_MALLOC):
     g_orig = read_graph_c(graph, mem_mode)
     g = alloc_graph(g_orig)
     minc = g_orig.len * (g_orig.len - 1) // 2
-    start_time = time()
     for i in range(N):
         copy_graph(g, g_orig)
         # print("before:")
@@ -454,14 +453,14 @@ def gen_random_graph(n, m, selfloops: bool = False):
     return graph
 
 def test_create_graph():
-    print_func_name()
+    
     cdef graph_c* g
     g = create_graph_c()
     # print_graph(g)
     free_graph(g)
 
 def test_replace_references():
-    print_func_name()
+    
     cdef graph_c *g
     cdef size_t n
 
@@ -477,7 +476,7 @@ def test_replace_references():
 
 
 def test_delete_vertex():
-    print_func_name()
+    
     cdef graph_c *g
 
     graph = {1: [2, 1],
@@ -508,7 +507,7 @@ def test_delete_vertex():
 
 
 def test_delete_vertex_1():
-    print_func_name()
+    
     cdef graph_c *g
 
     graph = {1: [],
@@ -523,7 +522,7 @@ def test_delete_vertex_1():
 
 
 def test_transfer_vertices():
-    print_func_name()
+    
     cdef graph_c *g
 
     g = read_graph_c({1: [1, 2, 3],
@@ -541,7 +540,7 @@ def test_transfer_vertices():
     # print_graph(g, n)
 
 def test_pop_from_graph():
-    print_func_name()
+    
     cdef graph_c* g
 
     g = read_graph_c({1: [2, 2, 2, 3],
@@ -559,7 +558,7 @@ def test_pop_from_graph():
     PyMem_Free(g.buff)
 
 def test_pop_from_graph_1():
-    print_func_name()
+    
     cdef graph_c* g
 
     g = read_graph_c({1: [2, 2]})
@@ -571,7 +570,7 @@ def test_pop_from_graph_1():
     free_graph(g)
 
 def test_delete_self_loops():
-    print_func_name()
+    
 
     cdef graph_c * g
     graph = {1: [2, 2, 2, 3],
@@ -588,7 +587,7 @@ def test_delete_self_loops():
     free_graph(g)
 
 def test_random_pair():
-    print_func_name()
+    
     cdef graph_c* g
     cdef size_t j, k
     graph = {1: [2, 3, 4],
@@ -604,7 +603,7 @@ def test_random_pair():
     free_graph(g)
 
 def test_read_graph_c_1():
-    print_func_name()
+    
     cdef graph_c* g
     graph = {1: [],
              2: [3, 4, 5]}
@@ -618,7 +617,7 @@ def test_read_graph_c_1():
 
 
 def test_read_graph_c_2():
-    print_func_name()
+    
     cdef graph_c* g
     graph = {1: [1, 2],
              2: []}
@@ -631,7 +630,7 @@ def test_read_graph_c_2():
 
 
 def test_read_graph_c_3():
-    print_func_name()
+    
     cdef graph_c* g
     graph = {1: [],
              2: []}
@@ -641,7 +640,7 @@ def test_read_graph_c_3():
 
 
 def test_read_graph_c_4():
-    print_func_name()
+    
     cdef graph_c* g
     graph = {1: [1, 2, 3],
              2: [3, 4, 5]}
@@ -658,7 +657,7 @@ def test_read_graph_c_4():
 
 
 def test_read_graph_c_random():
-    print_func_name()
+    
     cdef graph_c* g
 
     for i in range(100):
@@ -687,7 +686,7 @@ def test_read_graph_c_random():
         free_graph(g)
 
 def test_copy_graph():
-    print_func_name()
+    
     cdef graph_c* g
     cdef graph_c* g_copy
 
@@ -710,7 +709,7 @@ def test_copy_graph():
 
 
 def test_contract():
-    print_func_name()
+    
     cdef graph_c* g
 
     graph = {1: [2, 3, 4],
@@ -720,22 +719,42 @@ def test_contract():
 
     g = read_graph_c(graph)
     contract(g)
-    print_graph(g)
+    # print_graph(g)
+    assert g.node[0].vertex == 2
+    assert g.node[0].next[0] == 4
+    assert g.node[0].next[1] == 3
+    assert g.node[1].vertex == 3
+    assert g.node[1].next[0] == 2
+    assert g.node[1].next[1] == 4
+    assert g.node[1].next[2] == 4
+    assert g.node[2].vertex == 4
+    assert g.node[2].next[0] == 3
+    assert g.node[2].next[1] == 2
+    assert g.node[2].next[2] == 3
+
     free_graph(g)
 
 def test_mincut():
-    print_func_name()
     graph = {1: [2, 3, 4],
              2: [1, 3],
              3: [2, 1, 4],
              4: [1, 3]}
     g = read_graph_c(graph)
     _mincut(g)
-    print_graph(g)
+    # print_graph(g)
+    assert g.node[0].vertex == 3
+    assert g.node[0].next[0] == 4
+    assert g.node[0].next[1] == 4
+    assert g.node[0].next[2] == 4
+
+    assert g.node[1].vertex == 4
+    assert g.node[1].next[0] == 3
+    assert g.node[1].next[1] == 3
+    assert g.node[1].next[2] == 3
     free_graph(g)
 
 def test_mincut_1():
-    print_func_name()
+    
     graph = gen_random_graph(200, 3000)
     # print(graph)
     g = read_graph_c(graph)
@@ -751,7 +770,7 @@ def test_mincut_1():
     free_graph(g)
 
 def test_mincut_N():
-    print_func_name()
+    
     graph = gen_random_graph(10, 20)
     # graph = {1: [2, 3, 4],
     #          2: [1, 3],

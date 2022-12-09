@@ -1,4 +1,5 @@
 from sorting cimport _swap
+from c_utils cimport swap
 
 cdef inline void insertsort(double * a, size_t n):
     cdef:
@@ -18,8 +19,20 @@ cdef inline void insertsort(double * a, size_t n):
         a[j+1] = x
         i += 1
 
-    # for size in range(2, n + 1):
-    #     insert(a, size)
+cdef inline void isort(double* lo, double* hi):
+    cdef double x
+    cdef double* pi
+    cdef double* pj
+
+    pi = &lo[0]
+    while pi <= hi:
+        x = pi[0]
+        pj = pi - 1
+        while pj >= lo and pj[0] > x:
+            pj[1] = pj[0]
+            pj -= 1
+        pj[1] = x
+        pi += 1
 
 
 cdef inline void insert(double* a, size_t n):

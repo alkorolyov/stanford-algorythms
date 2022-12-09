@@ -228,7 +228,7 @@ cdef graph_c* read_graph_l(str filename):
 
 
 def test_ascii2int():
-    print_func_name()
+    
     cdef:
         char * buf = "1234 \r\n" # 0x20 0x0D 0x0A
 
@@ -236,7 +236,7 @@ def test_ascii2int():
     assert str2int(buf)[1] == 5
 
 def test_ascii2int_1():
-    print_func_name()
+    
     cdef:
         char * buf = "1234 \n" # 0x20 0xA0
 
@@ -244,7 +244,7 @@ def test_ascii2int_1():
     assert str2int(buf)[1] == 5
 
 def test_ascii2int_2():
-    print_func_name()
+    
     cdef:
         char * buf = "1234\n" # 0xA0
 
@@ -253,7 +253,7 @@ def test_ascii2int_2():
 
 
 def test_read_edge_spc_n():
-    print_func_name()
+    
     cdef:
         char * buf = "12 34 \n5"
         size_t v1, v2, i
@@ -265,7 +265,7 @@ def test_read_edge_spc_n():
     assert buf[i] == 0x35
 
 def test_read_edge_spc_rn():
-    print_func_name()
+    
     cdef:
         char * buf = "12 34 \r\n5"
         size_t v1, v2, i
@@ -285,7 +285,7 @@ def test_read_edge_spc_rn():
     # assert v2 == 2
 
 def test_read_edge_rn():
-    print_func_name()
+    
     cdef:
         char * buf = "12 34\r\n5"
         size_t v1, v2, i
@@ -298,7 +298,7 @@ def test_read_edge_rn():
 
 
 def test_read_edge_n():
-    print_func_name()
+    
     cdef:
         char * buf = "12 34\n5"
         size_t v1, v2, i
@@ -312,7 +312,7 @@ def test_read_edge_n():
 
 
 def test_read_buf_1():
-    print_func_name()
+    
     cdef:
         char * buf = "12 34 \n567 8 \r\n"
 
@@ -325,7 +325,7 @@ def test_read_buf_1():
 
 
 def test_read_array():
-    print_func_name()
+    
     cdef:
         array_c* arr
     arr = read_array("scc_small.txt")
@@ -341,7 +341,7 @@ def test_read_array():
     free_arr(arr)
 
 def test_read_graph():
-    print_func_name()
+    
     cdef graph_c* g
     g = read_graph("scc_small.txt")
     assert g.node[0].adj.items[0] == 0
@@ -352,34 +352,20 @@ def test_read_graph():
     # print_graph(g)
 
 
-def test_read_big():
-    print_func_name(end=" ... ")
-
-    start_time = time()
-
-    cdef graph_c* g = read_graph("scc.txt")
-
-    print(f"{time() - start_time:.2f}s")
-
-    free_graph(g)
+# def test_read_big():
+#     cdef graph_c* g = read_graph("scc.txt")
+#     free_graph(g)
 
 def test_read_big_pair():
-    print_func_name(end="\t")
-
     cdef:
         graph_c* g
         graph_c* g_rev
 
-    start_time = time()
-
     g, g_rev = read_graphs("scc.txt")
-
-    print(f"{time() - start_time:.2f}s")
-
     free_graph(g)
 
 def test_read_graph_l():
-    print_func_name()
+    
     path = "tests//course2_assignment2Dijkstra//"
     filename = "input_random_1_4.txt"
 

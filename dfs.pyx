@@ -101,7 +101,7 @@ cdef void dfs_ordered_loop(graph_c* g, array_c* order):
 
 
 def test_dfs_1():
-    print_func_name()
+    
     graph = {0: [0, 1, 2],
              1: [3],
              2: [],
@@ -113,7 +113,7 @@ def test_dfs_1():
     free_graph(g)
 
 def test_dfs_2():
-    print_func_name()
+    
     graph = {0: [0, 1, 2],
              1: [3],
              2: [],
@@ -125,7 +125,7 @@ def test_dfs_2():
     free_graph(g)
 
 def test_dfs_3():
-    print_func_name()
+    
     graph = {0: [2, 1, 4],
              1: [],
              2: [4, 3],
@@ -147,7 +147,7 @@ def test_dfs_3():
     free_arr(out)
 
 def test_dfs_4():
-    print_func_name()
+    
     graph = {0: [1, 2],
              1: [],
              2: [3, 4],
@@ -170,7 +170,7 @@ def test_dfs_4():
     free_arr(out)
 
 def test_dfs_random():
-    print_func_name()
+    
     DEF SIZE = 30
     cdef:
         graph_c* g
@@ -194,34 +194,30 @@ def test_dfs_random():
         free_graph(g)
     free_arr(out)
 
-def test_dfs_big():
-    print_func_name(end=" ... ")
-    cdef:
-        graph_c* g
-        graph_c* g_rev
-
-    start = time()
-    g = read_graph("scc.txt")
-    dfs_stack(g, 0)
-    print(f"{time() - start:.2f}s")
-
-def test_dfs_loop_big():
-    print_func_name(end=" ... ")
-    cdef:
-        size_t i
-        graph_c* g
-        graph_c* g_rev
-
-    g = read_graph("scc.txt")
-
-    cdef:
-        array_c * order = create_arr(g.len)
-    for i in range(g.len):
-        order.items[i] = i
-    order.size = g.len
-
-    start = time()
-    dfs_ordered_loop(g, order)
-    print(f"{time() - start:.2f}s")
+# def test_dfs_big():
+#     cdef:
+#         graph_c* g
+#         graph_c* g_rev
+#
+#     g = read_graph("scc.txt")
+#     dfs_stack(g, 0)
+#
+#
+# def test_dfs_loop_big():
+#     cdef:
+#         size_t i
+#         graph_c* g
+#         graph_c* g_rev
+#
+#     g = read_graph("scc.txt")
+#
+#     cdef:
+#         array_c * order = create_arr(g.len)
+#     for i in range(g.len):
+#         order.items[i] = i
+#     order.size = g.len
+#
+#     dfs_ordered_loop(g, order)
+    
 
 

@@ -1,22 +1,47 @@
 
+from libc.stdlib cimport malloc, realloc, free
+from c_utils cimport max_st
 
-from utils import print_func_name
 
 """ ################## Linked lists in C ###################### """
 
-ctypedef struct l_list:
-    size_t  id
-    l_list* next
+DEF MIN_SIZE = 10
+
+ctypedef struct l_item:
+    size_t value
+    size_t* next
+
+ctypedef struct list_c:
+    size_t capacity
+    size_t size
+    l_item* items
+
+cdef list_c* make_list(size_t n):
+    cdef:
+        list_c* l = <list_c *> malloc(sizeof(list_c))
+    l.capacity = max_st(MIN_SIZE, n)
+    l.items = <l_item*> malloc(sizeof(l_item) * l.capacity)
 
 
-cdef l_list* create_l(size_t val):
-    cdef l_list * l = <l_list *> PyMem_Malloc(sizeof(l_list))
+cdef void resize_list(list_c* l):
+    l.capacity *= 2
+    l.items = <l_item*> realloc(l.items, l.capacity * sizeof(l_item))
+
+
+cdef void insert_list(list_c* l, size_t x):
+    if l.size == l.capacity:
+        resize_list(l)
+
+
+
+cdef list_c* create_l(size_t val):
+    cdef list_c * l = <list_c *> malloc(sizeof(list_c))
     l.id = val
     l.next = NULL
     return l
 
-cdef void insert_l(l_list* l, size_t val):
-    cdef l_list* new_l = <l_list*> PyMem_Malloc(sizeof(l_list))
+cdef void insert_l(list_c* l, size_t val):
+    cdef list_c* new_l = <list_c*> malloc(sizeof(list_c))
 
     # go to the end of l-list
     while l.next:
@@ -28,8 +53,8 @@ cdef void insert_l(l_list* l, size_t val):
     new_l.next = NULL
     return
 
-cdef void print_l(l_list* l):
-    cdef l_list* temp = l
+cdef void print_l(list_c* l):
+    cdef list_c* temp = l
 
     if l == NULL:
         print("[]")
@@ -42,9 +67,9 @@ cdef void print_l(l_list* l):
     # print last element
     print(temp.id, end="]\n")
 
-cdef l_list* arr2list(size_t* arr, size_t n):
+cdef list_c* arr2list(size_t* arr, size_t n):
     cdef size_t i
-    cdef l_list* l = <l_list*> PyMem_Malloc(sizeof(l_list) * n)
+    cdef list_c* l = <list_c*> malloc(sizeof(list_c) * n)
 
     for i in range(n - 1):
         l[i].id = arr[i]
@@ -60,8 +85,8 @@ cdef l_list* arr2list(size_t* arr, size_t n):
 """ ################################################################ """
 
 def test_print_l_list():
-    print_func_name()
-    cdef l_list first, second, third
+    
+    cdef list_c first, second, third
     first.id = 1
     second.id = 2
     third.id = 3
@@ -71,10 +96,10 @@ def test_print_l_list():
     print_l(&first)
 
 def test_create_l_list():
-    print_func_name()
+    
     cdef:
         size_t[3] arr = [1, 2, 3]
-        l_list* l = arr2list(&arr[0], 3)
+        list_c* l = arr2list(&arr[0], 3)
     for i in range(3):
         assert l.id == arr[i]
         l = l.next
@@ -82,10 +107,10 @@ def test_create_l_list():
 
 
 def test_insert_l_list():
-    print_func_name()
+    
     cdef:
         size_t[3] arr = [1, 2, 3]
-        l_list* l = arr2list(&arr[0], 3)
+        list_c* l = arr2list(&arr[0], 3)
     insert_l(l, 4)
     for i in range(4):
         assert l.id == i + 1
@@ -94,9 +119,9 @@ def test_insert_l_list():
 
 def test_create_l_list_random():
     DEF size = 1000
-    print_func_name()
+    
     cdef size_t[size] arr
-    cdef l_list * l
+    cdef list_c * l
     cdef size_t i, j
 
     for j in range(100):

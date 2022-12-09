@@ -70,7 +70,7 @@ cdef void print_queue(queue* q):
 """ ################################################################ """
 
 def test_enqueue():
-    print_func_name()
+    
     cdef queue* q = create_queue(3)
     enqueue(q, 1)
     enqueue(q, 2)
@@ -81,7 +81,7 @@ def test_enqueue():
     free_queue(q)
 
 def test_empty():
-    print_func_name()
+    
     cdef queue* q = create_queue(3)
     assert is_empty_q(q)
     enqueue(q, 1)
@@ -89,14 +89,14 @@ def test_empty():
     assert is_empty_q(q)
 
 def test_full():
-    print_func_name()
+    
     cdef queue* q = create_queue(2)
     enqueue(q, 1)
     enqueue(q, 2)
     assert is_full_q(q)
 
 def test_print():
-    print_func_name()
+    
 
     cdef queue* q = create_queue(3)
     enqueue(q, 1)

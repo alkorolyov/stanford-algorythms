@@ -28,15 +28,31 @@ def parse_time(time: float) -> str:
     else:
         return f"{time:.2f} s"
 
+
+NUM_RUNS = 21
+NUM_LOOPS_DIV = 1
+
 def timeit_func(func, arg_string: str, import_string: str, post_string: str=""):
     t = Timer(stmt=f"{func}({arg_string}){post_string}",
                    setup=import_string)
-    NUM_LOOPS = t.autorange()[0]
-    NUM_RUNS = 7
+    global NUM_RUNS
+    global NUM_LOOPS_DIV
+    NUM_LOOPS = t.autorange()[0] // NUM_LOOPS_DIV
     result = np.array(t.repeat(repeat=NUM_RUNS, number=NUM_LOOPS))
     run_time = result.mean() / NUM_LOOPS
     std = result.std() / NUM_LOOPS
     print(f"{func:20s} {parse_time(run_time):8s} ± {parse_time(std):8s} (of {NUM_RUNS} runs {NUM_LOOPS:.0f} loops each)")
+
+def time_sorts(arr_len):
+    imports = "from quicksort import qsort_cy, qsort_cmp_py\n" \
+              "import numpy as np\n" \
+              f"n = {arr_len}\n" \
+              "arr = np.random.randn(n)\n"
+
+    print(f"Array length: {arr_len}")
+    timeit_func("qsort_cy", "arr.copy()", imports)
+    timeit_func("qsort_cmp_py", "arr.copy()", imports)
+    timeit_func("np.sort", "arr.copy(), kind='quicksort'", imports)
 
 
 def set_stdout():

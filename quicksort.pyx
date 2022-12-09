@@ -1,119 +1,185 @@
 from libc.stdlib cimport RAND_MAX
-from c_utils cimport frand, frand32, read_numpy, log2, print_arr
-from sorting cimport _swap, choose_p
-from insertsort cimport insertsort
-from heapsort cimport hsort_c
+from c_utils cimport frand, frand32, read_numpy, log2, print_arr, swap, \
+    med3, _med3, imed3, med3_sse
+from insertsort cimport insertsort, isort
 from stack cimport stack_c, create_stack, push, pop, size_s, is_empty_s, free_stack
-
 
 from utils import print_func_name
 import numpy as np
 
-cdef void qsort_s(stack_c* stack):
-    """ QuickSort stack version """
-    cdef:
-        double* arr
-        size_t i, j, n, maxdepth
-        size_t p_idx, idx, delta
+cdef max_depth = 0
+""" ================= QuickSort in C ================== """
 
-    maxdepth = pop(stack)
+""" QuickSort stack version """
+cdef void qsort_s(stack_c* stack):
+    cdef:
+        size_t n
+        double* lo
+        double* hi
+        double* mid
+        double p
+        double* pp
 
     while not is_empty_s(stack):
-        n = pop(stack)
-        arr = <double*>pop(stack)
+        hi = <double*>pop(stack)
+        lo = <double*>pop(stack)
+        n = hi - lo
 
         # base cases
-        if n <= 1:
+        if n == 0:
             continue
-        if n == 2:
-            if arr[0] > arr[1]:
-                _swap(arr, 0, 1)
+        if n == 1:
+            if lo[0] > hi[0]:
+                swap(lo, hi)
             continue
 
         # insertsort on small casses
-        if n <= 16:
-            insertsort(arr, n)
+        if n < 16:
+            isort(lo, hi)
             continue
 
         # choose pivot
-        if n > RAND_MAX:
-            p_idx = frand32() % n
-        else:
-            p_idx = frand() % n
+        p = med3(lo, hi)
+        pp = part_h(lo, hi, p)
 
-        idx = partition_l(arr, n, p_idx)
-        delta = idx + 1
+        # qsort(lo, pp)
+        push(stack, <size_t>lo)
+        push(stack, <size_t>pp)
 
-        # qsort(arr, idx)
-        push(stack, <size_t>arr)
-        push(stack, idx)
-        # qsort(arr + delta, n - delta)
-        push(stack, <size_t>(arr + delta))
-        push(stack, n - delta)
+        # qsort(pp + 1, hi)
+        push(stack, <size_t>(pp + 1))
+        push(stack, <size_t>hi)
 
-""" ================= QuickSort in C ================== """
-
-cdef void qsort(double *arr, size_t n):
+cdef void qsort(double* lo, double* hi, size_t depth=0):
     cdef:
-        double x
-        size_t i, j, p_idx, idx, delta
+        size_t n = hi - lo
+        double p
+        double* pp
+        double* mid
+        # size_t i, j, p_idx, idx, delta
 
     # base cases
-    if n <= 1:
+    if n == 0:
         return
-    if n == 2:
-        if arr[0] > arr[1]:
-            _swap(arr, 0, 1)
+    if n == 1:
+        if lo[0] > hi[0]:
+            swap(lo, hi)
         return
 
     # insertsort on small casses
-    if n <= 16:
-        insertsort(arr, n)
+    if n < 16:
+        isort(lo, hi)
         return
 
-    """ different choose pivot options """
+    # global max_depth
+    # if depth == max_depth:
+    #     hsort_c(lo, n + 1)
+    #     return
 
+    # choose pivots
     # if n > RAND_MAX:
     #     p_idx = frand32() % n
     # else:
     #     p_idx = frand() % n
-
     # p_idx = frand32() % n
     # p_idx = frand() % n
-    # p_idx = rand() % n
-    # p_idx = 0 # first
-    # p_idx = n - 1 # last
-    p_idx = n // 2 # middle
-    # p_idx = choose_p(arr, n) # median of 3
+    # p_idx = median3(lo, n)
 
-    # Lomuto partition
-    idx = partition_l(arr, n, p_idx)
-    delta = idx + 1
 
-    if idx < n - delta:
-        qsort(arr, idx)
-        qsort(arr + delta, n - delta)
-    else:
-        qsort(arr + delta, n - delta)
-        qsort(arr, idx)
+    # # Lomuto's partition
+    # pp = part_l(lo, hi, &lo[p_idx])
+    # qsort(lo, pp - 1)
+    # qsort(pp + 1, hi)
 
-    # # Hoare partition
-    # idx = partition_h(arr, n, p_idx)
-    # delta = idx + 1
-    #
-    # if delta < n - delta:
-    #     qsort(arr, delta)
-    #     qsort(arr + delta, n - delta)
+    # Hoare's partition
+    # p = lo[p_idx]
+    p = med3(lo, hi)
+    # p = med3(lo, hi)
+    # p = imed3(lo, hi)
+    # p = _med3(lo, hi)[0]
+
+    # p = max(min(lo[0], mid[0]), min(max(lo[0], mid[0]), hi[0]))
+
+    # median of 3: 3 cmps max, 0 swaps
+    # mid = lo + (n >> 1)  # (hi + lo) // 2
+    # if lo[0] < mid[0]:
+    #     # a[0] < a[mid]
+    #     if hi[0] > mid[0]:
+    #         # median is a[mid]
+    #         p = mid[0]
+    #     elif hi[0] < lo[0]:
+    #         # median is a[0]
+    #         p = lo[0]
+    #     else:
+    #         # median is a[hi]
+    #         p = hi[0]
     # else:
-    #     qsort(arr + delta, n - delta)
-    #     qsort(arr, delta)
+    #     # a[mid] <= a[0]
+    #     if hi[0] > lo[0]:
+    #         # median is a[0]
+    #         p = lo[0]
+    #     elif hi[0] < mid[0]:
+    #         # median is a[mid]
+    #         p = mid[0]
+    #     else:
+    #         # median is a[hi]
+    #         p = hi[0]
+
+    # # median of 3: 3 cmps, max 3 swaps
+    # mid = lo + (n >> 1) # (hi + lo) // 2
+    # if mid[0] < lo[0]:
+    #     swap_c(lo, mid)
+    # if hi[0] < lo[0]:
+    #     swap_c(lo, hi)
+    # if mid[0] < hi[0]:
+    #     swap_c(mid, hi)
+    # p = hi[0]
+
+    # pp = part_h(lo, hi, p)
+    pp = part_h(lo, hi, p)
+
+    qsort(lo, pp)
+    qsort(pp + 1, hi)
+
+    # if pp < mid:
+    #     qsort(lo, pp)
+    #     qsort(pp + 1, hi, depth + 1)
+    # else:
+    #     qsort(pp + 1, hi)
+    #     qsort(lo, pp, depth + 1)
+
+cdef inline void qsort_cmp(double *lo, double* hi):
+    cdef:
+        size_t n = hi - lo
+        double* pp
+        double* mid
+        double p
+
+    # base cases
+    if n == 0:
+        return
+    if n == 1:
+        if lo[0] > hi[0]:
+            swap(lo, hi)
+        return
+
+    # insertsort on small casses
+    if n < 16:
+        isort(lo, hi)
+        return
+
+    p = med3(lo, hi)
+    pp = part_h(lo, hi, p)
+
+    qsort_cmp(lo, pp)
+    qsort_cmp(pp + 1, hi)
 
 
-cdef inline size_t partition_l(double *arr, size_t n, size_t p_idx):
+cdef inline double* part_l(double *lo, double* hi, double* pp):
     """
     Lomuto's Partition Scheme. Keeps original pivot
-    between two arrays. 
-    
+    between two arrays.
+
     Partitions array around the pivot inplace:
     |  < p  | p |    > p    |
               ↑
@@ -121,75 +187,95 @@ cdef inline size_t partition_l(double *arr, size_t n, size_t p_idx):
 
     Works when no duplicates.
 
-    :param arr: input array
-    :param n: array length
-    :param p_idx: pivot index in the input array
-    :return: index of pivot in partitioned array
+    :param lo: starting pointer (included)
+    :param hi: ending pointer (included)
+    :param pp: pointer to pivot position
+    :return: pointer the pivot in partitioned array
     """
-    cdef size_t i
-    cdef size_t j = 1
-    _swap(arr, 0, p_idx)
-    for i in range(1, n):
-        if arr[i] < arr[0]:
-            _swap(arr, i, j)
-            j += 1
-    j -= 1
-    _swap(arr, 0, j)
-    return j
+    cdef:
+        double* pi = lo + 1     # main iter ptr
+        double* pj = lo + 1     # temporary pivot ptr
 
-cdef inline partition_h(double *arr, size_t n, size_t p_idx):
-    """ 
+    swap(lo, pp) # swap pivot to first elem
+
+    while pi <= hi:
+        # if current elem smaller than pivot
+        if pi[0] < lo[0]:
+            swap(pi, pj)
+            pj += 1  # inc temp pivot ptr
+        pi += 1
+    pj -= 1
+    swap(lo, pj)
+    return pj
+
+cdef inline double* part_h(double *lo, double* hi, double p):
+    """     
     Hoare Partition Scheme. Using double pointers moving
-    towards each other. Splits into two arrays - smaller or
-    equal than pivot to the left side, bigger or equal - to
-    the right.
+    towards each other. Splits [lo, hi] input array into two 
+    parts: 
+    (1) all elems <= p to the left side
+    (2) elems >= p to the right
+    returns pointer to the last elem from (1) 
     
     Partitions array around the pivot inplace:
-    |    <= p  |   |  >= p  |
-                 ↑
-                j-th last elem of smaller array
+    |  <= p  | |    >= p    |
+              ↑
+              j-th last elem of smaller array
+
+    :param lo: starting pointer (included)
+    :param hi: ending pointer (included)
+    :param p: pivot value
+    :return: pointer to last elem of smaller array
 
     """
     cdef:
-        size_t i, j
-        double p = arr[p_idx]
-    i = -1
-    j = n
+        double* pi = lo - 1
+        double* pj = hi + 1
     while True:
-        i += 1
-        while arr[i] < p: # first el a[i] >= p
-            i += 1
-        j -= 1
-        while arr[j] > p: # stop when a[j] <= p
-            j -= 1
+        pi += 1
+        while pi[0] < p:
+            pi += 1
+        pj -= 1
+        while pj[0] > p:
+            pj -= 1
+        if pi >= pj:
+            return pj
+        swap(pi, pj)
 
-        if i >= j:
-            return j
-        _swap(arr, i, j)
 
-def qsort_py(arr):
+""" Python wrap """
+
+def qsort_cy(arr):
     cdef:
-        double*     a
-        size_t      n
-
+        double* a
+        size_t  n
     a, n = read_numpy(arr)
-    qsort(a, n)
+    qsort(a, a + n - 1)
+
+def qsort_cmp_py(arr):
+    cdef:
+        double* lo
+        double* hi
+        size_t  n
+    lo, n = read_numpy(arr)
+    hi = lo + n - 1
+    qsort_cmp(lo, hi)
+
 
 def qsort_stack(arr):
     cdef:
-        double*     a
-        size_t      n, maxdepth
-        stack_c*    s
+        double*  lo
+        double*  hi
+        size_t   n, maxdepth
+        stack_c* s
 
-
-    a, n = read_numpy(arr)
+    lo, n = read_numpy(arr)
+    hi = lo + n - 1
     maxdepth = 2 * log2(n)
     s = create_stack(2 * maxdepth)
 
-    push(s, <size_t>a)
-    push(s, n)
-    push(s, maxdepth)
-
+    push(s, <size_t>lo)
+    push(s, <size_t>hi)
     qsort_s(s)
 
     free_stack(s)
@@ -199,9 +285,8 @@ def qsort_stack(arr):
 """ ######################### UNIT TESTS ########################### """
 """ ################################################################ """
 
-
 def test_qsort():
-    print_func_name()
+    
     cdef:
         size_t n = 100
         double* a
@@ -212,12 +297,13 @@ def test_qsort():
         arr = np.random.randint(0, n, n).astype(np.float64)
         a, n = read_numpy(arr)
         a_mv = np.sort(arr)
-        qsort(a, n)
+        qsort(a, a + n - 1)
         for j in range(n):
             assert a[j] == a_mv[j]
 
-def test_qsort_stack():
-    print_func_name()
+
+def test_qsort_cmp():
+    
     cdef:
         size_t n = 100
         double* a
@@ -228,7 +314,29 @@ def test_qsort_stack():
     # np.random.seed(5)
     for i in range(1000):
         arr = np.random.randint(0, n, n).astype(np.float64)
+        np_sort = np.sort(arr)
+        qsort_cmp_py(arr)
+        q_sort = arr
 
+        for j in range(n):
+            if q_sort[j] != np_sort[j]:
+                print(i)
+                print(arr)
+            assert q_sort[j] == np_sort[j]
+
+
+def test_qsort_stack():
+    
+    cdef:
+        size_t n = 100
+        double* a
+        size_t i, j
+        double [:] np_sort
+        double [:] q_sort
+
+    # np.random.seed(5)
+    for i in range(1000):
+        arr = np.random.randint(0, n, n).astype(np.float64)
         np_sort = np.sort(arr)
         qsort_stack(arr)
         q_sort = arr
@@ -239,27 +347,51 @@ def test_qsort_stack():
                 print(arr)
             assert q_sort[j] == np_sort[j]
 
-def test_partition_hoare():
-    print_func_name()
+
+def test_part_l():
+    
     cdef:
-        size_t n = 5
+        size_t n = 100
         double* a
+        double* pp
         double p
         size_t i, j, p_idx
         double [:] a_mv
-    np.random.seed(3)
-    for i in range(10):
+    # np.random.seed(3)
+    for i in range(1000):
         arr = np.random.randint(0, n, n).astype(np.float64)
         a, n = read_numpy(arr)
         p_idx = frand() % n
-        p_idx = n // 2
-        # p_idx = 0
         p = a[p_idx]
-        p_idx = partition_h(a, n, p_idx)
 
-        for j in range(p_idx + 1):
+        # print(arr)
+        pp = part_l(a, a + n - 1, &a[p_idx])
+        # print(arr)
+        for j in range(0, pp - a):
             assert a[j] <= p
-        for j in range(p_idx + 1, n):
+        for j in range(pp - a, n - 1):
             assert a[j] >= p
 
+def test_part_h():
+    
+    cdef:
+        size_t n = 100
+        double* a
+        double* pp
+        double p
+        size_t i, j, p_idx
+        double [:] a_mv
+    # np.random.seed(3)
+    for i in range(1000):
+        arr = np.random.randint(0, n, n).astype(np.float64)
+        a, n = read_numpy(arr)
+        p_idx = frand() % n
+        p = a[p_idx]
 
+        # print(arr)
+        pp = part_h(a, a + n - 1, p)
+        # print(arr)
+        for j in range(0, pp - a + 1):
+            assert a[j] <= p
+        for j in range(pp - a + 1, n - 1):
+            assert a[j] >= p

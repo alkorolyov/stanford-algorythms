@@ -59,7 +59,7 @@ cdef void print_stack(stack_c* s):
 """ ################################################################ """
 
 def test_push():
-    print_func_name()
+    
     cdef stack_c* s = create_stack(5)
     push(s, 1)
     push(s, 2)
@@ -70,7 +70,7 @@ def test_push():
     free_stack(s)
 
 def test_print():
-    print_func_name()
+    
     cdef stack_c* s = create_stack(5)
     push(s, 1)
     push(s, 2)
@@ -88,7 +88,7 @@ def test_print():
 
 
 def test_empty():
-    print_func_name()
+    
     cdef stack_c* s = create_stack(5)
     assert is_empty_s(s)
     push(s, 1)
@@ -97,7 +97,7 @@ def test_empty():
     free_stack(s)
 
 def test_full():
-    print_func_name()
+    
     cdef stack_c* s = create_stack(1)
     assert is_empty_s(s)
     push(s, 0)
@@ -105,7 +105,7 @@ def test_full():
     free_stack(s)
 
 def test_size():
-    print_func_name()
+    
     cdef stack_c* s = create_stack(5)
     push(s, 1)
     assert size_s(s) == 1
@@ -120,7 +120,7 @@ def test_size():
     free_stack(s)
 
 def test_random():
-    print_func_name()
+    
     DEF size = 1000
     cdef size_t i, j
     cdef stack_c* s = <stack_c*>create_stack(size)

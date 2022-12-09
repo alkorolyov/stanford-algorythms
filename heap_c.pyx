@@ -5,9 +5,10 @@ from array_c cimport array_c, py2arr
 from numpy cimport PyArray_DIMS, PyArray_DATA, npy_intp, ndarray
 
 
-from utils import print_func_name
+from utils import set_stdout, restore_stdout
 from time import time
 import numpy as np
+
 """ ################## Heap in C ######################### """
 
 cdef heap_c* create_heap(size_t n):
@@ -182,7 +183,7 @@ cdef (size_t*, size_t) read_numpy(ndarray[unsigned long long, ndim=1] arr):
         exit(1)
 
 def time_log2():
-    print_func_name()
+    
     cdef:
         size_t*   data
         size_t    size
@@ -216,7 +217,7 @@ def time_log2():
 
 
 def test_log2():
-    print_func_name()
+    
 
     assert log2(0) == 0
     assert log2(1) == 0
@@ -243,7 +244,7 @@ def test_get_parent():
     #     print("i:", i, "parent:",get_parent_h(i))
 
 def test_get_children():
-    print_func_name()
+    
     assert _get_l_child(0) == 1
     assert _get_l_child(1) == 3
     assert _get_l_child(2) == 5
@@ -256,7 +257,7 @@ def test_get_children():
 
 
 def test_create():
-    print_func_name()
+    
     cdef heap_c* h = create_heap(5)
     push_heap(h, 3)
     push_heap(h, 4)
@@ -270,7 +271,7 @@ def test_create():
 
 
 def test_heapify():
-    print_func_name()
+    
     # py_l = [4, 2, 3, 1, 0]
     py_l = [21, 32, 48, 14, 99, 4, 5, 7, 8, 9]
     cdef array_c* a = py2arr(py_l)
@@ -281,7 +282,7 @@ def test_heapify():
     free_heap(<heap_c*>a)
 
 def test_resize():
-    print_func_name()
+    
     cdef heap_c* h = create_heap(1)
     push_heap(h, 3)
     push_heap(h, 4)
@@ -295,7 +296,7 @@ def test_resize():
 
 
 def test_pop_heap():
-    print_func_name()
+    
     cdef heap_c* h = create_heap(8)
     push_heap(h, 1)
     push_heap(h, 4)
@@ -341,7 +342,6 @@ def test_heap_rnd():
 
 
 def test_heapify_rnd():
-    print_func_name()
     DEF n = 10
     cdef:
         size_t [:] a_view
@@ -358,26 +358,25 @@ def test_heapify_rnd():
 
         heapify(<array_c*>h)
 
-        if h.items[0] != np.min(arr):
-            print_heap(h)
-            print(arr)
-            print(np.min(arr))
+        # if h.items[0] != np.min(arr):
+        #     print_heap(h)
+        #     print(arr)
+        #     print(np.min(arr))
 
         assert h.items[0] == np.min(arr)
 
         pop_heap(h)
 
-        if h.items[0] != np.partition(arr, 1)[1]:
-            print_heap(h)
-            print(arr)
-            print(np.partition(arr, 1)[1])
+        # if h.items[0] != np.partition(arr, 1)[1]:
+        #     print_heap(h)
+        #     print(arr)
+        #     print(np.partition(arr, 1)[1])
 
         assert h.items[0] == np.partition(arr, 1)[1]
-
         h.size = 0
 
 def test_print_tree():
-    print_func_name()
+    
     cdef heap_c* h = create_heap(4)
     push_heap(h, 21)
     push_heap(h, 32)
@@ -389,5 +388,20 @@ def test_print_tree():
     push_heap(h, 7)
     push_heap(h, 8)
     push_heap(h, 9)
+
+    s = set_stdout()
     print_heap(h)
+    out = s.getvalue()
+    exp_out =   "0: [4]\n"\
+                "├╴1: [7]\n"\
+                "│ ├╴3: [8]\n"\
+                "│ │ ├╴7: [32]\n"\
+                "│ │ └╴8: [21]\n"\
+                "│ └╴4: [9]\n"\
+                "│   └╴9: [99]\n"\
+                "└╴2: [5]\n"\
+                "  ├╴5: [48]\n"\
+                "  └╴6: [14]\n"
+    restore_stdout()
     free_heap(h)
+    assert out == exp_out

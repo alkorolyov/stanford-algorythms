@@ -1,7 +1,7 @@
 """ ================ IntroSort implementation in C ================== """
 from c_utils cimport frand32, frand
 from heapsort cimport hsort_c
-from sorting cimport partition_c, choose_p, _swap
+from sorting cimport partition_c, median3, _swap
 from insertsort cimport insertsort
 
 from c_utils cimport log2, read_numpy
@@ -37,7 +37,7 @@ cdef void isort(double* a, size_t n, size_t maxdepth, size_t depth=0):
     # p_idx = rand() % n
     # p_idx = 0 # first
     # p_idx = n - 1 # last
-    # p_idx = choose_p(a, n) # median of 3
+    # p_idx = median3(a, n) # median of 3
 
     idx = partition_c(a, n, p_idx)
     delta = idx + 1
@@ -57,7 +57,7 @@ def introsort_py(arr):
 """ ################################################################ """
 
 def test_introsort():
-    print_func_name()
+    
     cdef:
         size_t n = 100
         double* a

@@ -87,12 +87,12 @@ def test_max_6():
     for i in range(100):
         arr = np.random.randn(64)
         res = arr.copy()
-        res.sort()
+        res.qsort()
         assert max1_r(arr.copy()) == res[-1]
 
 def test_max_7():
     for i in range(100):
         arr = np.random.randn(64)
         res = arr.copy()
-        res.sort()
+        res.qsort()
         assert max2(arr.copy()) == res[-2]

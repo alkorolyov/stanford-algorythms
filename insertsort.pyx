@@ -16,7 +16,7 @@ def insertsort_py(arr: np.array):
 """ ################################################################ """
 
 def test_insert():
-    print_func_name()
+    
     cdef double* a = [0.1, 0.2, 0.3]
     insert(a, 3)
     # print_arr(a, 3)
@@ -49,7 +49,7 @@ def test_insert():
     assert d[2]  == 0.2
 
 def test_insertsort():
-    print_func_name()
+    
     cdef:
         size_t n = 16
         double* a
@@ -63,7 +63,20 @@ def test_insertsort():
         for j in range(n):
             assert a[j] == a_mv[j]
 
-
+def test_isort():
+    
+    cdef:
+        size_t n = 16
+        double* a
+        size_t i, j
+        double [:] a_mv
+    for i in range(1000):
+        arr = np.random.randint(0, n, n).astype(np.float64)
+        a, n = read_numpy(arr)
+        a_mv = np.sort(arr)
+        isort(a, &a[n - 1])
+        for j in range(n):
+            assert a[j] == a_mv[j]
 
 
 

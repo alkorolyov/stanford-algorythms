@@ -1,3 +1,3 @@
 closestpair
-sort
+qsort
 test_sort

@@ -14,6 +14,7 @@ cdef inline size_t size_s(stack_c* s):
 
 cdef inline void push(stack_c* s, size_t x):
     if is_full_s(s):
+        print("stack overflow")
         exit(1)
     s.top += 1
     s.items[s.top] = x

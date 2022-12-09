@@ -1,87 +1,96 @@
-import numpy as np
+def merge(a, b):
+    i = 0
+    j = 0
+    c = []
+    while len(c) < len(a) + len(b):
+        if i == len(a):
+            c.append(b[j])
+            j += 1
+            continue
 
-''' Python implementation of QuickSort using Hoare's
-partition scheme. '''
-
-''' This function takes first element as pivot, and places
-      all the elements smaller than the pivot on the left side
-      and all the elements greater than the pivot on
-      the right side. It returns the index of the last element
-      on the smaller side '''
-
-
-def partition(arr, low, high):
-    pivot = arr[low]
-    i = low - 1
-    j = high + 1
-
-    while (True):
-
-        # Find leftmost element greater than
-        # or equal to pivot
-        i += 1
-        while arr[i] < pivot:
+        if j == len(b):
+            c.append(a[i])
             i += 1
+            continue
 
-        # Find rightmost element smaller than
-        # or equal to pivot
-        j -= 1
-        while arr[j] > pivot:
-            j -= 1
+        if a[i] < b[j]:
+            c.append(a[i])
+            i += 1
+        elif a[i] > b[j]:
+            c.append(b[j])
+            j += 1
+    return c
 
-        # If two pointers met.
-        if i >= j:
-            return j
+def merge_sort(a):
+    n = len(a)
+    if n < 2:
+        return a
+    #partition
+    q = a[:n // 2]
+    r = a[n // 2:]
+    q_sort = merge_sort(q)
+    r_sort = merge_sort(r)
+    res = merge(q_sort, r_sort)
+    print(res)
+    return res
+    # return merge(q_sort, r_sort)
 
-        arr[i], arr[j] = arr[j], arr[i]
-
-
-''' The main function that implements QuickSort
-arr --> Array to be sorted,
-low --> Starting index,
-high --> Ending index '''
-
-
-def quickSort(arr, low, high):
-    ''' pi is partitioning index, arr[p] is now
-    at right place '''
-    if (low < high):
-        print("input arr: ", arr)
-        print(f"old_p: {low}   ", "   " * low, "↑")
-        pi = partition(arr, low, high)
-        print("output arr:", arr)
-        print(f"new_p: {pi}   ", "   " * pi, "↑")
-        print("==================================")
-
-        # Separately sort elements before
-        # partition and after partition
-        quickSort(arr, low, pi)
-        quickSort(arr, pi + 1, high)
+# print(merge([1], [2, 4, 6]))
+print(merge_sort([6, 5, 4, 3, 2, 1]))
 
 
-''' Function to print an array '''
+
+def partition(a, p):
+    q, r = [], []
+    for i in range(len(a)):
+        if a[i] < p:
+            q.append(a[i])
+        else:
+            r.append(a[i])
+    return q, r
+
+def qsort(a):
+    if len(a) < 2:
+        return a
+    if len(a) == 2:
+        if a[0] > a[1]:
+            return [a[1], a[0]]
+        return a
+
+    p = a[len(a) // 2]
+    q, r = partition(a, p)
+    q_sorted = qsort(q)
+    r_sorted = qsort(r)
+    return q_sorted + r_sorted
+
+print(qsort([6, 5, 4, 3, 2, 1]))
+#%%
+
+nums = [8, 1, 2, 2, 3]
+n = len(nums)
+snums = nums.copy()
+snums.sort()
+mp = {}
+
+# create map: value -> sorted position
+# reversed - to overwrite duplicated values with lower position
+for i in reversed(range(n)):
+    print(snums[i], i)
+    mp[snums[i]] = i
+
+for i in range(n):
+    print(mp[nums[i]])
+
+#%%
 
 
-# This code is contributed by shubhamsingh10
 
-n = 5
-np.random.seed(3)
-for i in range(10):
-    arr = np.random.randint(0, 2*n, n).astype(np.float64)
-    # arr = np.array([5., 7., 6., 0., 4.])
-    # p_idx = n // 2
-    # p_idx = 0
-    # pivot = arr[p_idx]
-    # print("input arr: ", arr)
-    # print("old_p:     ", "   " * p_idx, "↑")
-    # new_pi = partition(arr, 0, n - 1)
-    # print("output arr:", arr)
-    # print("new_p:     ", "   " * new_pi, "↑")
-    # print("==================================")
-    quickSort(arr, 0, n - 1)
-    # print("sorted arr:", arr)
-    # assert arr[new_pidx] == pivot
-    print("==================================")
-    print("============ FINISHED ============")
-    print("==================================")
+x = 14
+bx = bin(x).lstrip("0b")
+print(bin(x))
+print(bin(x).lstrip("0b"))
+print(x)
+print(bx.count("1"))
+print(len(bx))
+
 

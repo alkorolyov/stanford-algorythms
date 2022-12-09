@@ -207,14 +207,14 @@ cdef void print_heap(heap_ex* h, size_t i=0, str indent="", bint last=False):
 
 
 def test_create_ex():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(3)
     h.items[0].id = 7
     h.items[0].val = 42
     free_heap(h)
 
 def test_swap_ex():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(2)
     h.items[0].id = 1
     h.items[0].val = 42
@@ -231,7 +231,7 @@ def test_swap_ex():
     free_heap(h)
 
 def test_print_ex():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(4)
 
     h.items[0].id = 7
@@ -253,7 +253,7 @@ def test_print_ex():
 
 
 def test_push_heap():
-    print_func_name()
+    
     cdef heap_ex * h = create_heap(5)
     push_heap(h, 3, 32)
     push_heap(h, 1, 57)
@@ -268,7 +268,7 @@ def test_push_heap():
     free_heap(h)
 
 def test_isin():
-    print_func_name()
+    
     cdef heap_ex * h = create_heap(5)
     push_heap(h, 3, 32)
     push_heap(h, 1, 57)
@@ -281,7 +281,7 @@ def test_isin():
     free_heap(h)
 
 def test_find():
-    print_func_name()
+    
     cdef heap_ex * h = create_heap(5)
     push_heap(h, 3, 32)
     push_heap(h, 1, 57)
@@ -308,7 +308,7 @@ def test_find():
 
 
 def test_resize():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(1)
     push_heap(h, 0, 3)
     push_heap(h, 1, 4)
@@ -321,7 +321,7 @@ def test_resize():
     free_heap(h)
 
 def test_pop_heap():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(8)
     push_heap(h, 0, 1)
     push_heap(h, 1, 4)
@@ -342,7 +342,7 @@ def test_pop_heap():
     free_heap(h)
 
 def test_pop_heap_single():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(1)
     push_heap(h, 0, 98)
     push_heap(h, 1, 99)
@@ -356,7 +356,7 @@ def test_pop_heap_single():
 
 
 def test_replace():
-    print_func_name()
+    
     cdef heap_ex* h = create_heap(4)
     push_heap(h, 0, 1)
     push_heap(h, 1, 4)
@@ -382,7 +382,7 @@ def test_replace():
     free_heap(h)
 
 def test_push_pop_rnd():
-    print_func_name()
+    
     DEF SIZE = 100
 
     cdef:

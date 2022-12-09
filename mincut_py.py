@@ -91,7 +91,6 @@ def mincut(g: dict):
 
 def mincut_n(g: dict, n: int):
     min_cut = len(g)
-    start_time = time()
     for i in range(n):
 
         # if i % 100 == 0:

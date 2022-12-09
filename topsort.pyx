@@ -56,7 +56,7 @@ cdef void dfs(graph_c* g, size_t s, array_c* top_order, size_t* ft, bint* ft_cal
 
 cdef array_c* topsort(graph_c* g):
     """
-    Topological sort for graph
+    Topological qsort for graph
     :param g: C graph
     :return: topologically sorted array of vertices
     """
@@ -79,7 +79,7 @@ cdef array_c* topsort(graph_c* g):
 """ ################################################################ """
 
 def test_topsort():
-    print_func_name()
+    
     graph = {0: [1],
              1: [2],
              2: []}
@@ -106,7 +106,7 @@ def test_graphlib():
 
 
 def test_topsort_rnd():
-    print_func_name()
+    
     DEF n = 50
 
     cdef:
@@ -132,11 +132,10 @@ def test_topsort_rnd():
         except CycleError:
             pass
 
-def test_big():
-    print_func_name()
-    cdef:
-        size_t i, j
-        graph_c * g = read_graph("scc.txt")
-        array_c * order = topsort(g)
-    free_graph(g)
-    free_arr(order)
+# def test_big():
+#     cdef:
+#         size_t i, j
+#         graph_c * g = read_graph("scc.txt")
+#         array_c * order = topsort(g)
+#     free_graph(g)
+#     free_arr(order)

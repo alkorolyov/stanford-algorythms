@@ -49,12 +49,23 @@ cdef size_t max_arr(array_c * arr):
             max_val = arr.items[i]
     return max_val
 
-cdef bint isin_arr(array_c* arr, size_t val):
+
+cdef bint isin_arr(array_c* arr, size_t val) nogil:
     cdef size_t i
     for i in range(arr.size):
         if arr.items[i] == val:
             return True
     return False
+
+
+cdef size_t count_arr(array_c* arr, size_t x):
+    cdef:
+        size_t i
+        size_t count = 0
+    for i in range(arr.size):
+        if arr.items[i] == x:
+            count += 1
+    return count
 
 
 cdef inline void push_back_arr(array_c* arr, size_t val):
@@ -132,7 +143,7 @@ cdef void print_array(array_c* arr):
 
 
 def test_create_arr():
-    print_func_name()
+    
     cdef array_c* arr = create_arr(10)
     assert arr.capacity == 10
     arr.items[9] = 1
@@ -140,7 +151,7 @@ def test_create_arr():
     free_arr(arr)
 
 def test_resize_arr():
-    print_func_name()
+    
     cdef array_c* arr = create_arr(10)
     resize_arr(arr)
     assert arr.capacity == 20
@@ -148,7 +159,7 @@ def test_resize_arr():
     free_arr(arr)
 
 def test_list2arr():
-    print_func_name()
+    
     l = [1, 2, 3]
     cdef array_c* arr = py2arr(l)
     assert l[0] == arr.items[0]
@@ -157,7 +168,7 @@ def test_list2arr():
     assert arr.size == len(l)
 
 def test_arr2numpy():
-    print_func_name()
+    
     cdef array_c* arr = create_arr(3)
     push_back_arr(arr, 1)
     push_back_arr(arr, 2)
@@ -171,7 +182,7 @@ def test_arr2numpy():
     free_arr(arr)
 
 def test_swap():
-    print_func_name()
+    
     cdef array_c * arr = create_arr(3)
     arr.items[0] = 3
     arr.items[1] = 2
@@ -218,7 +229,7 @@ def test_reverse_odd():
 
 
 def test_print():
-    print_func_name()
+    
     cdef array_c * arr = create_arr(10)
     arr.items[0] = 3
     arr.items[1] = 2
@@ -235,7 +246,7 @@ def test_print():
     free_arr(arr)
 
 def test_print_zero_length():
-    print_func_name()
+    
     cdef array_c * arr = create_arr(10)
 
     s = set_stdout()
